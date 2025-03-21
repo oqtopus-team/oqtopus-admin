@@ -1,0 +1,102 @@
+export default {
+  title: 'Users',
+  mail: 'Mail address',
+  group_id: 'Group ID',
+  name: 'Name',
+  organization: 'Organization',
+  status: {
+    name: 'Status',
+    approved: 'Approved',
+    unapproved: 'Unapproved',
+    suspended: 'Suspended',
+  },
+  list: {
+    header: 'Users List',
+    operations: 'Operations',
+    search_button: 'Search',
+    operation: {
+      delete: 'Delete',
+      delete_success: '{{user}} is deleted successfully',
+      delete_confirm: 'Are you sure you want to delete {{user}}?',
+      suspend: 'Suspend',
+      unsuspend: 'Unsuspend',
+      suspend_confirm: 'Are you sure you want to suspend {{user}}?',
+      unsuspend_confirm: 'Are you sure you want to unsuspend {{user}}?',
+    }
+  },
+  white_list: {
+    title: 'Whitelist',
+    header: 'Whitelist Users List',
+    signup: 'Signup',
+    is_signup_completed: {
+      true: 'Done',
+      false: 'Not yet',
+    },
+    operations: 'Operations',
+    search_button: 'Search',
+    register_button: 'Register new user',
+    operation: {
+      delete: 'Delete',
+      delete_success: '{{user}} is deleted successfully',
+      delete_failure: 'Failed to delete {{user}}',
+      delete_confirm: 'Are you sure you want to delete {{user}}?',
+    },
+    register: {
+      title: 'Register Whitelist',
+      header: 'Register Whitelist User',
+      button: {
+        add: 'Add',
+        register: 'Register',
+        clear: 'Clear',
+      },
+      register_confirm: 'Are you sure you want to register new user?',
+      register_success: 'Successfully registered whitelist user',
+      warn: {
+        group_id: 'Enter group ID',
+        group_id_length: 'Enter within 100 characters',
+        email: 'Enter email address',
+        email_invalid: 'Invalid email address',
+        email_length: 'Enter within 100 characters',
+        email_duplicated: 'Duplicated email address.',
+        username_length: 'Enter within 100 characters',
+        organization_length: 'Enter within 100 characters',
+        no_data: 'No data to register.',
+      },
+      failure: 'Failed to register user: ',
+      clear_confirm: 'Are you sure you want to clear the input?',
+      excel: {
+        title: 'Import from spreadsheet',
+        button: {
+          import: 'Import from spreadsheet',
+          template: 'Spreadsheet template',
+          register: 'Register',
+          cancel: 'Cancel',
+        },
+        header: {
+          group_id: 'Group ID (Mandatory)',
+          mail: 'Mail address (Mandatory)',
+          name: 'Name',
+          organization: 'Organization',
+        },
+        notice: '* 100 records can be registered at once.',
+        error: {
+          load: 'Failed to load the file.',
+          register: 'Failed to register users: ',
+          system_error: 'System error occurred. Please contact the administrator.',
+          invalid_spreadsheet: 'Invalid spreadsheet. Please use the template spreadsheet.',
+          invalid_header: 'Invalid header. Please use the template spreadsheet.',
+          no_data: 'No data to register. Please enter the information from the second row.',
+          exceeded_records: 'Maximum 100 users can be registered at once.',
+          required_item: 'Group ID and mail address are mandatory.',
+          invalid_group_id_length: 'Group ID must be within 100 characters.',
+          invalid_email: 'Invalid email address.',
+          invalid_email_length: 'Email address must be within 100 characters.',
+          invalid_username_length: 'User name must be within 100 characters.',
+          invalid_organization_length: 'Organization must be within 100 characters.',
+          duplicated_email: 'Duplicated email address.',
+        },
+      }
+    }
+  },
+};
+  
