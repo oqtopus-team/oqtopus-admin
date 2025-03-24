@@ -89,7 +89,7 @@ const UserList: React.FunctionComponent = () => {
     const search = setSearchParams();
 
     // If there is no change, the redraw will not run, so manually redraw
-    // @memo: If redraw manually when there is a change, 
+    // @memo: If redraw manually when there is a change,
     // infinite scroll will work twice in useLayoutEffect() and the page number will be corrupted
     if (oldSearch === search) getUsersAgain();
   };

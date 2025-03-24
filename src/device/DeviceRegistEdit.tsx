@@ -14,8 +14,8 @@ export const DeviceRegisterEdit: React.FC = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-      document.title = `${t('device.register.title')} | ${appName}`;
-    }, [auth.idToken]);
+    document.title = `${t('device.register.title')} | ${appName}`;
+  }, [auth.idToken]);
 
   const inputData = (() => {
     try {

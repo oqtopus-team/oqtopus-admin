@@ -22,7 +22,7 @@ export default {
       unsuspend: 'Unsuspend',
       suspend_confirm: 'Are you sure you want to suspend {{user}}?',
       unsuspend_confirm: 'Are you sure you want to unsuspend {{user}}?',
-    }
+    },
   },
   white_list: {
     title: 'Whitelist',
@@ -95,8 +95,7 @@ export default {
           invalid_organization_length: 'Organization must be within 100 characters.',
           duplicated_email: 'Duplicated email address.',
         },
-      }
-    }
+      },
+    },
   },
 };
-  
