@@ -7,6 +7,7 @@
 ![React](https://img.shields.io/badge/React-18.2.0-blue)
 ![AWS Amplify](https://img.shields.io/badge/AWS%20Amplify-4.3.32-orange)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![slack](https://img.shields.io/badge/slack-OQTOPUS-pink.svg?logo=slack&style=plastic")](https://oqtopus.slack.com/archives/C08KMHXKT40)
 
 ## Overview
 
