@@ -18,6 +18,8 @@ import { DeviceRegisterConfirm } from './device/DeviceRegisterConfirm';
 import { DeviceDetail } from './device/DeviceDetail';
 import { DeviceUpdateEdit } from './device/DeviceUpdateEdit';
 import { DeviceUpdateConfirm } from './device/DeviceUpdateConfirm';
+import NewsList from './news/NewsList';
+import NewsEditor from './news/NewsEditor';
 
 const App: React.FC = () => {
   const auth = useAuth();
@@ -43,6 +45,9 @@ const App: React.FC = () => {
           <Route path="device/:deviceId" element={<DeviceDetail />} />
           <Route path="device/form/:deviceId/edit" element={<DeviceUpdateEdit />} />
           <Route path="device/form/:deviceId/confirm" element={<DeviceUpdateConfirm />} />
+          <Route path="news" element={<NewsList />} />
+          <Route path="news/create" element={<NewsEditor />} />
+          <Route path="news/edit/:postId" element={<NewsEditor />} />
           <Route path="*" element={<p>Page Not Found</p>} />
         </Routes>
       </LoadingProvider>

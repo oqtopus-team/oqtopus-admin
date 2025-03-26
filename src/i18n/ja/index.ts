@@ -3,7 +3,7 @@ import sidebar from './sidebar';
 import device from './device';
 import auth from './auth';
 import users from './users';
-import common from './common';
+import news from './news';
 
 export default {
   translation: {
@@ -12,6 +12,6 @@ export default {
     device,
     auth,
     users,
-    common,
+    news
   },
 };

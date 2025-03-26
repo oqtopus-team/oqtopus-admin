@@ -1,0 +1,19 @@
+export default {
+  title: 'タイトル',
+  publish_start_date: '公開開始日',
+  publish_end_date: '公開終了日',
+  publish_setting: '公開設定',
+  actions: {
+    title: 'アクション',
+    edit: '編集',
+    delete: '削除',
+    save: '保存',
+    cancel: 'キャンセル',
+  },
+  publishable: '公開可能',
+  unpublishable: '公開不可',
+  publish_title: 'お知らせ公開日',
+  news_title_placeholder: 'タイトルを入力',
+  news_content_placeholder: 'ここにテキストを入力してください...',
+  save_time: '保存時間',
+}

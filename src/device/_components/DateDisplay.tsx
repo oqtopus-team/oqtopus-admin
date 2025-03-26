@@ -1,4 +1,4 @@
-export const dateDisplay = (dateString?: string): string => {
+export const dateDisplay = (dateString?: string | number): string => {
   if (dateString == null) {
     return '';
   }
