@@ -10,12 +10,13 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Form from 'react-bootstrap/Form';
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
-
+import MarkdownPlugin from './plugins/MarkdownPlugin';
 
 export function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [linkUrl, setLinkUrl] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
+  const [isMarkdownActive, setMarkdownActive] = useState(false);
 
   const formatBold = () => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
@@ -31,7 +32,7 @@ export function ToolbarPlugin() {
 
   const formatStrikethrough = () => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
-    save()
+    save();
   };
 
   const formatQuote = () => {
@@ -52,11 +53,11 @@ export function ToolbarPlugin() {
 
   const formatNumberedList = () => {
     editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
-  }
+  };
 
   const formatBulletList = () => {
     editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
-  }
+  };
 
   const insertLink = () => {
     if (linkUrl) {
@@ -69,13 +70,13 @@ export function ToolbarPlugin() {
     }
   };
 
-  const save = () => {
-  }
+  const save = () => {};
 
   return (
     <Stack direction="horizontal" gap={3}>
       <ButtonGroup>
         <Button
+          disabled={isMarkdownActive}
           variant="outline-primary"
           onClick={formatBold}
           className="toolbar-item"
@@ -84,6 +85,7 @@ export function ToolbarPlugin() {
           <strong>B</strong>
         </Button>
         <Button
+          disabled={isMarkdownActive}
           variant="outline-primary"
           onClick={formatItalic}
           className="toolbar-item"
@@ -92,6 +94,7 @@ export function ToolbarPlugin() {
           <em>I</em>
         </Button>
         <Button
+          disabled={isMarkdownActive}
           variant="outline-primary"
           onClick={formatUnderline}
           className="toolbar-item"
@@ -100,6 +103,7 @@ export function ToolbarPlugin() {
           <u>U</u>
         </Button>
         <Button
+          disabled={isMarkdownActive}
           variant="outline-primary"
           onClick={formatStrikethrough}
           aria-label="Format Strikethrough"
@@ -110,6 +114,7 @@ export function ToolbarPlugin() {
 
       <ButtonGroup>
         <Button
+          disabled={isMarkdownActive}
           variant="outline-primary"
           onClick={formatQuote}
           className="toolbar-item"
@@ -118,6 +123,7 @@ export function ToolbarPlugin() {
           <FaQuoteRight />
         </Button>
         <Button
+          disabled={isMarkdownActive}
           variant="outline-primary"
           active={showLinkInput}
           onClick={toggleLinkInput}
@@ -135,26 +141,37 @@ export function ToolbarPlugin() {
             onChange={(e) => setLinkUrl(e.target.value)}
             placeholder="Enter URL..."
           />
-          <Button variant='outline-primary' onClick={insertLink}>Add</Button>
+          <Button disabled={isMarkdownActive} variant="outline-primary" onClick={insertLink}>
+            Add
+          </Button>
         </div>
       )}
       <ButtonGroup>
         <Button
+          disabled={isMarkdownActive}
           variant="outline-primary"
           onClick={formatNumberedList}
           className="toolbar-item"
           aria-label="Numbered List"
         >
-          <span><FaListOl /></span>
+          <span>
+            <FaListOl />
+          </span>
         </Button>
         <Button
+          disabled={isMarkdownActive}
           variant="outline-primary"
           onClick={formatBulletList}
           className="toolbar-item"
           aria-label="Bullet List"
         >
-          <span><FaListUl /></span>
+          <span>
+            <FaListUl />
+          </span>
         </Button>
+      </ButtonGroup>
+      <ButtonGroup>
+        <MarkdownPlugin isMarkdownActive={isMarkdownActive} setMarkdownActive={setMarkdownActive} />
       </ButtonGroup>
     </Stack>
   );

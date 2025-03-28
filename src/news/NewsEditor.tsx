@@ -29,6 +29,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { CodeNode } from '@lexical/code';
 
 type Publishable = 'publishable' | 'unpublishable';
 
@@ -67,7 +68,7 @@ const NewsEditor = () => {
     namespace: 'MyRichTextEditor',
     theme,
     onError: (error) => console.error(error),
-    nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, AutoLinkNode],
+    nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, AutoLinkNode, CodeNode],
   };
 
   const handleDateChange = (date: Date | null) => {
