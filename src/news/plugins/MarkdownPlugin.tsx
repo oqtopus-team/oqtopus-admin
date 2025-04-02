@@ -11,16 +11,16 @@ import Button from 'react-bootstrap/Button';
 import { TbMarkdown, TbMarkdownOff } from 'react-icons/tb';
 
 interface MarkdownPluginProps {
-  isMarkdownActive: boolean;
+  isMarkdownModeActive: boolean;
   setMarkdownActive: (active: boolean) => void;
 }
 
-const MarkdownPlugin = ({ isMarkdownActive, setMarkdownActive }: MarkdownPluginProps) => {
+const MarkdownPlugin = ({ isMarkdownModeActive, setMarkdownActive }: MarkdownPluginProps) => {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
-    setMarkdownActive(isMarkdownActive);
-  }, [isMarkdownActive]);
+    setMarkdownActive(isMarkdownModeActive);
+  }, [isMarkdownModeActive]);
 
   const toggleMarkdown = useCallback(() => {
     editor.update(() => {
@@ -32,7 +32,7 @@ const MarkdownPlugin = ({ isMarkdownActive, setMarkdownActive }: MarkdownPluginP
         undefined, // node
         false
       );
-      if (!isMarkdownActive) {
+      if (!isMarkdownModeActive) {
         const codeNode = $createCodeNode('markdown');
         codeNode.append($createTextNode(markdown));
         root.clear().append(codeNode);
@@ -47,22 +47,22 @@ const MarkdownPlugin = ({ isMarkdownActive, setMarkdownActive }: MarkdownPluginP
             firstChild.getTextContent(),
             TRANSFORMERS,
             undefined, // node
-            true
+            false
           );
         });
         setMarkdownActive(false);
       }
     });
-  }, [editor, isMarkdownActive]);
+  }, [editor, isMarkdownModeActive]);
 
   return (
     <Button
       onClick={toggleMarkdown}
-      variant={isMarkdownActive ? 'primary' : 'outline-primary'}
+      variant={isMarkdownModeActive ? 'primary' : 'outline-primary'}
       className="toolbar-item"
       aria-label="Bullet List"
     >
-      {isMarkdownActive ? <TbMarkdownOff /> : <TbMarkdown />}
+      {isMarkdownModeActive ? <TbMarkdownOff /> : <TbMarkdown />}
     </Button>
   );
 };

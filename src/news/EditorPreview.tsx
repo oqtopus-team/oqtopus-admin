@@ -1,29 +1,35 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useEffect, useState } from 'react';
-import { $generateHtmlFromNodes } from '@lexical/html';
+import { editorConfig } from './editorSettings';
+import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import PreviewSyncPlugin from './plugins/PreviewSyncPlugin';
+import { useEditorContext } from './EditorContext';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
+import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 
-interface PostPreviewProps {
-  title: string;
-}
+const previewConfig: InitialConfigType = {
+  ...editorConfig,
+  namespace: 'PreviewEditor',
+  editable: false,
+};
 
-const EditorPreview = ({ title }: PostPreviewProps) => {
+const EditorPreview = () => {
+  const { isMarkdownModeActive } = useEditorContext();
   const [editor] = useLexicalComposerContext();
-  const [htmlString, setHtmlString] = useState('');
-
-  useEffect(() => {
-    return editor.registerUpdateListener(({ editorState }) => {
-      editorState.read(() => {
-        const htmlString = $generateHtmlFromNodes(editor);
-        setHtmlString(htmlString);
-      });
-    });
-  }, [editor]);
 
   return (
-    <div className="editor-preview">
-      <span className="editor-preview-title">{title}</span>
-      <div dangerouslySetInnerHTML={{ __html: htmlString }} className="editor-preview-content" />
-    </div>
+    <LexicalComposer initialConfig={previewConfig}>
+      <RichTextPlugin contentEditable={<ContentEditable />} ErrorBoundary={LexicalErrorBoundary} />
+      <PreviewSyncPlugin editor={editor} isMarkdownModeActive={isMarkdownModeActive}/>
+      <HistoryPlugin />
+      <ListPlugin />
+      <LinkPlugin />
+      <CheckListPlugin />
+    </LexicalComposer>
   );
 };
 
