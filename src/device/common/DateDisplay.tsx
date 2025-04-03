@@ -2,6 +2,7 @@ export const dateDisplay = (dateString?: string): string => {
   if (dateString == null) {
     return '';
   }
+
   try {
     const date = new Date(dateString);
     const year = date.getFullYear();
