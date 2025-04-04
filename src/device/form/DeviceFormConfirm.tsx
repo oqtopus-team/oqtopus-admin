@@ -14,10 +14,7 @@ export const DeviceFormConfirm: React.FC<DeviceFormConfirmProps> = ({ inputData 
 
   return (
     <div>
-      <DisplayInfo
-        title={t('device.device_type')}
-        info={inputData.deviceType}
-      ></DisplayInfo>
+      <DisplayInfo title={t('device.device_type')} info={inputData.deviceType}></DisplayInfo>
 
       <DisplayInfo
         title={t('device.form.device_info')}
@@ -25,11 +22,7 @@ export const DeviceFormConfirm: React.FC<DeviceFormConfirmProps> = ({ inputData 
         spacer={true}
       ></DisplayInfo>
 
-      <DisplayInfo
-        title={t('device.status')}
-        info={inputData.status}
-        spacer={true}
-      ></DisplayInfo>
+      <DisplayInfo title={t('device.status')} info={inputData.status} spacer={true}></DisplayInfo>
 
       <DisplayInfo
         title={t('device.qubits')}

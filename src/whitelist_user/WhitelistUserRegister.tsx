@@ -49,7 +49,7 @@ const validateDuplicatedEmail: TestFunction = (email: unknown, context): boolean
   return true;
 };
 
-const validationRules = (t: TFunction<"translation", any>) => {
+const validationRules = (t: TFunction<'translation', any>) => {
   const schema = yup.object().shape({
     whitelist: yup.array(
       yup.object().shape({
@@ -62,14 +62,20 @@ const validationRules = (t: TFunction<"translation", any>) => {
           .required(t('users.white_list.register.warn.email'))
           .email(t('users.white_list.register.warn.email_invalid'))
           .max(100, t('users.white_list.register.warn.email_length'))
-          .test('email-dup', t('users.white_list.register.warn.email_duplicated'), validateDuplicatedEmail),
+          .test(
+            'email-dup',
+            t('users.white_list.register.warn.email_duplicated'),
+            validateDuplicatedEmail
+          ),
         username: yup.string().max(100, t('users.white_list.register.warn.username_length')),
-        organization: yup.string().max(100, t('users.white_list.register.warn.organization_length')),
+        organization: yup
+          .string()
+          .max(100, t('users.white_list.register.warn.organization_length')),
       })
     ),
   });
   return schema;
-}
+};
 
 const WhitelistUserRegister: React.FunctionComponent = () => {
   const auth = useAuth();
@@ -175,7 +181,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
               {t('users.white_list.register.excel.button.import')}
             </Button>
             <Button variant="primary" onClick={downloadExcel} className="bg-secondary">
-            {t('users.white_list.register.excel.button.template')}
+              {t('users.white_list.register.excel.button.template')}
             </Button>
           </div>
         </Row>
