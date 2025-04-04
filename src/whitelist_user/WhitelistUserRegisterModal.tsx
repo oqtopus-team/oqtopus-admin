@@ -102,7 +102,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
     const sheetJson: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
     const header: string[] = sheetJson[0];
     if (
-      header[0] !== t('users.white_list.register.excel.header.group_id')||
+      header[0] !== t('users.white_list.register.excel.header.group_id') ||
       header[1] !== t('users.white_list.register.excel.header.mail') ||
       (useUsername && header[2] !== t('users.white_list.register.excel.header.name')) ||
       (useOrganization && header[3] !== t('users.white_list.register.excel.header.organization'))
@@ -142,7 +142,9 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
         };
       }
       if (groupId.length > 100) {
-        errorMessage = `${t('users.white_list.register.excel.error.invalid_group_id_length')} \n${groupId}`;
+        errorMessage = `${t(
+          'users.white_list.register.excel.error.invalid_group_id_length'
+        )} \n${groupId}`;
         return {
           hasError,
           errorMessage,
@@ -156,21 +158,27 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
         };
       }
       if (email.length > 100) {
-        errorMessage = `${t('users.white_list.register.excel.error.invalid_email_length')} \n${email}`;
+        errorMessage = `${t(
+          'users.white_list.register.excel.error.invalid_email_length'
+        )} \n${email}`;
         return {
           hasError,
           errorMessage,
         };
       }
       if (username !== undefined && username.length > 100) {
-        errorMessage = `${t('users.white_list.register.excel.error.invalid_username_length')} \n${username}`;
+        errorMessage = `${t(
+          'users.white_list.register.excel.error.invalid_username_length'
+        )} \n${username}`;
         return {
           hasError,
           errorMessage,
         };
       }
       if (organization !== undefined && organization.length > 100) {
-        errorMessage = `${t('users.white_list.register.excel.error.invalid_organization_length')} \n${organization}`;
+        errorMessage = `${t(
+          'users.white_list.register.excel.error.invalid_organization_length'
+        )} \n${organization}`;
         return {
           hasError,
           errorMessage,
@@ -217,7 +225,9 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">{t('users.white_list.register.excel.title')}</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">
+          {t('users.white_list.register.excel.title')}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>

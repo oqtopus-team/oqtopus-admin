@@ -3,6 +3,5 @@ export default {
     confirm: '確認',
     yes: 'はい',
     no: 'いいえ',
-  }
+  },
 };
-  
