@@ -23,7 +23,7 @@ const isJsonParsable = (value: string): boolean => {
   }
 };
 
-const validationRules = (t: TFunction<"translation", any>) => {
+const validationRules = (t: TFunction<'translation', any>) => {
   const validationRules = yup.object().shape({
     deviceType: yup.string().required(t('device.form.warn.required')),
     deviceInfo: yup
@@ -232,10 +232,7 @@ export const DeviceFormEdit: React.FC<DeviceFormEditProps> = ({
 
       <Spacer size={15} horizontal={true} />
 
-      <Headding
-        title={`* ${t('device.status')}`}
-        isStyle={changedFields.status}
-      ></Headding>
+      <Headding title={`* ${t('device.status')}`} isStyle={changedFields.status}></Headding>
       <select
         title="Status"
         {...register('status')}
@@ -248,10 +245,7 @@ export const DeviceFormEdit: React.FC<DeviceFormEditProps> = ({
 
       <Spacer size={15} horizontal={true} />
 
-      <Headding
-        title={`* ${t('device.qubits')}`}
-        isStyle={changedFields.qubits}
-      ></Headding>
+      <Headding title={`* ${t('device.qubits')}`} isStyle={changedFields.qubits}></Headding>
       <textarea
         title="Qubits"
         {...register('qubits')}
@@ -311,10 +305,7 @@ export const DeviceFormEdit: React.FC<DeviceFormEditProps> = ({
 
       <Spacer size={15} horizontal={true} />
 
-      <Headding
-        title={t('device.form.basis_gates')}
-        isStyle={changedFields.basisGates}
-      ></Headding>
+      <Headding title={t('device.form.basis_gates')} isStyle={changedFields.basisGates}></Headding>
       <textarea
         title="Basis Gates"
         {...register('basisGates')}

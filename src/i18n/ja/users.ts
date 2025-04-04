@@ -22,7 +22,7 @@ export default {
       unsuspend: '停止解除',
       suspend_confirm: '{{user}}の利用を停止します。よろしいですか？',
       unsuspend_confirm: '{{user}}の利用停止を解除します。よろしいですか？',
-    }
+    },
   },
   white_list: {
     title: 'ホワイトリスト',
@@ -60,7 +60,7 @@ export default {
         email_duplicated: 'メールアドレスが重複しています。',
         username_length: '100文字以下で入力してください。',
         organization_length: '100文字以下で入力してください。',
-        no_data: '登録するデータがありません。'
+        no_data: '登録するデータがありません。',
       },
       failure: '登録処理が失敗しました。\n',
       clear_confirm: '入力内容をクリアします。よろしいですか？',
@@ -94,9 +94,8 @@ export default {
           invalid_username_length: '氏名は100文字以下で入力してください。',
           invalid_organization_length: '所属組織は100文字以下で入力してください。',
           duplicated_email: 'メールアドレスが重複しています。',
-        }
-      }
-    }
+        },
+      },
+    },
   },
 };
-  

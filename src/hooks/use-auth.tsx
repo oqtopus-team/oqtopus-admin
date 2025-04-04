@@ -3,7 +3,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import AwsConfigAuth from '../config/auth';
 import { TFunction } from 'i18next';
 
-
 Amplify.configure({ Auth: AwsConfigAuth });
 
 interface UseAuth {
@@ -12,14 +11,18 @@ interface UseAuth {
   username: string;
   email: string;
   idToken: string;
-  signIn: (username: string, password: string, t: TFunction<"translation", any>) => Promise<Result>;
-  signOut: (t: TFunction<"translation", any>) => Promise<Result>;
-  changePassword: (currentPassword: string, newPassword: string, t: TFunction<"translation", any>) => Promise<Result>;
+  signIn: (username: string, password: string, t: TFunction<'translation', any>) => Promise<Result>;
+  signOut: (t: TFunction<'translation', any>) => Promise<Result>;
+  changePassword: (
+    currentPassword: string,
+    newPassword: string,
+    t: TFunction<'translation', any>
+  ) => Promise<Result>;
   firstChangePassword: (
     username: string,
     currentPassword: string,
     newPassword: string,
-    t: TFunction<"translation", any>
+    t: TFunction<'translation', any>
   ) => Promise<Result>;
 }
 
@@ -71,7 +74,7 @@ const useProvideAuth = (): UseAuth => {
   const signIn = async (
     username: string,
     password: string,
-    t: TFunction<"translation", any>
+    t: TFunction<'translation', any>
   ): Promise<Result> => {
     try {
       const result = await Auth.signIn(username, password);
@@ -92,7 +95,7 @@ const useProvideAuth = (): UseAuth => {
     }
   };
 
-  const signOut = async (t: TFunction<"translation", any>): Promise<Result> => {
+  const signOut = async (t: TFunction<'translation', any>): Promise<Result> => {
     try {
       await Auth.signOut();
       setUsername('');
@@ -111,7 +114,7 @@ const useProvideAuth = (): UseAuth => {
   const changePassword = async (
     currentPassword: string,
     newPassword: string,
-    t: TFunction<"translation", any>
+    t: TFunction<'translation', any>
   ): Promise<Result> => {
     try {
       const user = await Auth.currentAuthenticatedUser();
@@ -129,7 +132,7 @@ const useProvideAuth = (): UseAuth => {
     username: string,
     currentPassword: string,
     newPassword: string,
-    t: TFunction<"translation", any>
+    t: TFunction<'translation', any>
   ): Promise<Result> => {
     try {
       await Auth.signIn(username, currentPassword).then(async (user) => {
