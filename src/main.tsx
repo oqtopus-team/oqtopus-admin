@@ -8,7 +8,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ProvideAuth>
       <I18nProvider>
-      <App />
+        <App />
       </I18nProvider>
     </ProvideAuth>
   </React.StrictMode>

@@ -3,6 +3,5 @@ export default {
     confirm: 'Confirmation',
     yes: 'Yes',
     no: 'No',
-  }
+  },
 };
-  
