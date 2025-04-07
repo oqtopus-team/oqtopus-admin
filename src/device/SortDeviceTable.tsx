@@ -13,7 +13,7 @@ import {
 } from '@tanstack/react-table';
 import Nav from 'react-bootstrap/Nav';
 import { useTranslation } from 'react-i18next';
-import { dateDisplay } from './common/DateDisplay';
+import { DateTimeFormatter } from './common/DateTimeFormatter';
 
 interface TableProps {
   devices: Device[];
@@ -21,7 +21,7 @@ interface TableProps {
 
 export const SortDeviceTable: React.FC<TableProps> = ({ devices }): JSX.Element => {
   const columnHelper = createColumnHelper<Device>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const columns: Array<ColumnDef<Device, any>> = [
     columnHelper.accessor('id', {
       header: t('device.id'),
@@ -124,7 +124,7 @@ export const SortDeviceTable: React.FC<TableProps> = ({ devices }): JSX.Element 
       cell: (info: CellContext<Device, string>) => {
         try {
           const availableAt: string = info.getValue();
-          const local_availableAt: string = dateDisplay(availableAt);
+          const local_availableAt: string = DateTimeFormatter(t, i18n, availableAt);
           return <p> {local_availableAt} </p>;
         } catch (e) {
           return <p> - </p>;
