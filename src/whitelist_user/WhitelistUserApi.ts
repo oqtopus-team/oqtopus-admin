@@ -4,7 +4,7 @@ import {
   WhitelistUserSearchParams,
 } from '../types/WhitelistUserType';
 import { ApiResponse } from '../types/CommonType';
-import { TFunction } from 'i18next'
+import { TFunction } from 'i18next';
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 
@@ -57,7 +57,7 @@ export async function searchUsers(
 export async function registerUsers(
   whitelist: WhitelistUserRequest[],
   idToken: string,
-  t: TFunction<"translation", any>
+  t: TFunction<'translation', any>
 ): Promise<ApiResponse> {
   const res = await fetch(`${apiEndpoint}/whitelist_users`, {
     method: 'POST',
@@ -86,7 +86,7 @@ export async function registerUsers(
 export async function deleteUser(
   userEmails: string[],
   idToken: string,
-  t: TFunction<"translation", any>
+  t: TFunction<'translation', any>
 ): Promise<ApiResponse> {
   const res = await fetch(`${apiEndpoint}/whitelist_users`, {
     method: 'DELETE',
@@ -102,7 +102,7 @@ export async function deleteUser(
   if (!res.ok) {
     return {
       success: false,
-      message:t('users.white_list.operation.delete_failure'),
+      message: t('users.white_list.operation.delete_failure'),
     };
   }
   return {

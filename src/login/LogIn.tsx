@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 const appName: string = import.meta.env.VITE_APP_NAME;
 
 // Validation Rule
-const validationRules = (t: TFunction<"translation", any>) => {
+const validationRules = (t: TFunction<'translation', any>) => {
   const schema = yup.object({
     username: yup
       .string()
@@ -24,7 +24,7 @@ const validationRules = (t: TFunction<"translation", any>) => {
     password: yup.string().required(t('auth.signin.warn.password')),
   });
   return schema;
-}
+};
 
 // type definition of form inputs
 interface LoginInputs {
@@ -111,7 +111,7 @@ const LogIn: React.FunctionComponent = () => {
               </Form.Group>
               <div className="float-end">
                 <Button variant="primary" type="submit">
-                {t('auth.signin.submit')}
+                  {t('auth.signin.submit')}
                 </Button>
               </div>
             </Form>

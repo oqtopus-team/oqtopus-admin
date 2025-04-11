@@ -1,6 +1,6 @@
 export default {
-    users: 'Users',
-    white_list: 'Whitelist',
-    device: 'Devices',
-    news: 'News',
-  };
+  users: 'Users',
+  white_list: 'Whitelist',
+  device: 'Devices',
+  news: 'News',
+};
