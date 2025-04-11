@@ -21,8 +21,9 @@ const theme = {
   link: 'editor-link',
 };
 
-export const editorConfig: InitialConfigType = {
-  namespace: 'MyRichTextEditor',
+export const editorPreviewConfig: InitialConfigType = {
+  namespace: 'PreviewEditor',
+  editable: false,
   theme,
   onError: (error) => console.error(error),
   nodes: [
@@ -33,5 +34,13 @@ export const editorConfig: InitialConfigType = {
     LinkNode,
     AutoLinkNode,
     CodeNode,
+  ],
+};
+
+export const editorConfig: InitialConfigType = {
+  namespace: 'MyRichTextEditor',
+  theme,
+  onError: (error) => console.error(error),
+  nodes: [
   ],
 };

@@ -6,16 +6,11 @@ import DatePicker from 'react-datepicker';
 import Stack from 'react-bootstrap/Stack';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
-import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
-import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import BaseLayout from '../common/BaseLayout';
 import { ToolbarPlugin } from './ToolbarPlugin';
 import EditorPreview from './EditorPreview';
@@ -25,7 +20,6 @@ import { editorConfig } from './editorSettings';
 import './editor.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { EditorProvider } from './EditorContext';
-import MarkdownPlugin from './plugins/MarkdownShortcutPlugin';
 
 type Publishable = 'publishable' | 'unpublishable';
 
@@ -118,11 +112,6 @@ const NewsEditor = () => {
                     ErrorBoundary={LexicalErrorBoundary}
                   />
                   <HistoryPlugin />
-                  <ListPlugin />
-                  <LinkPlugin />
-                  <CheckListPlugin />
-                  <AutoFocusPlugin />
-                  <MarkdownPlugin />
                 </div>
                 <EditorPreview />
               </Stack>

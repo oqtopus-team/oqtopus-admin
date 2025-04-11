@@ -10,16 +10,16 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Form from 'react-bootstrap/Form';
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
-import MarkdownPlugin from './plugins/MarkdownPlugin';
 import { useEditorContext } from './EditorContext';
+import { formatQuote } from './helpers';
 
 export function ToolbarPlugin() {
   const { isMarkdownModeActive, setMarkdownModeActive } = useEditorContext();
   const [editor] = useLexicalComposerContext();
-  const [linkUrl, setLinkUrl] = useState('');
+  const [linkUrl, setLinkUrl] = useState('https://');
   const [showLinkInput, setShowLinkInput] = useState(false);
 
-  const formatBold = () => {
+  const insertBold = () => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
   };
 
@@ -27,22 +27,13 @@ export function ToolbarPlugin() {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
   };
 
-  const formatUnderline = () => {
-    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
-  };
-
   const formatStrikethrough = () => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
     save();
   };
 
-  const formatQuote = () => {
-    editor.update(() => {
-      const selection = $getSelection();
-      if ($isRangeSelection(selection)) {
-        $wrapNodes(selection, () => $createQuoteNode());
-      }
-    });
+  const formatQuoteFunc = () => {
+    formatQuote(editor)
   };
 
   const toggleLinkInput = () => {
@@ -79,7 +70,7 @@ export function ToolbarPlugin() {
         <Button
           disabled={isMarkdownModeActive}
           variant="outline-primary"
-          onClick={formatBold}
+          onClick={insertBold}
           className="toolbar-item"
           aria-label="Format Bold"
         >
@@ -97,15 +88,6 @@ export function ToolbarPlugin() {
         <Button
           disabled={isMarkdownModeActive}
           variant="outline-primary"
-          onClick={formatUnderline}
-          className="toolbar-item"
-          aria-label="Format Underline"
-        >
-          <u>U</u>
-        </Button>
-        <Button
-          disabled={isMarkdownModeActive}
-          variant="outline-primary"
           onClick={formatStrikethrough}
           aria-label="Format Strikethrough"
         >
@@ -117,7 +99,7 @@ export function ToolbarPlugin() {
         <Button
           disabled={isMarkdownModeActive}
           variant="outline-primary"
-          onClick={formatQuote}
+          onClick={formatQuoteFunc}
           className="toolbar-item"
           aria-label="Format Quote"
         >
@@ -170,9 +152,6 @@ export function ToolbarPlugin() {
             <FaListUl />
           </span>
         </Button>
-      </ButtonGroup>
-      <ButtonGroup>
-        <MarkdownPlugin isMarkdownModeActive={isMarkdownModeActive} setMarkdownActive={setMarkdownModeActive} />
       </ButtonGroup>
     </Stack>
   );
