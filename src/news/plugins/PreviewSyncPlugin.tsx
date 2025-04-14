@@ -7,7 +7,6 @@ import { formatLink, toggleMarkdownFormat } from '../helpers';
 
 interface PreviewSyncPluginProps {
   editor: LexicalEditor;
-  isMarkdownModeActive: boolean;
 }
 
 const MARKDOWN_FORMATS = {
@@ -38,7 +37,7 @@ const MARKDOWN_FORMATS = {
   },
 };
 
-const PreviewSyncPlugin = ({ editor, isMarkdownModeActive }: PreviewSyncPluginProps) => {
+const PreviewSyncPlugin = ({ editor }: PreviewSyncPluginProps) => {
   const [previewEditor] = useLexicalComposerContext();
 
   useEffect(() => {
@@ -56,7 +55,7 @@ const PreviewSyncPlugin = ({ editor, isMarkdownModeActive }: PreviewSyncPluginPr
     });
 
     return removeListener;
-  }, [editor, previewEditor, isMarkdownModeActive]);
+  }, [editor, previewEditor]);
 
   // Intercept "FORMAT_TEXT" command
   useEffect(() => {

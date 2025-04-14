@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getSelection, $isRangeSelection, FORMAT_TEXT_COMMAND } from 'lexical';
-import { FaListUl, FaListOl, FaLink, FaQuoteRight } from 'react-icons/fa';
-import { $wrapNodes } from '@lexical/selection';
-import { $createQuoteNode } from '@lexical/rich-text';
+import { FORMAT_TEXT_COMMAND } from 'lexical';
+import { FaLink, FaListOl, FaListUl, FaQuoteRight } from 'react-icons/fa';
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { ButtonGroup } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Form from 'react-bootstrap/Form';
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
-import { useEditorContext } from './EditorContext';
 import { formatQuote } from './helpers';
 
 export function ToolbarPlugin() {
-  const { isMarkdownModeActive, setMarkdownModeActive } = useEditorContext();
   const [editor] = useLexicalComposerContext();
   const [linkUrl, setLinkUrl] = useState('https://');
   const [showLinkInput, setShowLinkInput] = useState(false);
@@ -33,13 +29,13 @@ export function ToolbarPlugin() {
   };
 
   const formatQuoteFunc = () => {
-    formatQuote(editor)
+    formatQuote(editor);
   };
 
   const toggleLinkInput = () => {
     setShowLinkInput(!showLinkInput);
     if (showLinkInput) {
-      setLinkUrl('');
+      setLinkUrl('https://');
     }
   };
 
@@ -58,7 +54,7 @@ export function ToolbarPlugin() {
         target: '_blank',
       });
       setShowLinkInput(false);
-      setLinkUrl('');
+      setLinkUrl('https://');
     }
   };
 
@@ -68,7 +64,6 @@ export function ToolbarPlugin() {
     <Stack direction="horizontal" gap={3}>
       <ButtonGroup>
         <Button
-          disabled={isMarkdownModeActive}
           variant="outline-primary"
           onClick={insertBold}
           className="toolbar-item"
@@ -77,7 +72,6 @@ export function ToolbarPlugin() {
           <strong>B</strong>
         </Button>
         <Button
-          disabled={isMarkdownModeActive}
           variant="outline-primary"
           onClick={formatItalic}
           className="toolbar-item"
@@ -86,7 +80,6 @@ export function ToolbarPlugin() {
           <em>I</em>
         </Button>
         <Button
-          disabled={isMarkdownModeActive}
           variant="outline-primary"
           onClick={formatStrikethrough}
           aria-label="Format Strikethrough"
@@ -97,7 +90,6 @@ export function ToolbarPlugin() {
 
       <ButtonGroup>
         <Button
-          disabled={isMarkdownModeActive}
           variant="outline-primary"
           onClick={formatQuoteFunc}
           className="toolbar-item"
@@ -106,7 +98,6 @@ export function ToolbarPlugin() {
           <FaQuoteRight />
         </Button>
         <Button
-          disabled={isMarkdownModeActive}
           variant="outline-primary"
           active={showLinkInput}
           onClick={toggleLinkInput}
@@ -124,14 +115,13 @@ export function ToolbarPlugin() {
             onChange={(e) => setLinkUrl(e.target.value)}
             placeholder="Enter URL..."
           />
-          <Button disabled={isMarkdownModeActive} variant="outline-primary" onClick={insertLink}>
+          <Button variant="outline-primary" onClick={insertLink}>
             Add
           </Button>
         </div>
       )}
       <ButtonGroup>
         <Button
-          disabled={isMarkdownModeActive}
           variant="outline-primary"
           onClick={formatNumberedList}
           className="toolbar-item"
@@ -142,7 +132,6 @@ export function ToolbarPlugin() {
           </span>
         </Button>
         <Button
-          disabled={isMarkdownModeActive}
           variant="outline-primary"
           onClick={formatBulletList}
           className="toolbar-item"

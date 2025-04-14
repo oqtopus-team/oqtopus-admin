@@ -19,7 +19,6 @@ import { editorConfig } from './editorSettings';
 
 import './editor.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import { EditorProvider } from './EditorContext';
 
 type Publishable = 'publishable' | 'unpublishable';
 
@@ -57,7 +56,6 @@ const NewsEditor = () => {
 
   return (
     <BaseLayout>
-      <EditorProvider >
         <Stack direction="horizontal" className="mb-3">
           <label htmlFor="publish-date">{t('news.publish_title')}</label>
           <DatePicker
@@ -118,7 +116,6 @@ const NewsEditor = () => {
             </div>
           </LexicalComposer>
         </Stack>
-      </EditorProvider>
     </BaseLayout>
   );
 };
