@@ -14,6 +14,7 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import BaseLayout from '../common/BaseLayout';
 import { ToolbarPlugin } from './ToolbarPlugin';
 import EditorPreview from './EditorPreview';
+import MarkdownListPlugin from './plugins/MarkdownListPlugin';
 import { Select } from '../common/Select';
 import { editorConfig } from './editorSettings';
 
@@ -114,6 +115,7 @@ const NewsEditor = () => {
                 <EditorPreview />
               </Stack>
             </div>
+            <MarkdownListPlugin />
           </LexicalComposer>
         </Stack>
     </BaseLayout>
