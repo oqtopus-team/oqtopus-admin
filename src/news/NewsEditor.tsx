@@ -14,12 +14,13 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import BaseLayout from '../common/BaseLayout';
 import { ToolbarPlugin } from './ToolbarPlugin';
 import EditorPreview from './EditorPreview';
-import MarkdownListPlugin from './plugins/MarkdownListPlugin';
+import MarkdownUnorderedListPlugin from './plugins/MarkdownUnorderedListPlugin';
 import { Select } from '../common/Select';
 import { editorConfig } from './editorSettings';
 
 import './editor.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import MarkdownOrderedListPlugin from './plugins/MarkdownOrderedListPlugin';
 
 type Publishable = 'publishable' | 'unpublishable';
 
@@ -115,7 +116,8 @@ const NewsEditor = () => {
                 <EditorPreview />
               </Stack>
             </div>
-            <MarkdownListPlugin />
+            <MarkdownUnorderedListPlugin />
+            <MarkdownOrderedListPlugin />
           </LexicalComposer>
         </Stack>
     </BaseLayout>

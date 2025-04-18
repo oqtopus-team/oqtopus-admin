@@ -14,7 +14,7 @@ import { INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
 
 const insertOrderedListCommand: LexicalCommand<null> = INSERT_UNORDERED_LIST_COMMAND;
 
-export default function MarkdownListPlugin() {
+export default function MarkdownUnorderedListPlugin() {
   const [editor] = useLexicalComposerContext();
 
 
