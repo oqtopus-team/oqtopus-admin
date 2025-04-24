@@ -12,7 +12,6 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import BaseLayout from '../common/BaseLayout';
 import { ToolbarPlugin } from './ToolbarPlugin';
 import EditorPreview from './EditorPreview';
@@ -24,6 +23,7 @@ import './editor.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import MarkdownOrderedListPlugin from './plugins/MarkdownOrderedListPlugin';
 import MarkdownCodeBlockPlugin from './plugins/MarkdownCodeBlockPlugin';
+import MarkdownCheckListPlugin from './plugins/MarkdownCheckListPlugin';
 
 type Publishable = 'publishable' | 'unpublishable';
 
@@ -116,7 +116,6 @@ const NewsEditor = () => {
                   />
                   <HistoryPlugin />
                   <ListPlugin />
-                  <CheckListPlugin />
                 </div>
                 <EditorPreview />
               </Stack>
@@ -124,6 +123,7 @@ const NewsEditor = () => {
             <MarkdownUnorderedListPlugin />
             <MarkdownOrderedListPlugin />
             <MarkdownCodeBlockPlugin />
+            <MarkdownCheckListPlugin />
           </LexicalComposer>
         </Stack>
     </BaseLayout>

@@ -7,8 +7,8 @@ import PreviewSyncPlugin from './plugins/PreviewSyncPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
-import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { editorPreviewConfig } from './editorSettings';
+import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 
 const EditorPreview = () => {
   const [editor] = useLexicalComposerContext();
