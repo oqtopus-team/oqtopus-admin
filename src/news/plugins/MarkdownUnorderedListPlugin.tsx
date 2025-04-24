@@ -62,6 +62,10 @@ export default function MarkdownUnorderedListPlugin() {
             if (previousSibling && previousSibling.getType() === 'paragraph') {
               const prevText = previousSibling.getTextContent();
 
+              if(prevText.includes('- [')) {
+                return;
+              }
+
               if (prevText === '-' || prevText === '- ') {
                 previousSibling.remove();
                 commandHandled = true;
@@ -75,32 +79,6 @@ export default function MarkdownUnorderedListPlugin() {
                 commandHandled = true;
                 return;
               }
-            }
-          });
-
-          return commandHandled;
-        },
-        COMMAND_PRIORITY_LOW
-      ),
-
-      editor.registerCommand(
-        KEY_BACKSPACE_COMMAND,
-        () => {
-          let commandHandled = false;
-
-          editor.update(() => {
-            const selection = $getSelection();
-            if (!$isRangeSelection(selection) || !selection.isCollapsed()) return;
-
-            const anchorNode = selection.anchor.getNode();
-            const paragraph = anchorNode.getTopLevelElementOrThrow();
-            const text = paragraph.getTextContent();
-
-            if (text === '-' || text === '- ') {
-              paragraph.clear();
-              paragraph.append($createTextNode(''));
-              commandHandled = true;
-              return;
             }
           });
 

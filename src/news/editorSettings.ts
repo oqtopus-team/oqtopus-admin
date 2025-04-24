@@ -42,5 +42,12 @@ export const editorConfig: InitialConfigType = {
   theme,
   onError: (error) => console.error(error),
   nodes: [
+    HeadingNode,
+    QuoteNode,
+    ListNode,
+    ListItemNode,
+    LinkNode,
+    AutoLinkNode,
+    CodeNode,
   ],
 };
