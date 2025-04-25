@@ -97,6 +97,61 @@
 
 .editor-listitem {
     margin: 8px 0 0 0;
+    position: relative;
+}
+
+.editor-checklist {
+    list-style: none;
+}
+
+.editor-checklist li {
+    position: relative;
+
+    &:before, &:after {
+        top: 50%;
+        transform: translateY(-50%);
+        left: -20px;
+    }
+
+    &:before {
+        content: "";
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        display: block;
+        background-size: cover;
+        position: absolute;
+        border: 1px solid rgb(61, 135, 245);
+        border-radius: 2px;
+        background-color: #3d87f5;
+        background-repeat: no-repeat;
+    }
+
+    &:after {
+        cursor: pointer;
+        border-color: #fff;
+        border-style: solid;
+        position: absolute;
+        display: block;
+        width: 6px;
+        height: 9px;
+        transform: rotate(45deg);
+        border-width: 0 2px 2px 0;
+        left: -15px;
+        top: 7px;
+    }
+}
+
+.editor-listItemUnchecked {
+    &:after {
+        content: unset;
+    }
+}
+
+.editor-listItemChecked {
+    &:after {
+        content: '';
+    }
 }
 
 .editor-quote {

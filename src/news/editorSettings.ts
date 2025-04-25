@@ -16,6 +16,10 @@ const theme = {
     ol: 'editor-list-ol',
     ul: 'editor-list-ul',
     listitem: 'editor-listitem',
+    checklist: 'editor-checklist',
+    listitemChecked: 'editor-listItemChecked',
+    listitemUnchecked: 'editor-listItemUnchecked',
+
   },
   quote: 'editor-quote',
   link: 'editor-link',
