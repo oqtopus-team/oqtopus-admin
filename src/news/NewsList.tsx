@@ -1,27 +1,58 @@
 import BaseLayout from '../common/BaseLayout';
 import Table from 'react-bootstrap/Table';
-import InfiniteScroll from 'react-infinite-scroller';
-import WhitelistUserListItem from '../whitelist_user/WhitelistUserListItem';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import { dateDisplay } from '../device/_components/DateDisplay';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router';
+import { Announcement, deleteAnnouncement, getAnnouncements } from './NewsApi';
+import { useAuth } from '../hooks/use-auth';
 
 const NewsList = () => {
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [loadingState, setLoading] = useState({
+    delete: false,
+    get: false,
+  });
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const auth = useAuth();
 
-  const isPublishable = true;
-
-  const handleEditPost = (postId: string) => {
+  const handleEditPost = (postId: number) => {
     navigate(`/news/edit/${postId}`);
   };
 
-  const handleDeletePost = () => {
-    console.log('delete post');
+  const handleDeletePost = async (announcementId: number) => {
+    setLoading({ ...loadingState, delete: true });
+    try {
+      await deleteAnnouncement(announcementId, auth.idToken);
+
+      setAnnouncements(announcements.filter((announcement) => announcement.id !== announcementId));
+    } catch (e) {
+      console.error('Error deleting announcement:', e);
+    } finally {
+      setLoading({ ...loadingState, delete: false });
+    }
   };
+
+  useEffect(() => {
+    if (announcements.length > 0) return;
+
+    async function getAnnouncementsList() {
+      setLoading({ ...loadingState, get: true });
+      try {
+        const announcements = await getAnnouncements(auth.idToken);
+        setAnnouncements(announcements);
+      } catch (e) {
+        console.error('Error fetching announcements:', e);
+      } finally {
+        setLoading({ ...loadingState, get: false });
+      }
+    }
+
+    getAnnouncementsList();
+  }, []);
 
   return (
     <>
@@ -43,42 +74,51 @@ const NewsList = () => {
             </tr>
           </thead>
           <tbody>
-            <tr style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-              <td
-                style={{
-                  maxWidth: '130px',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                Some title Some title Some title
-              </td>
-              <td>{dateDisplay(Date.now())}</td>
-              <td>{dateDisplay(Date.now())}</td>
-              <td
-                style={{
-                  color: isPublishable ? '#316cf4' : '#fc6464',
-                }}
-              >
-                {isPublishable ? 'publishable' : 'unpublishable'}
-              </td>
-              <td style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <Button
-                  onClick={() => {
-                    //TODO: Map posts and put correct post ID
-                    handleEditPost('123123');
-                  }}
-                  style={{ width: '45%' }}
-                >
-                  {t('news.actions.edit')}
-                </Button>
-                <Button variant="danger" onClick={handleDeletePost} style={{ width: '45%' }}>
-                  {t('news.actions.delete')}
-                </Button>
-              </td>
-              <td>{dateDisplay(Date.now())}</td>
-            </tr>
+            {announcements.map((announcement) => {
+              return (
+                <tr style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <td
+                    style={{
+                      maxWidth: '130px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {announcement.title}
+                  </td>
+                  <td>{dateDisplay(announcement.start_time)}</td>
+                  <td>{dateDisplay(announcement.end_time)}</td>
+                  <td
+                    style={{
+                      color: announcement.publishable ? '#316cf4' : '#fc6464',
+                    }}
+                  >
+                    {announcement.publishable ? 'publishable' : 'unpublishable'}
+                  </td>
+                  <td style={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <Button
+                      disabled={loadingState.delete}
+                      onClick={() => {
+                        handleEditPost(announcement.id);
+                      }}
+                      style={{ width: '45%' }}
+                    >
+                      {t('news.actions.edit')}
+                    </Button>
+                    <Button
+                      disabled={loadingState.delete}
+                      variant="danger"
+                      onClick={() => handleDeletePost(announcement.id)}
+                      style={{ width: '45%' }}
+                    >
+                      {t('news.actions.delete')}
+                    </Button>
+                  </td>
+                  <td>{dateDisplay(Date.now())}</td>
+                </tr>
+              );
+            })}
           </tbody>
           {/*<InfiniteScroll*/}
           {/*  pageStart={0}*/}
