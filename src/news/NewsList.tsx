@@ -115,7 +115,7 @@ const NewsList = () => {
                       {t('news.actions.delete')}
                     </Button>
                   </td>
-                  <td>{dateDisplay(Date.now())}</td>
+                  <td>{dateDisplay(announcement.updated_at)}</td>
                 </tr>
               );
             })}

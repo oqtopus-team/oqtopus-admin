@@ -13,6 +13,7 @@ interface AnnouncementBase {
   content: string;
   start_time: string;
   end_time: string;
+  updated_at: string;
   publishable: boolean;
 }
 
