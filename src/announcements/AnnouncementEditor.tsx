@@ -38,7 +38,7 @@ const AnnouncementEditor = () => {
   const [editorState, setEditorState] = useState('');
   const [initialContent, setInitialContent] = useState('');
   const auth = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const navigate = useNavigate();
   const params = useParams<{ postId: string }>();
@@ -113,6 +113,7 @@ const AnnouncementEditor = () => {
           timeIntervals={15}
           timeCaption="Time"
           className="form-control editor-datepicker"
+          locale={i18n.language}
         />
         <DatePicker
           id="end-date"

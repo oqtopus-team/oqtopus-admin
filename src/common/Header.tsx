@@ -8,6 +8,11 @@ import { useAuth } from '../hooks/use-auth';
 import { Select } from './Select';
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { ja, enUS } from 'date-fns/locale';
+import { registerLocale } from 'react-datepicker';
+
+registerLocale('ja', ja);
+registerLocale('en', enUS);
 
 const Header: React.FunctionComponent = () => {
   const auth = useAuth();
@@ -56,7 +61,6 @@ const LanguageSelector = (): React.ReactElement => {
       className={clsx('!w-[100px]', 'border-primary', 'text-primary', 'outline-primary')}
       onChange={async (e: React.ChangeEvent<HTMLSelectElement>) => {
         if (languages.includes(e.target.value)) {
-          console.log(e.target.value);
           i18next.changeLanguage(e.target.value);
         }
       }}
