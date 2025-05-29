@@ -13,6 +13,7 @@ export default {
   publishable: 'Publishable',
   unpublishable: 'Unpublishable',
   publish_title: 'Announcement release date',
+  publish_title_end: 'Announcement End Date',
   announcements_title_placeholder: 'Enter title',
   announcements_content_placeholder: 'Put some text here...',
   save_time: 'Save Time',

@@ -1,9 +1,9 @@
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getRoot, $createParagraphNode, $createTextNode } from 'lexical';
+import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
 
 interface ComponentProps {
-  children: ReactNode;
+  children: JSX.Element;
   setEditorState: (editorState: any) => void;
   initialContent?: string;
 }
@@ -36,5 +36,6 @@ export const ComposerWrapper = ({ children, setEditorState, initialContent }: Co
 
     return removeListener;
   }, [editor, setEditorState]);
+
   return children;
 };

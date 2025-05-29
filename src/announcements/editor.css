@@ -170,14 +170,6 @@
 
 .editor-actions {
     margin-left: auto;
-
-    button {
-        margin: 0 10px;
-
-        &:last-child {
-            margin-right: 0;
-        }
-    }
 }
 
 .editor-publish-state {
@@ -194,11 +186,6 @@
     option {
         color: #000;
     }
-}
-
-/*This class exist only in react-datepicker styles and it wraps datepicker*/
-.react-datepicker-wrapper {
-    margin: 0 10px;
 }
 
 .title-input {
@@ -226,6 +213,10 @@
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
+}
+
+.announcements-label {
+    text-align: left;
 }
 
 /* Styles only for editor preview */

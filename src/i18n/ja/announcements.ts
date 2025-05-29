@@ -13,6 +13,7 @@ export default {
   publishable: '公開可能',
   unpublishable: '公開不可',
   publish_title: 'お知らせ公開日',
+  publish_title_end: '発表の終了日',
   announcements_title_placeholder: 'タイトルを入力',
   announcements_content_placeholder: 'ここにテキストを入力してください...',
   save_time: '保存時間',

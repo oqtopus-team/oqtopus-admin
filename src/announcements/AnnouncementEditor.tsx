@@ -87,9 +87,9 @@ const AnnouncementEditor = () => {
       publishable: Boolean(publishable),
     };
 
-    if(params.postId) {
-      await editAnnouncement(params.postId, postData, auth.idToken)
-      return
+    if (params.postId) {
+      await editAnnouncement(params.postId, postData, auth.idToken);
+      return;
     }
 
     await createAnnouncement(postData, auth.idToken);
@@ -101,31 +101,39 @@ const AnnouncementEditor = () => {
 
   return (
     <BaseLayout>
-      <Stack direction="horizontal" className="mb-3">
-        <label htmlFor="publish-date">{t('announcements.publish_title')}</label>
-        <DatePicker
-          id="publish-date"
-          selected={selectedDate.start}
-          onChange={(e) => handleDateChange(e, 'start')}
-          dateFormat="dd/MM/yyyy HH:mm"
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          timeCaption="Time"
-          className="form-control editor-datepicker"
-          locale={i18n.language}
-        />
-        <DatePicker
-          id="end-date"
-          selected={selectedDate.end}
-          onChange={(e) => handleDateChange(e, 'end')}
-          dateFormat="dd/MM/yyyy HH:mm"
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          timeCaption="Time"
-          className="form-control editor-datepicker"
-        />
+      <Stack direction="horizontal" gap={2} className="flex-wrap py-2 align-items-end">
+        <Stack direction="horizontal" gap={2} className="flex-wrap">
+          <Stack direction="vertical">
+            <label htmlFor="publish-date" className="announcements-label">{t('announcements.publish_title')}</label>
+            <DatePicker
+              id="publish-date"
+              selected={selectedDate.start}
+              onChange={(e) => handleDateChange(e, 'start')}
+              dateFormat="dd/MM/yyyy HH:mm"
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="Time"
+              className="form-control editor-datepicker"
+              locale={i18n.language}
+            />
+          </Stack>
+          <Stack direction="vertical">
+            <label htmlFor="publish-date" className="announcements-label">{t('announcements.publish_title_end')}</label>
+            <DatePicker
+              id="end-date"
+              selected={selectedDate.end}
+              onChange={(e) => handleDateChange(e, 'end')}
+              dateFormat="dd/MM/yyyy HH:mm"
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="Time"
+              className="form-control editor-datepicker"
+            />
+          </Stack>
+        </Stack>
+
         <Select
           value={publishable.toString()}
           onChange={handlePublishableChange}
@@ -134,7 +142,7 @@ const AnnouncementEditor = () => {
           <option value={1}>{t('announcements.publishable')}</option>
           <option value={0}>{t('announcements.unpublishable')}</option>
         </Select>
-        <Stack direction="horizontal" className="editor-actions">
+        <Stack direction="horizontal" gap={2} className="editor-actions align-items-end">
           <Button disabled={!editorState} variant="outline-primary" onClick={handleSavePost}>
             {t('announcements.actions.save')}
           </Button>
@@ -153,30 +161,34 @@ const AnnouncementEditor = () => {
       <Stack direction="horizontal" className="align-items-start">
         <LexicalComposer initialConfig={editorConfig}>
           <ComposerWrapper setEditorState={setEditorState} initialContent={initialContent}>
-            <div className="editor-container">
-              <ToolbarPlugin />
-              <Stack
-                direction="horizontal"
-                className="editor-toolbar align-items-start overflow-hidden"
-              >
-                <div className="editor-inner">
-                  <RichTextPlugin
-                    contentEditable={<ContentEditable className="editor-input" />}
-                    placeholder={
-                      <div className="editor-placeholder">{t('announcements.announcements_content_placeholder')}</div>
-                    }
-                    ErrorBoundary={LexicalErrorBoundary}
-                  />
-                  <HistoryPlugin />
-                  <ListPlugin />
-                </div>
-                <EditorPreview />
-              </Stack>
-            </div>
-            <MarkdownUnorderedListPlugin />
-            <MarkdownOrderedListPlugin />
-            <MarkdownCodeBlockPlugin />
-            <MarkdownCheckListPlugin />
+            <>
+              <div className="editor-container">
+                <ToolbarPlugin />
+                <Stack
+                  direction="horizontal"
+                  className="editor-toolbar align-items-start overflow-hidden"
+                >
+                  <div className="editor-inner">
+                    <RichTextPlugin
+                      contentEditable={<ContentEditable className="editor-input" />}
+                      placeholder={
+                        <div className="editor-placeholder">
+                          {t('announcements.announcements_content_placeholder')}
+                        </div>
+                      }
+                      ErrorBoundary={LexicalErrorBoundary}
+                    />
+                    <HistoryPlugin />
+                    <ListPlugin />
+                  </div>
+                  <EditorPreview />
+                </Stack>
+              </div>
+              <MarkdownUnorderedListPlugin />
+              <MarkdownOrderedListPlugin />
+              <MarkdownCodeBlockPlugin />
+              <MarkdownCheckListPlugin />
+            </>
           </ComposerWrapper>
         </LexicalComposer>
       </Stack>
