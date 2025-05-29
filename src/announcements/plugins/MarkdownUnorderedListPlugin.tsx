@@ -3,9 +3,9 @@ import {
   $createTextNode,
   $getSelection,
   $isRangeSelection,
-  COMMAND_PRIORITY_LOW,
-  KEY_BACKSPACE_COMMAND,
+  COMMAND_PRIORITY_HIGH,
   KEY_ENTER_COMMAND,
+  KEY_TAB_COMMAND,
   LexicalCommand,
 } from 'lexical';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -16,7 +16,6 @@ const insertOrderedListCommand: LexicalCommand<null> = INSERT_UNORDERED_LIST_COM
 
 export default function MarkdownUnorderedListPlugin() {
   const [editor] = useLexicalComposerContext();
-
 
   useEffect(() => {
     return mergeRegister(
@@ -44,7 +43,7 @@ export default function MarkdownUnorderedListPlugin() {
 
           return true;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_HIGH
       ),
       editor.registerCommand(
         KEY_ENTER_COMMAND,
@@ -62,7 +61,7 @@ export default function MarkdownUnorderedListPlugin() {
             if (previousSibling && previousSibling.getType() === 'paragraph') {
               const prevText = previousSibling.getTextContent();
 
-              if(prevText.includes('- [')) {
+              if (prevText.includes('- [')) {
                 return;
               }
 
@@ -72,9 +71,30 @@ export default function MarkdownUnorderedListPlugin() {
                 return;
               }
 
-              if (prevText.startsWith('- ')) {
+              const match = prevText.match(/^(\s*)-\s*$/);
+              if (match) {
+                const indentation = match[1];
+
+                if (indentation.length >= 4) {
+                  const newIndentation = indentation.slice(4);
+
+                  previousSibling.clear();
+                  previousSibling.append($createTextNode(newIndentation + '- '));
+                  previousSibling.selectEnd();
+                } else {
+                  previousSibling.remove();
+                }
+
+                commandHandled = true;
+                return;
+              }
+
+              const listItemMatch = prevText.match(/^(\s*)-\s+/);
+              if (listItemMatch) {
+                const indentation = listItemMatch[1];
+
                 currentParagraph.clear();
-                currentParagraph.append($createTextNode('- '));
+                currentParagraph.append($createTextNode(indentation + '- '));
                 currentParagraph.selectEnd();
                 commandHandled = true;
                 return;
@@ -84,7 +104,42 @@ export default function MarkdownUnorderedListPlugin() {
 
           return commandHandled;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_HIGH
+      ),
+      editor.registerCommand(
+        KEY_TAB_COMMAND,
+        (event) => {
+          let commandHandled = false;
+
+          editor.update(() => {
+            const selection = $getSelection();
+            if (!$isRangeSelection(selection) || !selection.isCollapsed()) return;
+
+            const anchorNode = selection.anchor.getNode();
+            const currentParagraph = anchorNode.getTopLevelElementOrThrow();
+            const currentParagraphText = currentParagraph.getTextContent();
+
+            const match = currentParagraphText.match(/^(\s*)-/);
+            if (match) {
+              const currentIndentation = match[1];
+
+              const newIndentation = currentIndentation + '    ';
+
+              currentParagraph.clear();
+              currentParagraph.append($createTextNode(newIndentation + '- '));
+              currentParagraph.selectEnd();
+              commandHandled = true;
+              if (event) {
+                // Prevent changing focus to browser buttons
+                event.preventDefault();
+              }
+              return;
+            }
+          });
+
+          return commandHandled;
+        },
+        COMMAND_PRIORITY_HIGH
       )
     );
   }, [editor]);

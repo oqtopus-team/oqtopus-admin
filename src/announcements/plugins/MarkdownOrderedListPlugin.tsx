@@ -1,9 +1,10 @@
 import {
   $createTextNode,
   $getSelection,
-  $isRangeSelection,
+  $isRangeSelection, COMMAND_PRIORITY_HIGH,
   COMMAND_PRIORITY_LOW,
   KEY_ENTER_COMMAND,
+  KEY_TAB_COMMAND,
   LexicalCommand,
 } from 'lexical';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -44,7 +45,7 @@ export default function MarkdownOrderedListPlugin() {
 
           return true;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_HIGH
       ),
 
       editor.registerCommand(
@@ -63,19 +64,33 @@ export default function MarkdownOrderedListPlugin() {
             if (previousSibling && previousSibling.getType() === 'paragraph') {
               const prevText = previousSibling.getTextContent();
 
-              if (/^\d+\.\s*$/.test(prevText)) {
-                previousSibling.remove();
+              const emptyListItemMatch = prevText.match(/^(\s*)(\d+)\.\s*$/);
+              if (emptyListItemMatch) {
+                const indentation = emptyListItemMatch[1];
+                const number = emptyListItemMatch[2];
+
+                if (indentation.length >= 4) {
+                  const newIndentation = indentation.slice(4);
+
+                  previousSibling.clear();
+                  previousSibling.append($createTextNode(newIndentation + number + '. '));
+                  previousSibling.selectEnd();
+                } else {
+                  previousSibling.remove();
+                }
+
                 commandHandled = true;
                 return;
               }
 
-              const match = prevText.match(/^(\d+)\.\s+/);
+              const match = prevText.match(/^(\s*)(\d+)\.\s+/);
               if (match) {
-                const prevNumber = parseInt(match[1], 10);
+                const indentation = match[1];
+                const prevNumber = parseInt(match[2], 10);
                 const nextNumber = prevNumber + 1;
 
                 currentParagraph.clear();
-                currentParagraph.append($createTextNode(`${nextNumber}. `));
+                currentParagraph.append($createTextNode(`${indentation}${nextNumber}. `));
                 currentParagraph.selectEnd();
                 commandHandled = true;
                 return;
@@ -87,6 +102,38 @@ export default function MarkdownOrderedListPlugin() {
         },
         COMMAND_PRIORITY_LOW
       ),
+      editor.registerCommand(KEY_TAB_COMMAND, (event) => {
+        let commandHandled = false;
+
+        editor.update(() => {
+          const selection = $getSelection();
+          if (!$isRangeSelection(selection) || !selection.isCollapsed()) return;
+
+          const anchorNode = selection.anchor.getNode();
+          const currentParagraph = anchorNode.getTopLevelElementOrThrow();
+          const currentParagraphText = currentParagraph.getTextContent();
+
+          const match = currentParagraphText.match(/^(\s*)(\d+)\./);
+          if (match) {
+            const currentIndentation = match[1];
+            const number = match[2];
+
+            const newIndentation = currentIndentation + '    ';
+
+            currentParagraph.clear();
+            currentParagraph.append($createTextNode(newIndentation + number + '. '));
+            currentParagraph.selectEnd();
+            commandHandled = true;
+            if (event) {
+              // Prevent changing focus to browser buttons
+              event.preventDefault();
+            }
+            return;
+          }
+        });
+
+        return commandHandled;
+      }, COMMAND_PRIORITY_HIGH),
     );
   }, [editor]);
 

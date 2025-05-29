@@ -227,3 +227,605 @@
         border-bottom-left-radius: 0;
     }
 }
+
+/* Styles only for editor preview */
+.editor-ltr {
+    text-align: left;
+}
+.editor-rtl {
+    text-align: right;
+}
+.editor-paragraph {
+    margin: 0;
+    position: relative;
+}
+.editor-quote {
+    margin: 0;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: rgb(101, 103, 107);
+    border-left-color: rgb(206, 208, 212);
+    border-left-width: 4px;
+    border-left-style: solid;
+    padding-left: 16px;
+}
+.editor-h1 {
+    font-size: 24px;
+    color: rgb(5, 5, 5);
+    font-weight: 400;
+    margin: 0;
+}
+.editor-h2 {
+    font-size: 15px;
+    color: rgb(101, 103, 107);
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+}
+.editor-h3 {
+    font-size: 12px;
+    margin: 0;
+    text-transform: uppercase;
+}
+.editor-indent {
+    --lexical-indent-base-value: 40px;
+}
+.editor-textBold {
+    font-weight: bold;
+}
+.editor-paragraph mark {
+    background-color: unset;
+}
+.editor-textHighlight {
+    background: rgba(255, 212, 0, 0.14);
+    border-bottom: 2px solid rgba(255, 212, 0, 0.3);
+}
+.editor-textItalic {
+    font-style: italic;
+}
+.editor-textUnderline {
+    text-decoration: underline;
+}
+
+.editor-textStrikethrough {
+    text-decoration: line-through;
+}
+
+.editor-textUnderlineStrikethrough {
+    text-decoration: underline line-through;
+}
+
+.editor-tabNode {
+    position: relative;
+    text-decoration: none;
+}
+
+.editor-tabNode.editor-textUnderline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.15em;
+    border-bottom: 0.1em solid currentColor;
+}
+
+.editor-tabNode.editor-textStrikethrough::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0.69em;
+    border-top: 0.1em solid currentColor;
+}
+
+.editor-tabNode.editor-textUnderlineStrikethrough::before,
+.editor-tabNode.editor-textUnderlineStrikethrough::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.editor-tabNode.editor-textUnderlineStrikethrough::before {
+    top: 0.69em;
+    border-top: 0.1em solid currentColor;
+}
+
+.editor-tabNode.editor-textUnderlineStrikethrough::after {
+    bottom: 0.05em;
+    border-bottom: 0.1em solid currentColor;
+}
+
+.editor-textSubscript {
+    font-size: 0.8em;
+    vertical-align: sub !important;
+}
+.editor-textSuperscript {
+    font-size: 0.8em;
+    vertical-align: super;
+}
+.editor-textCode {
+    background-color: rgb(240, 242, 245);
+    padding: 1px 0.25rem;
+    font-family: Menlo, Consolas, Monaco, monospace;
+    font-size: 94%;
+}
+.editor-textLowercase {
+    text-transform: lowercase;
+}
+.editor-textUppercase {
+    text-transform: uppercase;
+}
+.editor-textCapitalize {
+    text-transform: capitalize;
+}
+.editor-hashtag {
+    background-color: rgba(88, 144, 255, 0.15);
+    border-bottom: 1px solid rgba(88, 144, 255, 0.3);
+}
+.editor-link {
+    color: rgb(33, 111, 219);
+    text-decoration: none;
+}
+.editor-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.editor-blockCursor {
+    display: block;
+    pointer-events: none;
+    position: absolute;
+}
+.editor-blockCursor:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -2px;
+    width: 20px;
+    border-top: 1px solid black;
+    animation: CursorBlink 1.1s steps(2, start) infinite;
+}
+@keyframes CursorBlink {
+    to {
+        visibility: hidden;
+    }
+}
+.editor-code {
+    background-color: rgb(240, 242, 245);
+    font-family: Menlo, Consolas, Monaco, monospace;
+    display: block;
+    padding: 8px 8px 8px 52px;
+    line-height: 1.53;
+    font-size: 13px;
+    margin: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    overflow-x: auto;
+    position: relative;
+    tab-size: 2;
+}
+.editor-code:before {
+    content: attr(data-gutter);
+    position: absolute;
+    background-color: #eee;
+    left: 0;
+    top: 0;
+    border-right: 1px solid #ccc;
+    padding: 8px;
+    color: #777;
+    white-space: pre-wrap;
+    text-align: right;
+    min-width: 25px;
+}
+.editor-tableScrollableWrapper {
+    overflow-x: auto;
+    margin: 0px 25px 30px 0px;
+}
+.editor-tableScrollableWrapper > .editor-table {
+    /* Remove the table's vertical margin and put it on the wrapper */
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.editor-tableAlignmentCenter {
+    margin-left: auto;
+    margin-right: auto;
+}
+.editor-tableAlignmentRight {
+    margin-left: auto;
+}
+.editor-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    table-layout: fixed;
+    width: fit-content;
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+.editor-tableScrollableWrapper.editor-tableFrozenRow {
+    /* position:sticky needs overflow:clip or visible
+       https://github.com/w3c/csswg-drafts/issues/865#issuecomment-350585274 */
+    overflow-x: clip;
+}
+.editor-tableFrozenRow tr:nth-of-type(1) > td {
+    overflow: clip;
+    background-color: #ffffff;
+    position: sticky;
+    z-index: 2;
+    top: 44px;
+}
+.editor-tableFrozenRow tr:nth-of-type(1) > th {
+    overflow: clip;
+    background-color: #f2f3f5;
+    position: sticky;
+    z-index: 2;
+    top: 44px;
+}
+.editor-tableFrozenRow tr:nth-of-type(1) > th:after,
+.editor-tableFrozenRow tr:nth-of-type(1) > td:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border-bottom: 1px solid #bbb;
+}
+.editor-tableFrozenColumn tr > td:first-child {
+    background-color: #ffffff;
+    position: sticky;
+    z-index: 2;
+    left: 0;
+}
+.editor-tableFrozenColumn tr > th:first-child {
+    background-color: #f2f3f5;
+    position: sticky;
+    z-index: 2;
+    left: 0;
+}
+.editor-tableFrozenColumn tr > :first-child::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-right: 1px solid #bbb;
+}
+.editor-tableRowStriping tr:nth-child(even) {
+    background-color: #f2f5fb;
+}
+.editor-tableSelection *::selection {
+    background-color: transparent;
+}
+.editor-tableSelected {
+    outline: 2px solid rgb(60, 132, 244);
+}
+.editor-tableCell {
+    border: 1px solid #bbb;
+    width: 75px;
+    vertical-align: top;
+    text-align: start;
+    padding: 6px 8px;
+    position: relative;
+    outline: none;
+    overflow: auto;
+}
+/*
+  A firefox workaround to allow scrolling of overflowing table cell
+  ref: https://bugzilla.mozilla.org/show_bug.cgi?id=1904159
+*/
+.editor-tableCell > * {
+    overflow: inherit;
+}
+.editor-tableCellResizer {
+    position: absolute;
+    right: -4px;
+    height: 100%;
+    width: 8px;
+    cursor: ew-resize;
+    z-index: 10;
+    top: 0;
+}
+.editor-tableCellHeader {
+    background-color: #f2f3f5;
+    text-align: start;
+}
+.editor-tableCellSelected {
+    caret-color: transparent;
+}
+.editor-tableCellSelected::after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: highlight;
+    mix-blend-mode: multiply;
+    content: '';
+    pointer-events: none;
+}
+.editor-tableAddColumns {
+    position: absolute;
+    background-color: #eee;
+    height: 100%;
+    animation: table-controls 0.2s ease;
+    border: 0;
+    cursor: pointer;
+}
+.editor-tableAddColumns:after {
+    background-image: url(../images/icons/plus.svg);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+}
+.editor-tableAddColumns:hover,
+.editor-tableAddRows:hover {
+    background-color: #c9dbf0;
+}
+.editor-tableAddRows {
+    position: absolute;
+    width: calc(100% - 25px);
+    background-color: #eee;
+    animation: table-controls 0.2s ease;
+    border: 0;
+    cursor: pointer;
+}
+.editor-tableAddRows:after {
+    background-image: url(../images/icons/plus.svg);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+}
+@keyframes table-controls {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.editor-tableCellResizeRuler {
+    display: block;
+    position: absolute;
+    width: 1px;
+    background-color: rgb(60, 132, 244);
+    height: 100%;
+    top: 0;
+}
+.editor-tableCellActionButtonContainer {
+    display: block;
+    right: 5px;
+    top: 6px;
+    position: absolute;
+    z-index: 4;
+    width: 20px;
+    height: 20px;
+}
+.editor-tableCellActionButton {
+    background-color: #eee;
+    display: block;
+    border: 0;
+    border-radius: 20px;
+    width: 20px;
+    height: 20px;
+    color: #222;
+    cursor: pointer;
+}
+.editor-tableCellActionButton:hover {
+    background-color: #ddd;
+}
+.editor-characterLimit {
+    display: inline;
+    background-color: #ffbbbb !important;
+}
+.editor-ol1 {
+    padding: 0;
+    margin: 0;
+    list-style-position: outside;
+}
+.editor-ol2 {
+    padding: 0;
+    margin: 0;
+    list-style-type: upper-alpha;
+    list-style-position: outside;
+}
+.editor-ol3 {
+    padding: 0;
+    margin: 0;
+    list-style-type: lower-alpha;
+    list-style-position: outside;
+}
+.editor-ol4 {
+    padding: 0;
+    margin: 0;
+    list-style-type: upper-roman;
+    list-style-position: outside;
+}
+.editor-ol5 {
+    padding: 0;
+    margin: 0;
+    list-style-type: lower-roman;
+    list-style-position: outside;
+}
+.editor-ul {
+    padding: 0;
+    margin: 0;
+    list-style-position: outside;
+}
+.editor-listItem {
+    margin: 0 32px;
+}
+.editor-listItem::marker {
+    color: var(--listitem-marker-color);
+    background-color: var(--listitem-marker-background-color);
+    font-family: var(--listitem-marker-font-family);
+    font-size: var(--listitem-marker-font-size);
+}
+.editor-listItemChecked,
+.editor-listItemUnchecked {
+    position: relative;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 24px;
+    padding-right: 24px;
+    list-style-type: none;
+    outline: none;
+}
+.editor-listItemChecked {
+    text-decoration: line-through;
+}
+.editor-listItemUnchecked:before,
+.editor-listItemChecked:before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    top: 2px;
+    left: 0;
+    cursor: pointer;
+    display: block;
+    background-size: cover;
+    position: absolute;
+}
+.editor-listItemUnchecked[dir='rtl']:before,
+.editor-listItemChecked[dir='rtl']:before {
+    left: auto;
+    right: 0;
+}
+.editor-listItemUnchecked:focus:before,
+.editor-listItemChecked:focus:before {
+    box-shadow: 0 0 0 2px #a6cdfe;
+    border-radius: 2px;
+}
+.editor-listItemUnchecked:before {
+    border: 1px solid #999;
+    border-radius: 2px;
+}
+.editor-listItemChecked:before {
+    border: 1px solid rgb(61, 135, 245);
+    border-radius: 2px;
+    background-color: #3d87f5;
+    background-repeat: no-repeat;
+}
+.editor-listItemChecked:after {
+    content: '';
+    cursor: pointer;
+    border-color: #fff;
+    border-style: solid;
+    position: absolute;
+    display: block;
+    top: 6px;
+    width: 3px;
+    left: 7px;
+    right: 7px;
+    height: 6px;
+    transform: rotate(45deg);
+    border-width: 0 2px 2px 0;
+}
+.editor-nestedListItem {
+    list-style-type: none;
+}
+.editor-nestedListItem:before,
+.editor-nestedListItem:after {
+    display: none;
+}
+.editor-tokenComment {
+    color: slategray;
+}
+.editor-tokenPunctuation {
+    color: #999;
+}
+.editor-tokenProperty {
+    color: #905;
+}
+.editor-tokenSelector {
+    color: #690;
+}
+.editor-tokenOperator {
+    color: #9a6e3a;
+}
+.editor-tokenAttr {
+    color: #07a;
+}
+.editor-tokenVariable {
+    color: #e90;
+}
+.editor-tokenFunction {
+    color: #dd4a68;
+}
+.editor-mark {
+    background: rgba(255, 212, 0, 0.14);
+    border-bottom: 2px solid rgba(255, 212, 0, 0.3);
+    padding-bottom: 2px;
+}
+.editor-markOverlap {
+    background: rgba(255, 212, 0, 0.3);
+    border-bottom: 2px solid rgba(255, 212, 0, 0.7);
+}
+.editor-mark.selected {
+    background: rgba(255, 212, 0, 0.5);
+    border-bottom: 2px solid rgba(255, 212, 0, 1);
+}
+.editor-markOverlap.selected {
+    background: rgba(255, 212, 0, 0.7);
+    border-bottom: 2px solid rgba(255, 212, 0, 0.7);
+}
+.editor-embedBlock {
+    user-select: none;
+}
+.editor-embedBlockFocus {
+    outline: 2px solid rgb(60, 132, 244);
+}
+.editor-layoutContainer {
+    display: grid;
+    gap: 10px;
+    margin: 10px 0;
+}
+.editor-layoutItem {
+    border: 1px dashed #ddd;
+    padding: 8px 16px;
+    min-width: 0;
+    max-width: 100%;
+}
+.editor-autocomplete {
+    color: #ccc;
+}
+.editor-hr {
+    padding: 2px 2px;
+    border: none;
+    margin: 1em 0;
+    cursor: pointer;
+}
+.editor-hr:after {
+    content: '';
+    display: block;
+    height: 2px;
+    background-color: #ccc;
+    line-height: 2px;
+}
+.editor-hr.editor-hrSelected {
+    outline: 2px solid rgb(60, 132, 244);
+    user-select: none;
+}
+
+.editor-specialText {
+    background-color: yellow;
+    font-weight: bold;
+}
