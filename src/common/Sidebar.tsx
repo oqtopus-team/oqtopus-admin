@@ -27,8 +27,8 @@ const Sidebar: React.FunctionComponent = () => {
       icon: <FaServer />,
     },
     {
-      name: t('sidebar.news'),
-      path: '/news',
+      name: t('sidebar.announcements'),
+      path: '/announcements',
       icon: <FaCommentAlt />,
     },
   ];

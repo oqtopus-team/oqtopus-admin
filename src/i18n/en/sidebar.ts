@@ -2,5 +2,5 @@ export default {
   users: 'Users',
   white_list: 'Whitelist',
   device: 'Devices',
-  news: 'News',
+  announcements: 'Announcements',
 };

@@ -1,4 +1,4 @@
-interface NewsData {
+interface AnnouncementsData {
   title: string;
   content: string;
   start_time: string;
@@ -21,7 +21,7 @@ export interface Announcement extends AnnouncementBase {
   id: number;
 }
 
-export async function createAnnouncement(newsData: NewsData, idToken: string) {
+export async function createAnnouncement(announcementsData: AnnouncementsData, idToken: string) {
   await fetch(`${apiEndpoint}/announcements/`, {
     method: 'POST',
     mode: 'cors',
@@ -31,11 +31,11 @@ export async function createAnnouncement(newsData: NewsData, idToken: string) {
       Authorization: 'Bearer ' + idToken,
     },
     body: JSON.stringify({
-      title: newsData.title,
-      content: newsData.content,
-      start_time: newsData.start_time,
-      end_time: newsData.end_time,
-      publishable: newsData.publishable,
+      title: announcementsData.title,
+      content: announcementsData.content,
+      start_time: announcementsData.start_time,
+      end_time: announcementsData.end_time,
+      publishable: announcementsData.publishable,
     }),
   });
 }
@@ -81,7 +81,7 @@ export async function getSingleAnnouncement(
   }
 }
 
-export async function editAnnouncement(announcementId: string ,newsData: NewsData, idToken: string) {
+export async function editAnnouncement(announcementId: string ,announcementsData: AnnouncementsData, idToken: string) {
   await fetch(`${apiEndpoint}/announcements/${announcementId}`, {
     method: 'PATCH',
     mode: 'cors',
@@ -91,11 +91,11 @@ export async function editAnnouncement(announcementId: string ,newsData: NewsDat
       Authorization: 'Bearer ' + idToken,
     },
     body: JSON.stringify({
-      title: newsData.title,
-      content: newsData.content,
-      start_time: newsData.start_time,
-      end_time: newsData.end_time,
-      publishable: newsData.publishable,
+      title: announcementsData.title,
+      content: announcementsData.content,
+      start_time: announcementsData.start_time,
+      end_time: announcementsData.end_time,
+      publishable: announcementsData.publishable,
     }),
   });
 }

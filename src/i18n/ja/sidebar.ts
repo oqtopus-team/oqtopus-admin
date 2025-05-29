@@ -1,7 +1,6 @@
 export default {
-    users: 'ユーザー',
-    white_list: 'ホワイトリスト',
-    device: 'デバイス',
-    news: 'ニュース'
-  };
-  
+  users: 'ユーザー',
+  white_list: 'ホワイトリスト',
+  device: 'デバイス',
+  announcements: 'ニュース',
+};

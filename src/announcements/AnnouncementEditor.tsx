@@ -26,9 +26,9 @@ import MarkdownCodeBlockPlugin from './plugins/MarkdownCodeBlockPlugin';
 import MarkdownCheckListPlugin from './plugins/MarkdownCheckListPlugin';
 import { useAuth } from '../hooks/use-auth';
 import { ComposerWrapper } from './ComposerWrapper/ComposerWrapper';
-import { createAnnouncement, editAnnouncement, getSingleAnnouncement } from './NewsApi';
+import { createAnnouncement, editAnnouncement, getSingleAnnouncement } from './AnnouncementApi';
 
-const NewsEditor = () => {
+const AnnouncementEditor = () => {
   const [postTitle, setPostTitle] = useState('');
   const [selectedDate, setSelectedDate] = useState<{ start: Date; end: Date }>({
     start: new Date(),
@@ -96,13 +96,13 @@ const NewsEditor = () => {
   };
 
   const handleCancelEdit = () => {
-    navigate('/news');
+    navigate('/announcements');
   };
 
   return (
     <BaseLayout>
       <Stack direction="horizontal" className="mb-3">
-        <label htmlFor="publish-date">{t('news.publish_title')}</label>
+        <label htmlFor="publish-date">{t('announcements.publish_title')}</label>
         <DatePicker
           id="publish-date"
           selected={selectedDate.start}
@@ -130,21 +130,21 @@ const NewsEditor = () => {
           onChange={handlePublishableChange}
           className={`editor-publish-state ${publishable ? 'publishable' : 'unpublishable'}`}
         >
-          <option value={1}>{t('news.publishable')}</option>
-          <option value={0}>{t('news.unpublishable')}</option>
+          <option value={1}>{t('announcements.publishable')}</option>
+          <option value={0}>{t('announcements.unpublishable')}</option>
         </Select>
         <Stack direction="horizontal" className="editor-actions">
           <Button disabled={!editorState} variant="outline-primary" onClick={handleSavePost}>
-            {t('news.actions.save')}
+            {t('announcements.actions.save')}
           </Button>
           <Button variant="outline-danger" onClick={handleCancelEdit}>
-            {t('news.actions.cancel')}
+            {t('announcements.actions.cancel')}
           </Button>
         </Stack>
       </Stack>
       <Form.Control
         type="text"
-        placeholder={`${t('news.news_title_placeholder')}`}
+        placeholder={`${t('announcements.announcements_title_placeholder')}`}
         value={postTitle}
         onChange={(e) => setPostTitle(e.target.value)}
         className="title-input"
@@ -162,7 +162,7 @@ const NewsEditor = () => {
                   <RichTextPlugin
                     contentEditable={<ContentEditable className="editor-input" />}
                     placeholder={
-                      <div className="editor-placeholder">{t('news.news_content_placeholder')}</div>
+                      <div className="editor-placeholder">{t('announcements.announcements_content_placeholder')}</div>
                     }
                     ErrorBoundary={LexicalErrorBoundary}
                   />
@@ -183,4 +183,4 @@ const NewsEditor = () => {
   );
 };
 
-export default NewsEditor;
+export default AnnouncementEditor;

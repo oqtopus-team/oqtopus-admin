@@ -13,7 +13,8 @@ export default {
   publishable: 'Publishable',
   unpublishable: 'Unpublishable',
   publish_title: 'Announcement release date',
-  news_title_placeholder: 'Enter title',
-  news_content_placeholder: 'Put some text here...',
+  announcements_title_placeholder: 'Enter title',
+  announcements_content_placeholder: 'Put some text here...',
   save_time: 'Save Time',
+  no_announcements: 'No announcements have been created yet.',
 }

@@ -84,7 +84,7 @@ const PreviewSyncPlugin = ({ editor }: PreviewSyncPluginProps) => {
       }
 
 
-      // Functionality for news feed component
+      // Functionality for announcements feed component
       const isChecked = item.getAttribute('value') === 'checked';
 
       const checkbox = document.createElement('input');

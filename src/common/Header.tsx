@@ -56,6 +56,7 @@ const LanguageSelector = (): React.ReactElement => {
       className={clsx('!w-[100px]', 'border-primary', 'text-primary', 'outline-primary')}
       onChange={async (e: React.ChangeEvent<HTMLSelectElement>) => {
         if (languages.includes(e.target.value)) {
+          console.log(e.target.value);
           i18next.changeLanguage(e.target.value);
         }
       }}
