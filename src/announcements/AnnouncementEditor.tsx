@@ -87,12 +87,19 @@ const AnnouncementEditor = () => {
       publishable: Boolean(publishable),
     };
 
-    if (params.postId) {
-      await editAnnouncement(params.postId, postData, auth.idToken);
-      return;
-    }
+    try {
+      if (params.postId) {
+        await editAnnouncement(params.postId, postData, auth.idToken);
+        alert(t('announcements.updated_success'));
+      } else {
+        await createAnnouncement(postData, auth.idToken);
+        alert(t('announcements.created_success'));
+      }
 
-    await createAnnouncement(postData, auth.idToken);
+      navigate('/announcements');
+    } catch (e) {
+      console.error('Error creating announcement:', e);
+    }
   };
 
   const handleCancelEdit = () => {
@@ -104,7 +111,9 @@ const AnnouncementEditor = () => {
       <Stack direction="horizontal" gap={2} className="flex-wrap py-2 align-items-end">
         <Stack direction="horizontal" gap={2} className="flex-wrap">
           <Stack direction="vertical">
-            <label htmlFor="publish-date" className="announcements-label">{t('announcements.publish_title')}</label>
+            <label htmlFor="publish-date" className="announcements-label">
+              {t('announcements.publish_title')}
+            </label>
             <DatePicker
               id="publish-date"
               selected={selectedDate.start}
@@ -119,7 +128,9 @@ const AnnouncementEditor = () => {
             />
           </Stack>
           <Stack direction="vertical">
-            <label htmlFor="publish-date" className="announcements-label">{t('announcements.publish_title_end')}</label>
+            <label htmlFor="publish-date" className="announcements-label">
+              {t('announcements.publish_title_end')}
+            </label>
             <DatePicker
               id="end-date"
               selected={selectedDate.end}

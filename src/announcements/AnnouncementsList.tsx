@@ -30,6 +30,8 @@ const AnnouncementsList = () => {
       await deleteAnnouncement(announcementId, auth.idToken);
 
       setAnnouncements(announcements.filter((announcement) => announcement.id !== announcementId));
+
+      alert(t('announcements.deleted_success'))
     } catch (e) {
       console.error('Error deleting announcement:', e);
     } finally {

@@ -18,4 +18,7 @@ export default {
   announcements_content_placeholder: 'Put some text here...',
   save_time: 'Save Time',
   no_announcements: 'No announcements have been created yet.',
+  created_success: 'Announcement created successfully',
+  updated_success: 'Announcement updated successfully',
+  deleted_success: 'Announcement deleted successfully.',
 }
