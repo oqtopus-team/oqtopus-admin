@@ -19,6 +19,9 @@ export default {
   save_time: 'Save Time',
   no_announcements: 'No announcements have been created yet.',
   created_success: 'Announcement created successfully',
+  created_failed: 'Failed to create announcement',
   updated_success: 'Announcement updated successfully',
+  updated_failed: 'Failed to update announcement',
   deleted_success: 'Announcement deleted successfully.',
+  deleted_failed: 'Failed to delete announcement.',
 }

@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import Stack from 'react-bootstrap/Stack';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { toast } from 'react-toastify';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
@@ -27,6 +28,7 @@ import MarkdownCheckListPlugin from './plugins/MarkdownCheckListPlugin';
 import { useAuth } from '../hooks/use-auth';
 import { ComposerWrapper } from './ComposerWrapper/ComposerWrapper';
 import { createAnnouncement, editAnnouncement, getSingleAnnouncement } from './AnnouncementApi';
+import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 
 const AnnouncementEditor = () => {
   const [postTitle, setPostTitle] = useState('');
@@ -90,14 +92,19 @@ const AnnouncementEditor = () => {
     try {
       if (params.postId) {
         await editAnnouncement(params.postId, postData, auth.idToken);
-        alert(t('announcements.updated_success'));
+        toast(t('announcements.updated_success'), successToastConfig);
       } else {
         await createAnnouncement(postData, auth.idToken);
-        alert(t('announcements.created_success'));
+        toast(t('announcements.created_success'), successToastConfig);
       }
 
       navigate('/announcements');
     } catch (e) {
+      toast(
+        t(params.postId ? 'announcements.updated_failed' : 'announcements.updated_success'),
+        errorToastConfig
+      );
+
       console.error('Error creating announcement:', e);
     }
   };

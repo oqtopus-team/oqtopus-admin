@@ -19,6 +19,9 @@ export default {
   save_time: '保存時間',
   no_announcements: 'まだお知らせは作成されていません。',
   created_success: '告知が正常に作成されました。',
+  created_failed: 'お知らせの作成に失敗しました。',
   updated_success: '告知が正常に更新されました。',
+  updated_failed: 'お知らせの更新に失敗しました。',
   deleted_success: '告知が正常に削除されました',
+  deleted_failed: 'お知らせの削除に失敗しました。',
 }

@@ -6,6 +6,12 @@ interface AnnouncementsData {
   publishable: boolean;
 }
 
+interface OptionalRequestParams {
+  offset?: number;
+  limit?: number;
+  order?: string;
+}
+
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 
 interface AnnouncementBase {
@@ -40,9 +46,18 @@ export async function createAnnouncement(announcementsData: AnnouncementsData, i
   });
 }
 
-export async function getAnnouncements(idToken: string): Promise<Announcement[]> {
+export async function getAnnouncements(
+  idToken: string,
+  { offset, limit, order }: OptionalRequestParams = {}
+): Promise<Announcement[]> {
+  const params = new URLSearchParams();
+
+  if (offset !== undefined) params.append('offset', offset.toString());
+  if (limit !== undefined) params.append('limit', limit.toString());
+  if (order) params.append('order', order);
+
   try {
-    const response = await fetch(`${apiEndpoint}/announcements/`, {
+    const response = await fetch(`${apiEndpoint}/announcements?${params.toString()}`, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -74,14 +89,18 @@ export async function getSingleAnnouncement(
       },
     });
 
-    return response.json()
+    return response.json();
   } catch (error) {
     console.error('Failed to fetch announcements:', error);
     throw error;
   }
 }
 
-export async function editAnnouncement(announcementId: string ,announcementsData: AnnouncementsData, idToken: string) {
+export async function editAnnouncement(
+  announcementId: string,
+  announcementsData: AnnouncementsData,
+  idToken: string
+) {
   await fetch(`${apiEndpoint}/announcements/${announcementId}`, {
     method: 'PATCH',
     mode: 'cors',
@@ -99,7 +118,6 @@ export async function editAnnouncement(announcementId: string ,announcementsData
     }),
   });
 }
-
 
 export async function deleteAnnouncement(announcementId: number, idToken: string) {
   try {
