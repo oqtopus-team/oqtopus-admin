@@ -10,6 +10,13 @@ export default {
     save: '保存',
     cancel: 'キャンセル',
   },
+  editor: {
+    errors: {
+      link_empty_string: 'リンクとなるテキストを選択してください',
+      link_empty_selection: '選択されたテキストは空にできません。',
+      link_empty_url: 'URLは空にできません。'
+    }
+  },
   publishable: '公開可能',
   unpublishable: '公開不可',
   publish_title: 'お知らせ公開日',

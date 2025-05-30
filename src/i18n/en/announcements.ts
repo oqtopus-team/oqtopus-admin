@@ -10,6 +10,13 @@ export default {
     save: 'Save',
     cancel: 'Cancel',
   },
+  editor: {
+    errors: {
+      link_empty_string: 'Please select the text that should be a link',
+      link_empty_selection: 'The selected text must not be empty.',
+      link_empty_url: 'The URL must not be an empty string.'
+    }
+  },
   publishable: 'Publishable',
   unpublishable: 'Unpublishable',
   publish_title: 'Announcement release date',

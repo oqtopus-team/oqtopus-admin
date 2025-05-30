@@ -1,6 +1,13 @@
 import { useEffect, useRef } from 'react';
-import { $getRoot, $createTextNode, COMMAND_PRIORITY_HIGH, FORMAT_TEXT_COMMAND, type LexicalEditor } from 'lexical';
-import { $convertFromMarkdownString, TRANSFORMERS, CHECK_LIST, ElementTransformer } from '@lexical/markdown';
+import { useTranslation } from 'react-i18next';
+import {
+  $createTextNode,
+  $getRoot,
+  COMMAND_PRIORITY_HIGH,
+  FORMAT_TEXT_COMMAND,
+  type LexicalEditor,
+} from 'lexical';
+import { $convertFromMarkdownString, ElementTransformer, TRANSFORMERS } from '@lexical/markdown';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { formatLink, toggleMarkdownFormat } from '../helpers';
@@ -70,19 +77,21 @@ const MARKDOWN_FORMATS = {
 const PreviewSyncPlugin = ({ editor }: PreviewSyncPluginProps) => {
   const [previewEditor] = useLexicalComposerContext();
   const observerRef = useRef<MutationObserver | null>(null);
+  const { t } = useTranslation();
 
   const transformChecklistItems = (element: HTMLElement) => {
     if (element.hasAttribute('data-checklist-processed')) {
       return;
     }
 
-    const checklistItems = element.querySelectorAll('.editor-listitem[value="checked"], .editor-listitem[value="unchecked"]');
+    const checklistItems = element.querySelectorAll(
+      '.editor-listitem[value="checked"], .editor-listitem[value="unchecked"]'
+    );
 
     checklistItems.forEach((item) => {
       if (item.parentElement?.hasAttribute('data-checklist-processed')) {
         return;
       }
-
 
       // Functionality for announcements feed component
       const isChecked = item.getAttribute('value') === 'checked';
@@ -103,7 +112,9 @@ const PreviewSyncPlugin = ({ editor }: PreviewSyncPluginProps) => {
           const text = root.getTextContent();
 
           const lines = text.split('\n');
-          const index = Array.from(element.querySelectorAll('.editor-listitem')).indexOf(item as HTMLElement);
+          const index = Array.from(element.querySelectorAll('.editor-listitem')).indexOf(
+            item as HTMLElement
+          );
 
           if (index >= 0 && index < lines.length) {
             const line = lines[index];
@@ -173,7 +184,12 @@ const PreviewSyncPlugin = ({ editor }: PreviewSyncPluginProps) => {
         previewEditor.update(() => {
           const root = $getRoot();
           root.clear();
-          $convertFromMarkdownString(textContent || '', [MARKDOWN_CHECK_LIST_TRANSFORMER, ...TRANSFORMERS], undefined, false);
+          $convertFromMarkdownString(
+            textContent || '',
+            [MARKDOWN_CHECK_LIST_TRANSFORMER, ...TRANSFORMERS],
+            undefined,
+            false
+          );
         });
       });
     });
@@ -204,27 +220,12 @@ const PreviewSyncPlugin = ({ editor }: PreviewSyncPluginProps) => {
     return editor.registerCommand(
       TOGGLE_LINK_COMMAND,
       (payload) => {
-        if(payload){
-          formatLink(editor, payload)
-          return true
+        if (payload) {
+          formatLink(t, editor, payload);
+          return true;
         }
 
-        return false
-      },
-      COMMAND_PRIORITY_HIGH
-    );
-  }, [editor]);
-
-  useEffect(() => {
-    return editor.registerCommand(
-      TOGGLE_LINK_COMMAND,
-      (payload) => {
-        if(payload){
-          formatLink(editor, payload)
-          return true
-        }
-
-        return false
+        return false;
       },
       COMMAND_PRIORITY_HIGH
     );

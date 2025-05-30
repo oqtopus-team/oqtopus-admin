@@ -14,3 +14,8 @@ export const successToastConfig: ToastOptions = {
   ...baseToastConfig,
   type: 'success'
 }
+
+export const infoToastConfig: ToastOptions = {
+  ...baseToastConfig,
+  type: 'info'
+}

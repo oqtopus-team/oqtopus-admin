@@ -1,4 +1,7 @@
 import { $getSelection, $isRangeSelection, LexicalEditor } from 'lexical';
+import { toast } from 'react-toastify';
+import { errorToastConfig, infoToastConfig } from '../config/toast-notification';
+import { TFunction } from 'i18next';
 
 export function toggleMarkdownFormat(editor: LexicalEditor, formatMarkers: string) {
   editor.update(() => {
@@ -158,21 +161,24 @@ export function findWordBoundaries(text:string, cursorOffset: number) {
   return null;
 }
 
-export function formatLink(editor: LexicalEditor, payload: string | { url: string }) {
+export function formatLink(t: TFunction, editor: LexicalEditor, payload: string | { url: string }) {
   editor.update(() => {
     const selection = $getSelection();
 
     if (!$isRangeSelection(selection) || selection.isCollapsed()) {
+      toast(t('announcements.editor.errors.link_empty_string'), infoToastConfig)
       return false;
     }
 
     const selectedText = selection.getTextContent();
     if (!selectedText.trim()) {
+      toast(t('announcements.editor.errors.link_empty_selection'), errorToastConfig)
       return false;
     }
 
     const url = typeof payload === 'string' ? payload : payload?.url ?? '';
-    if (!url) {
+    if (!url.trim()) {
+      toast(t('announcements.editor.errors.link_empty_url'), errorToastConfig)
       return false;
     }
 
