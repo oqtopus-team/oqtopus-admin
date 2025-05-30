@@ -7,7 +7,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { Headding } from './_components/Headding';
 import DatePicker from 'react-datepicker';
 import { Spacer } from '../../common/Spacer';
-import { dateStringFormatter } from '../common/DateStringFormatter';
 import Button from 'react-bootstrap/Button';
 import 'react-datepicker/dist/react-datepicker.css';
 import './DeviceFormEdit.css';
@@ -44,6 +43,10 @@ const validationRules = (t: TFunction<'translation', any>) => {
     description: yup.string().required(t('device.form.warn.required')),
   });
   return validationRules;
+};
+
+const dateStringFormatter = (date: Date): string => {
+  return date.toISOString().replace('.000', '');
 };
 
 interface DeviceFormEditProps {

@@ -13,12 +13,12 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import { dateDisplay } from '../device/_components/DateDisplay';
 import { useAuth } from '../hooks/use-auth';
 import BaseLayout from '../common/BaseLayout';
 import { Announcement, deleteAnnouncement, getAnnouncements } from './AnnouncementApi';
 import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 import './announcementsList.css';
+import { DateTimeFormatter } from '../device/common/DateTimeFormatter';
 
 const columnHelper = createColumnHelper<Announcement>();
 const getStatusColor = (publishable: boolean): string => {
@@ -32,7 +32,7 @@ const AnnouncementsList = () => {
     get: false,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -83,13 +83,13 @@ const AnnouncementsList = () => {
       columnHelper.accessor('start_time', {
         header: t('announcements.publish_start_date'),
         enableSorting: true,
-        cell: ({ getValue }) => <div>{dateDisplay(getValue())}</div>,
+        cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
 
       columnHelper.accessor('end_time', {
         header: t('announcements.publish_end_date'),
         enableSorting: true,
-        cell: ({ getValue }) => <div>{dateDisplay(getValue())}</div>,
+        cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
 
       columnHelper.accessor('publishable', {
@@ -140,7 +140,7 @@ const AnnouncementsList = () => {
       columnHelper.accessor('updated_at', {
         header: t('announcements.save_time'),
         enableSorting: true,
-        cell: ({ getValue }) => <div>{dateDisplay(getValue())}</div>,
+        cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
     ],
     [loadingState]
@@ -249,8 +249,8 @@ const AnnouncementsList = () => {
                     >
                       {announcement.title}
                     </td>
-                    <td>{dateDisplay(announcement.start_time)}</td>
-                    <td>{dateDisplay(announcement.end_time)}</td>
+                    <td>{DateTimeFormatter(t, i18n, announcement.start_time)}</td>
+                    <td>{DateTimeFormatter(t, i18n, announcement.end_time)}</td>
                     <td
                       style={{
                         color: announcement.publishable ? '#316cf4' : '#fc6464',
@@ -281,7 +281,7 @@ const AnnouncementsList = () => {
                         {t('announcements.actions.delete')}
                       </Button>
                     </td>
-                    <td>{dateDisplay(announcement.updated_at)}</td>
+                    <td>{DateTimeFormatter(t, i18n, announcement.updated_at)}</td>
                   </tr>
                 );
               })}

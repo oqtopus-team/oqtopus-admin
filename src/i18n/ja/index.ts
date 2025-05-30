@@ -4,6 +4,7 @@ import device from './device';
 import auth from './auth';
 import users from './users';
 import announcements from './announcements';
+import common from './common';
 
 export default {
   translation: {
@@ -12,6 +13,7 @@ export default {
     device,
     auth,
     users,
-    announcements
+    announcements,
+    common
   },
 };

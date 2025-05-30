@@ -2,9 +2,10 @@ import { Device } from '../../types/DeviceType';
 import { DeviceStatus } from './DeviceStatus';
 import Card from 'react-bootstrap/Card';
 import { useTranslation } from 'react-i18next';
+import { DateTimeFormatter } from '../common/DateTimeFormatter';
 
 export const DeviceDetailBasicInfo: React.FC<Device> = (device) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <Card>
       <div
@@ -34,11 +35,11 @@ export const DeviceDetailBasicInfo: React.FC<Device> = (device) => {
         </div>
         <div>
           <p>{t('device.available_at')}</p>
-          <h5>{device.availableAt}</h5>
+          <h5>{DateTimeFormatter(t, i18n, device.availableAt)}</h5>
         </div>
         <div>
           <p>{t('device.calibrated_at')}</p>
-          <h5>{device.calibratedAt}</h5>
+          <h5>{DateTimeFormatter(t, i18n, device.calibratedAt)}</h5>
         </div>
         {device.basisGates.length !== 0 && (
           <div>
