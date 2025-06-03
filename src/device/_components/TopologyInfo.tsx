@@ -59,11 +59,8 @@ const normalizePositions = <NodeType,>(
 };
 
 const createCouplingMapKey = (control: number, target: number): string => {
-  if (control > target) {
-    return `${target}-${control}`;
-  } else {
-    return `${control}-${target}`;
-  }
+  const [first, second] = [control, target].sort((a, b) => a - b);
+  return `${first}-${second}`;
 };
 
 const createNodeData = (
@@ -79,7 +76,7 @@ const createNodeData = (
       tempNodeMap.set(qubit.id.toString(), qubit);
       return {
         id: qubit.id.toString(),
-        label: `Q${qubit.id}`,
+        label: `${qubit.id}`,
         fx: scalePosition(qubit.position.x),
         fy: scalePosition(qubit.position.y * -1), // multiply by -1 to flip the y-axis
       };
