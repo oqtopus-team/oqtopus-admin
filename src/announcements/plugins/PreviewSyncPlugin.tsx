@@ -31,7 +31,10 @@ const MARKDOWN_CHECK_LIST_TRANSFORMER: ElementTransformer = {
     const isChecked = match[1] === 'x';
     const listItemNode = $createListItemNode(isChecked);
 
-    const textContent = match.input?.replace(/^[-*]\s*\[(x| )\]\s+/, '') || '';
+    console.log(match);
+
+    const textContent =
+      (match as unknown as { input: string }).input?.replace(/^[-*]\s*\[(x| )\]\s+/, '') || '';
 
     const textNode = $createTextNode(textContent);
 
