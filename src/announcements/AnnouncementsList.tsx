@@ -54,7 +54,7 @@ const AnnouncementsList = () => {
     try {
       //TODO: Important! After implementing the backend (sorting for every field), we need to change the sorting logic here.
       const result = await getAnnouncements(auth.idToken, {
-        order: sortConfig.direction,
+        order: sortConfig.direction.toUpperCase(),
       });
       setSorting([{ id: columnId, desc: sortConfig.direction === 'desc' }]);
       setAnnouncements(result);
