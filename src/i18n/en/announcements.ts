@@ -23,6 +23,7 @@ export default {
   publish_title_end: 'Announcement End Date',
   announcements_title_placeholder: 'Enter title',
   announcements_content_placeholder: 'Put some text here...',
+  time: 'Time',
   save_time: 'Save Time',
   no_announcements: 'No announcements have been created yet.',
   created_success: 'Announcement created successfully',

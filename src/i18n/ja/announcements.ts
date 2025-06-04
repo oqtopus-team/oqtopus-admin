@@ -23,6 +23,7 @@ export default {
   publish_title_end: '発表の終了日',
   announcements_title_placeholder: 'タイトルを入力',
   announcements_content_placeholder: 'ここにテキストを入力してください...',
+  time: '時間',
   save_time: '保存時間',
   no_announcements: 'まだお知らせは作成されていません。',
   created_success: '告知が正常に作成されました。',

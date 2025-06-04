@@ -125,11 +125,11 @@ const AnnouncementEditor = () => {
               id="publish-date"
               selected={selectedDate.start}
               onChange={(e) => handleDateChange(e, 'start')}
-              dateFormat="dd/MM/yyyy HH:mm"
+              dateFormat={t('common.date_format')}
               showTimeSelect
               timeFormat="HH:mm"
               timeIntervals={15}
-              timeCaption="Time"
+              timeCaption={t('announcements.time')}
               className="form-control editor-datepicker"
               locale={i18n.language}
             />
@@ -142,12 +142,13 @@ const AnnouncementEditor = () => {
               id="end-date"
               selected={selectedDate.end}
               onChange={(e) => handleDateChange(e, 'end')}
-              dateFormat="dd/MM/yyyy HH:mm"
+              dateFormat={t('common.date_format')}
               showTimeSelect
               timeFormat="HH:mm"
               timeIntervals={15}
-              timeCaption="Time"
+              timeCaption={t('announcements.time')}
               className="form-control editor-datepicker"
+              locale={i18n.language}
             />
           </Stack>
         </Stack>
