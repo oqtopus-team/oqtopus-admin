@@ -64,7 +64,7 @@ const AnnouncementsList = () => {
   const columns = useMemo<Array<ColumnDef<Announcement, any>>>(
     () => [
       columnHelper.accessor('title', {
-        header: t('announcements.title'),
+        header: 'announcements.title',
         enableSorting: true,
         cell: ({ getValue }) => (
           <div
@@ -81,19 +81,19 @@ const AnnouncementsList = () => {
       }),
 
       columnHelper.accessor('start_time', {
-        header: t('announcements.publish_start_date'),
+        header: 'announcements.publish_start_date',
         enableSorting: true,
         cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
 
       columnHelper.accessor('end_time', {
-        header: t('announcements.publish_end_date'),
+        header: 'announcements.publish_end_date',
         enableSorting: true,
         cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
 
       columnHelper.accessor('publishable', {
-        header: t('announcements.publish_setting'),
+        header: 'announcements.publish_setting',
         enableSorting: true,
         cell: ({ getValue }) => {
           const value: boolean = getValue();
@@ -112,7 +112,7 @@ const AnnouncementsList = () => {
 
       columnHelper.display({
         id: 'actions',
-        header: t('announcements.actions.title'),
+        header: 'announcements.actions.title',
         enableSorting: false,
         cell: ({ row }) => (
           <div className="action_cell">
@@ -138,7 +138,7 @@ const AnnouncementsList = () => {
       }),
 
       columnHelper.accessor('updated_at', {
-        header: t('announcements.save_time'),
+        header: 'announcements.save_time',
         enableSorting: true,
         cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
@@ -218,7 +218,7 @@ const AnnouncementsList = () => {
                       }}
                       style={{ verticalAlign: 'middle' }}
                     >
-                      <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
+                      <span>{flexRender(t(header.column.columnDef.header as string), header.getContext())}</span>
                       {header.column.getCanSort() && (
                         <span className="px-2">
                           {{
