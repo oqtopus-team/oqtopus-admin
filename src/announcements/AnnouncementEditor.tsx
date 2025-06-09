@@ -101,7 +101,7 @@ const AnnouncementEditor = () => {
       navigate('/announcements');
     } catch (e) {
       toast(
-        t(params.postId ? 'announcements.updated_failed' : 'announcements.updated_success'),
+        t(params.postId ? 'announcements.updated_failed' : 'announcements.created_failed'),
         errorToastConfig
       );
 
