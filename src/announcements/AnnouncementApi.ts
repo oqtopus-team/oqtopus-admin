@@ -28,7 +28,7 @@ export interface Announcement extends AnnouncementBase {
 }
 
 export async function createAnnouncement(announcementsData: AnnouncementsData, idToken: string) {
-  await fetch(`${apiEndpoint}/announcements/`, {
+  await fetch(`${apiEndpoint}/announcements`, {
     method: 'POST',
     mode: 'cors',
     headers: {
