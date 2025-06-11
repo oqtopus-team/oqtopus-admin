@@ -15,12 +15,15 @@
 
 .editor-toolbar {
     margin-top: 15px;
-    border-top: 1px solid #eee;
+    border: 1px solid #eee;
 }
 
 .editor-inner {
     position: relative;
     width: 50%;
+    min-width: 50%;
+    border-right: 1px solid #eee;
+    padding: 10px;
 }
 
 .editor-input {
@@ -50,8 +53,8 @@
     overflow: hidden;
     position: absolute;
     text-overflow: ellipsis;
-    top: 0;
-    left: 0;
+    top: 10px;
+    left: 10px;
     right: 20px;
     user-select: none;
     white-space: nowrap;

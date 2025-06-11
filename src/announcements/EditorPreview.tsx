@@ -14,14 +14,19 @@ const EditorPreview = () => {
   const [editor] = useLexicalComposerContext();
 
   return (
-    <LexicalComposer initialConfig={editorPreviewConfig}>
-      <RichTextPlugin contentEditable={<ContentEditable />} ErrorBoundary={LexicalErrorBoundary} />
-      <PreviewSyncPlugin editor={editor} />
-      <HistoryPlugin />
-      <ListPlugin />
-      <LinkPlugin />
-      <CheckListPlugin />
-    </LexicalComposer>
+    <div style={{ padding: '10px' }}>
+      <LexicalComposer initialConfig={editorPreviewConfig}>
+        <RichTextPlugin
+          contentEditable={<ContentEditable />}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+        <PreviewSyncPlugin editor={editor} />
+        <HistoryPlugin />
+        <ListPlugin />
+        <LinkPlugin />
+        <CheckListPlugin />
+      </LexicalComposer>
+    </div>
   );
 };
 
