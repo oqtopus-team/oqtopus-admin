@@ -78,6 +78,9 @@ export default function SetupMFA() {
       .catch((error) => {
         console.error(error);
         alert(t('auth.mfa.setup.alert.failure'));
+      })
+      .finally(() => {
+        submitProcessing.current = false;
       });
   };
 

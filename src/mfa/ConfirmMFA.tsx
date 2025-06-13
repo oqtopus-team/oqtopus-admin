@@ -54,6 +54,9 @@ export default function ConfirmMFA() {
       .catch((error) => {
         console.error(error);
         alert(t('auth.mfa.confirm.alert.failure'));
+      })
+      .finally(() => {
+        processing.current = false;
       });
   };
 
