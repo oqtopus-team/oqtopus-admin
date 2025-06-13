@@ -49,6 +49,9 @@ const App: React.FC = () => {
           <Route path="device/form/:deviceId/confirm" element={<DeviceUpdateConfirm />} />
           <Route path="confirm-mfa" element={<ConfirmMFA />} />
           <Route path="setup-mfa" element={<SetupMFA />} />
+          <Route path="announcements" element={<AnnouncementsList />} />
+          <Route path="announcements/create" element={<AnnouncementEditor />} />
+          <Route path="announcements/edit/:postId" element={<AnnouncementEditor />} />
           <Route path="*" element={<p>Page Not Found</p>} />
         </Routes>
       </LoadingProvider>
