@@ -59,27 +59,25 @@ const useProvideAuth = (): UseAuth => {
   const [qrcode, setQRCode] = useState('');
   const [resultUser, setresultUser] = useState<any>(null);
 
+  const refreshAuthState = async () => {
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+      setIdToken(result.signInUserSession.idToken.jwtToken);
+      setUsername(result.username);
+      setEmail(result.attributes.email);
+      setIsAuthenticated(true);
+      setIsLoading(false);
+    } catch {
+      setIdToken('');
+      setUsername('');
+      setEmail('');
+      setIsAuthenticated(false);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    Auth.currentAuthenticatedUser()
-      .then((result) => {
-        setIdToken(result.signInUserSession.idToken.jwtToken);
-        setUsername(result.username);
-        setEmail(result.attributes.email);
-        const hasChallenge = Object.prototype.hasOwnProperty.call(result, 'challengeName');
-        if (hasChallenge) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIdToken('');
-        setUsername('');
-        setEmail('');
-        setIsAuthenticated(false);
-        setIsLoading(false);
-      });
+    refreshAuthState();
   }, []);
 
   const signIn = async (
@@ -197,10 +195,7 @@ const useProvideAuth = (): UseAuth => {
     try {
       await Auth.verifyTotpToken(resultUser, totpCode);
       await Auth.setPreferredMFA(resultUser, 'TOTP');
-      setUsername(resultUser.username);
-      setEmail(resultUser.attributes.email);
-      setIdToken(resultUser.signInUserSession.idToken.jwtToken);
-      setIsAuthenticated(true);
+      await refreshAuthState();
       return { success: true, message: '' };
     } catch (error) {
       setIsAuthenticated(false);
@@ -217,7 +212,7 @@ const useProvideAuth = (): UseAuth => {
   ): Promise<Result> => {
     try {
       const result = await Auth.confirmSignIn(resultUser, totpCode, 'SOFTWARE_TOKEN_MFA');
-      setIsAuthenticated(true);
+      await refreshAuthState();
       return { success: true, message: '' };
     } catch (error) {
       setIsAuthenticated(false);
