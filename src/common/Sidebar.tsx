@@ -1,5 +1,5 @@
 import Nav from 'react-bootstrap/Nav';
-import { FaUser, FaFile, FaServer } from 'react-icons/fa';
+import { FaUser, FaFile, FaServer, FaCommentAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
 interface MenuItem {
@@ -25,6 +25,11 @@ const Sidebar: React.FunctionComponent = () => {
       name: t('sidebar.device'),
       path: '/device',
       icon: <FaServer />,
+    },
+    {
+      name: t('sidebar.announcements'),
+      path: '/announcements',
+      icon: <FaCommentAlt />,
     },
   ];
   return (

@@ -5,6 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/use-auth';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from './_components/LanguageSelector';
+import { ja, enUS } from 'date-fns/locale';
+import { registerLocale } from 'react-datepicker';
+
+registerLocale('ja', ja);
+registerLocale('en', enUS);
 
 const Header: React.FunctionComponent = () => {
   const auth = useAuth();
