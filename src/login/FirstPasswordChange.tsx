@@ -68,7 +68,7 @@ const FirstPasswordChange: React.FunctionComponent = () => {
       .then((result) => {
         if (result.success) {
           alert(t('auth.password_change.success'));
-          navigate({ pathname: '/users' });
+          navigate({ pathname: '/setup-mfa' });
         } else {
           alert(result.message);
         }

@@ -11,6 +11,7 @@ interface UseAuth {
   username: string;
   email: string;
   idToken: string;
+  qrcode: string;
   signIn: (username: string, password: string, t: TFunction<'translation', any>) => Promise<Result>;
   signOut: (t: TFunction<'translation', any>) => Promise<Result>;
   changePassword: (
@@ -24,6 +25,9 @@ interface UseAuth {
     newPassword: string,
     t: TFunction<'translation', any>
   ) => Promise<Result>;
+  setUpMfa: (t: TFunction<'translation', any>) => Promise<Result>;
+  confirmMfa: (totpCode: string, t: TFunction<'translation', any>) => Promise<Result>;
+  confirmSignIn: (totpCode: string, t: TFunction<'translation', any>) => Promise<Result>;
 }
 
 interface Result {
@@ -52,6 +56,8 @@ const useProvideAuth = (): UseAuth => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [idToken, setIdToken] = useState('');
+  const [qrcode, setQRCode] = useState('');
+  const [resultUser, setresultUser] = useState<any>(null);
 
   useEffect(() => {
     Auth.currentAuthenticatedUser()
@@ -59,7 +65,12 @@ const useProvideAuth = (): UseAuth => {
         setIdToken(result.signInUserSession.idToken.jwtToken);
         setUsername(result.username);
         setEmail(result.attributes.email);
-        setIsAuthenticated(true);
+        const hasChallenge = Object.prototype.hasOwnProperty.call(result, 'challengeName');
+        if (hasChallenge) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
         setIsLoading(false);
       })
       .catch(() => {
@@ -77,14 +88,20 @@ const useProvideAuth = (): UseAuth => {
     t: TFunction<'translation', any>
   ): Promise<Result> => {
     try {
+      setIsAuthenticated(false);
       const result = await Auth.signIn(username, password);
-      if (result.challengeName === 'NEW_PASSWORD_REQUIRED') {
-        return { success: false, message: t('auth.signin.require_password_change') };
+      setresultUser(result);
+      const hasChallenge = Object.prototype.hasOwnProperty.call(result, 'challengeName');
+      if (hasChallenge) {
+        if (result.challengeName === 'NEW_PASSWORD_REQUIRED') {
+          return { success: false, message: t('auth.signin.require_password_change') };
+        } else if (result.challengeName === 'SOFTWARE_TOKEN_MFA') {
+          return { success: true, message: t('') };
+        }
       }
-      setUsername(result.username);
-      setEmail(result.attributes.email);
-      setIdToken(result.signInUserSession.idToken.jwtToken);
-      setIsAuthenticated(true);
+      if (!hasChallenge) {
+        return { success: false, message: t('auth.signin.require_mfa_setup') };
+      }
       return { success: true, message: '' };
     } catch (error) {
       console.error(error);
@@ -135,11 +152,12 @@ const useProvideAuth = (): UseAuth => {
     t: TFunction<'translation', any>
   ): Promise<Result> => {
     try {
+      setIsAuthenticated(false);
       await Auth.signIn(username, currentPassword).then(async (user) => {
         await Auth.completeNewPassword(user, newPassword).then((result) => {
+          setresultUser(result);
           setUsername(result.username);
           setEmail(result.challengeParam.userAttributes.email);
-          setIsAuthenticated(true);
         });
       });
       return { success: true, message: '' };
@@ -152,15 +170,78 @@ const useProvideAuth = (): UseAuth => {
     }
   };
 
+  const setUpMfa = async (t: TFunction<'translation', any>): Promise<Result> => {
+    try {
+      setIsAuthenticated(false);
+      const user = resultUser;
+      const token = await Auth.setupTOTP(user);
+      const issuer = encodeURI('OQTOPUS');
+      const username: string = user.username;
+      const code =
+        'otpauth://totp/' + issuer + ':' + username + '?secret=' + token + '&issuer=' + issuer;
+      setQRCode(code);
+      return { success: true, message: '' };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        message: t('auth.mfa.error_alert.failed_get_setup_info'),
+      };
+    }
+  };
+
+  const confirmMfa = async (
+    totpCode: string,
+    t: TFunction<'translation', any>
+  ): Promise<Result> => {
+    try {
+      await Auth.verifyTotpToken(resultUser, totpCode);
+      await Auth.setPreferredMFA(resultUser, 'TOTP');
+      setUsername(resultUser.username);
+      setEmail(resultUser.attributes.email);
+      setIdToken(resultUser.signInUserSession.idToken.jwtToken);
+      setIsAuthenticated(true);
+      return { success: true, message: '' };
+    } catch (error) {
+      setIsAuthenticated(false);
+      console.error(error);
+      return {
+        success: false,
+        message: t('auth.mfa.error_alert.error_totp_code'),
+      };
+    }
+  };
+  const confirmSignIn = async (
+    totpCode: string,
+    t: TFunction<'translation', any>
+  ): Promise<Result> => {
+    try {
+      const result = await Auth.confirmSignIn(resultUser, totpCode, 'SOFTWARE_TOKEN_MFA');
+      setIsAuthenticated(true);
+      return { success: true, message: '' };
+    } catch (error) {
+      setIsAuthenticated(false);
+      console.error(error);
+      return {
+        success: false,
+        message: t('auth.mfa.error_alert.error_totp_code'),
+      };
+    }
+  };
+
   return {
     isLoading,
     isAuthenticated,
     username,
     email,
     idToken,
+    qrcode,
     signIn,
     signOut,
     changePassword,
     firstChangePassword,
+    setUpMfa,
+    confirmMfa,
+    confirmSignIn,
   };
 };

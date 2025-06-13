@@ -18,6 +18,8 @@ import { DeviceRegisterConfirm } from './device/DeviceRegisterConfirm';
 import { DeviceDetail } from './device/DeviceDetail';
 import { DeviceUpdateEdit } from './device/DeviceUpdateEdit';
 import { DeviceUpdateConfirm } from './device/DeviceUpdateConfirm';
+import ConfirmMFA from './mfa/ConfirmMFA';
+import SetupMFA from './mfa/SetupMFA';
 
 const App: React.FC = () => {
   const auth = useAuth();
@@ -43,6 +45,8 @@ const App: React.FC = () => {
           <Route path="device/:deviceId" element={<DeviceDetail />} />
           <Route path="device/form/:deviceId/edit" element={<DeviceUpdateEdit />} />
           <Route path="device/form/:deviceId/confirm" element={<DeviceUpdateConfirm />} />
+          <Route path="confirm-mfa" element={<ConfirmMFA />} />
+          <Route path="setup-mfa" element={<SetupMFA />} />
           <Route path="*" element={<p>Page Not Found</p>} />
         </Routes>
       </LoadingProvider>

@@ -30,6 +30,7 @@ export default {
     title: 'Signin',
     auth_failed: 'Authentication failed',
     require_password_change: 'Change your password',
+    require_mfa_setup: 'Please set up MFA',
     mail: 'Mail address',
     password: 'Password',
     submit: 'Signin',
@@ -40,6 +41,35 @@ export default {
     },
     signout: {
       signout_failed: 'Sign out failed',
+    },
+  },
+  mfa: {
+    confirm: {
+      title: 'MFA Confirm',
+      placeholder: 'Enter TOTP code',
+      button: 'Confirm',
+      warn: {
+        required: 'Please enter TOTP code',
+      },
+      alert: {
+        failure: 'Failed to authenticate TOTP',
+      },
+    },
+    setup: {
+      title: 'MFA Setup',
+      placeholder: 'Enter TOTP code',
+      warn: {
+        required: 'Please enter TOTP code',
+      },
+      alert: {
+        success: 'MFA device setup is complete',
+        failure: 'Failed to set up MFA device',
+      },
+      button: 'Submit',
+    },
+    error_alert: {
+      failed_get_setup_info: 'Failed to get setup information',
+      error_totp_code: 'Failed to authenticate TOTP',
     },
   },
 };

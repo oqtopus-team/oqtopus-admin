@@ -30,6 +30,7 @@ export default {
     title: 'ログイン',
     auth_failed: '認証に失敗しました',
     require_password_change: 'パスワードを変更してください。',
+    require_mfa_setup: 'MFAを設定してください',
     mail: 'メールアドレス',
     password: 'パスワード',
     submit: 'サインイン',
@@ -41,5 +42,34 @@ export default {
   },
   signout: {
     signout_failed: 'ログアウトに失敗しました',
+  },
+  mfa: {
+    confirm: {
+      title: 'MFA 確認',
+      placeholder: 'TOTP コードを入力してください',
+      button: '確認',
+      warn: {
+        required: 'TOTP コードを入力してください',
+      },
+      alert: {
+        failure: 'TOTP コードの認証に失敗しました',
+      },
+    },
+    setup: {
+      title: 'MFA セットアップ',
+      placeholder: 'TOTP コードを入力してください',
+      warn: {
+        required: 'TOTP コードを入力してください',
+      },
+      alert: {
+        success: 'MFAデバイスのセットアップが完了しました',
+        failure: 'MFAデバイスのセットアップに失敗しました',
+      },
+      button: '送信',
+    },
+    error_alert: {
+      failed_get_setup_info: 'セットアップ情報の取得に失敗しました',
+      error_totp_code: 'TOTPの認証に失敗しました',
+    },
   },
 };

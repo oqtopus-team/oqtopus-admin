@@ -6,6 +6,7 @@ import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
 import LogInRoute from './LogInRoute';
 import { useAuth } from '../hooks/use-auth';
+import AuthHeader from '../common/AuthHeader';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -57,12 +58,14 @@ const LogIn: React.FunctionComponent = () => {
       .signIn(username, password, t)
       .then((result) => {
         if (result.success) {
-          navigate({ pathname: '/users' });
+          navigate({ pathname: '/confirm-mfa' });
         } else {
+          alert(result.message);
           if (result.message === t('auth.signin.require_password_change')) {
             navigate({ pathname: '/first-password-change' });
+          } else if (result.message === t('auth.signin.require_mfa_setup')) {
+            navigate({ pathname: '/setup-mfa' });
           }
-          alert(result.message);
         }
       })
       .catch((error) => {
@@ -75,7 +78,8 @@ const LogIn: React.FunctionComponent = () => {
 
   return (
     <LogInRoute>
-      <Container className="login-container">
+      <AuthHeader />
+      <Container className="auth-container">
         <Card>
           <Card.Header as="h4">{appName}</Card.Header>
           <Card.Body>
