@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -22,6 +22,9 @@ import { TestFunction } from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { Combobox } from '../common/combobox/Combobox';
+import { getDevices } from '../device/DeviceApi';
+import { Device } from '../types/DeviceType';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
@@ -71,6 +74,7 @@ const validationRules = (t: TFunction<'translation', any>) => {
         organization: yup
           .string()
           .max(100, t('users.white_list.register.warn.organization_length')),
+        available_devices: yup.array(yup.string()),
       })
     ),
   });
@@ -81,14 +85,29 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
   const auth = useAuth();
   const [registerConfirmModalShow, setRegisterConfirmModalShow] = useState(false);
   const [registerImportModalShow, setRegisterImportModalShow] = useState(false);
+  const [devices, setDevices] = useState<Device[]>([]);
   const processing = useRef(false);
   const setLoading = useSetLoading();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const fetchDevices = (): void => {
+    getDevices(auth.idToken)
+      .then((devices: Device[]) => {
+        setDevices(devices);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch devices:', error);
+      });
+  };
+
   useEffect(() => {
     document.title = `${t('users.white_list.register.title')} | ${appName}`;
   }, [auth.idToken]);
+
+  useEffect(() => {
+    fetchDevices();
+  }, []);
 
   const {
     register,
@@ -96,6 +115,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     control,
     reset,
     formState: { errors },
+    watch,
   } = useForm({
     mode: 'onBlur',
     defaultValues: {
@@ -105,6 +125,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
           email: '',
           username: '',
           organization: '',
+          available_devices: [],
         },
       ],
     },
@@ -115,6 +136,8 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     control,
     name: 'whitelist',
   });
+
+  const [whitelistObserved] = watch(['whitelist']);
 
   const validationErrors = errors.whitelist;
 
@@ -236,6 +259,20 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
             ) : (
               ''
             )}
+            <Form.Group as={Col}>
+              <Combobox
+                value={whitelistObserved[index].available_devices}
+                onChange={(value) => {
+                  const { onChange, name } = register(`whitelist.${index}.available_devices`);
+                  onChange({ target: { name, value } });
+                }}
+                options={devices.map(({ id }) => ({ value: id, label: id }))}
+                multiple
+              />
+              <p style={{ color: 'red' }} className="small">
+                <span>{validationErrors?.[index]?.available_devices?.message}</span>
+              </p>
+            </Form.Group>
             <Col className="text-center col-1 pt-1">
               <GrClose onClick={() => remove(index)}></GrClose>
             </Col>
@@ -252,6 +289,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
                     email: '',
                     username: '',
                     organization: '',
+                    available_devices: [],
                   })
                 }
               >
