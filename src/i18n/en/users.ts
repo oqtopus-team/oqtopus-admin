@@ -77,6 +77,7 @@ export default {
           mail: 'Mail address (Mandatory)',
           name: 'Name',
           organization: 'Organization',
+          available_devices: 'Available devices',
         },
         notice: '* 100 records can be registered at once.',
         error: {
@@ -96,6 +97,7 @@ export default {
           duplicated_email: 'Duplicated email address.',
         },
       },
+      devices_combobox_placeholder: 'Available devices'
     },
   },
 };

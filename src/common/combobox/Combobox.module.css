@@ -8,11 +8,15 @@
     position: relative;
     display: flex;
     align-items: center;
-    border: 2px solid #ced4da;
+    border: var(--bs-border-width) solid var(--bs-border-color);
     border-radius: 6px;
     background-color: #fff;
     cursor: text;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.combobox_input_wrapper {
+    width: 100%;
 }
 
 .combobox_input_group:hover:not(.disabled) {
@@ -52,11 +56,9 @@
 .combobox_buttons {
     display: flex;
     align-items: center;
-    padding-right: 8px;
 }
 
 .combobox_button {
-    padding: 4px;
     background-color: transparent;
     border: none;
     border-radius: 4px;
@@ -143,7 +145,6 @@
 
 /* multiselect styles */
 .combobox_input_group.multiple {
-    min-height: 42px;
     align-items: flex-start;
     padding: 4px 4px 4px 8px;
 }
@@ -183,9 +184,8 @@
 }
 
 .combobox_input_group.multiple .combobox_input {
-    min-width: 120px;
     flex: 1;
-    padding: 4px 8px;
+    padding: 3px 8px;
 }
 
 .combobox_input_group.multiple .combobox_buttons {

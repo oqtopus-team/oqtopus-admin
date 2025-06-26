@@ -134,6 +134,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
       const email = row[1];
       const username = row[2];
       const organization = row[3];
+      const available_devices = row[4];
       if (groupId === undefined || email === undefined) {
         errorMessage = t('users.white_list.register.excel.error.required_item');
         return {
@@ -190,6 +191,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
         email: String(email),
         username: String(username),
         organization: String(organization),
+        available_devices: available_devices.split(','),
       });
     }
 

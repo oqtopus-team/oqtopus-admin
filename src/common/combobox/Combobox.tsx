@@ -171,7 +171,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
         })}
         onClick={() => !disabled && inputRef.current?.focus()}
       >
-        <div>
+        <div className={styles.combobox_input_wrapper}>
           {multiple && Array.isArray(value) && value.length > 0 && (
             <div className={styles.selected_items}>
               {value.map((selectedValue) => {

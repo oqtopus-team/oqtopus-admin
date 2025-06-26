@@ -77,6 +77,7 @@ export default {
           mail: 'メールアドレス(必須)',
           name: '氏名',
           organization: '所属組織',
+          available_devices: '利用可能なデバイス',
         },
         notice: '※一度に登録できるユーザーは最大100名です。',
         error: {
@@ -96,6 +97,7 @@ export default {
           duplicated_email: 'メールアドレスが重複しています。',
         },
       },
+      devices_combobox_placeholder: '利用可能なデバイス'
     },
   },
 };

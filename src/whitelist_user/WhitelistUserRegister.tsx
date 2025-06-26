@@ -184,8 +184,9 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     header.push(t('users.white_list.register.excel.header.mail'));
     if (useUsername) header.push(t('users.white_list.register.excel.header.name'));
     if (useOrganization) header.push(t('users.white_list.register.excel.header.organization'));
+    header.push(t('users.white_list.register.excel.header.available_devices'));
     XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
-    worksheet['!cols'] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 30 }];
+    worksheet['!cols'] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 30 }, { wch: 20 }];
 
     XLSX.writeFile(workbook, `${t('users.white_list.register.title')}.xlsx`, { compression: true });
   };
@@ -268,6 +269,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
                 }}
                 options={devices.map(({ id }) => ({ value: id, label: id }))}
                 multiple
+                placeholder={t('users.white_list.register.devices_combobox_placeholder')}
               />
               <p style={{ color: 'red' }} className="small">
                 <span>{validationErrors?.[index]?.available_devices?.message}</span>
