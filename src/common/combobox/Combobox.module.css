@@ -56,11 +56,9 @@
 .combobox_buttons {
     display: flex;
     align-items: center;
-    padding-right: 8px;
 }
 
 .combobox_button {
-    padding: 4px;
     background-color: transparent;
     border: none;
     border-radius: 4px;
@@ -147,7 +145,6 @@
 
 /* multiselect styles */
 .combobox_input_group.multiple {
-    min-height: 42px;
     align-items: flex-start;
     padding: 4px 4px 4px 8px;
 }
@@ -187,9 +184,8 @@
 }
 
 .combobox_input_group.multiple .combobox_input {
-    min-width: 120px;
     flex: 1;
-    padding: 4px 8px;
+    padding: 3px 8px;
 }
 
 .combobox_input_group.multiple .combobox_buttons {
