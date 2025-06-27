@@ -331,6 +331,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
         <WhitelistUserRegisterModal
           show={registerImportModalShow}
           onHide={() => setRegisterImportModalShow(false)}
+          devices={devices}
         />
       </Stack>
     </BaseLayout>

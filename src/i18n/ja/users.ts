@@ -94,6 +94,7 @@ export default {
           invalid_email_length: 'メールアドレスは100文字以下で入力してください。',
           invalid_username_length: '氏名は100文字以下で入力してください。',
           invalid_organization_length: '所属組織は100文字以下で入力してください。',
+          invalid_available_device_id: 'ID {{missingIds}} のデバイスが見つかりません',
           duplicated_email: 'メールアドレスが重複しています。',
         },
       },

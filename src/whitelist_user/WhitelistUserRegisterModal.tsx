@@ -11,6 +11,7 @@ import { registerUsers } from './WhitelistUserApi';
 import { useAuth } from '../hooks/use-auth';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Device } from '../types/DeviceType';
 
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 const useOrganization: boolean = import.meta.env.VITE_USE_ORGANIZATION === 'enable';
@@ -22,6 +23,7 @@ interface ExcelImportInput {
 interface ModalProps {
   show: boolean;
   onHide: Function;
+  devices: Device[];
 }
 
 const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) => {
@@ -134,7 +136,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
       const email = row[1];
       const username = row[2];
       const organization = row[3];
-      const available_devices = row[4];
+      const availableDevices = row[4];
       if (groupId === undefined || email === undefined) {
         errorMessage = t('users.white_list.register.excel.error.required_item');
         return {
@@ -186,12 +188,28 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
         };
       }
 
+      const availableDevicesList = availableDevices.split(',').map(deviceId => deviceId.trim())
+      const deviceIds = props.devices.map((device) => device.id);
+      const missingIds = availableDevicesList.filter(id => !deviceIds.includes(id));
+
+      if(missingIds.length > 0) {
+        errorMessage = t(
+          'users.white_list.register.excel.error.invalid_available_device_id', {
+            missingIds
+          }
+        );
+        return {
+          hasError,
+          errorMessage,
+        };
+      }
+
       whitelist.push({
         group_id: String(groupId),
         email: String(email),
         username: String(username),
         organization: String(organization),
-        available_devices: available_devices.split(','),
+        available_devices: availableDevicesList,
       });
     }
 

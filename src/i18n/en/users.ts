@@ -94,6 +94,7 @@ export default {
           invalid_email_length: 'Email address must be within 100 characters.',
           invalid_username_length: 'User name must be within 100 characters.',
           invalid_organization_length: 'Organization must be within 100 characters.',
+          invalid_available_device_id: 'Devices with ID: {{missingIds}} are missing',
           duplicated_email: 'Duplicated email address.',
         },
       },
