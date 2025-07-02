@@ -173,7 +173,7 @@ const useProvideAuth = (): UseAuth => {
       setIsAuthenticated(false);
       const user = resultUser;
       const token = await Auth.setupTOTP(user);
-      const issuer = encodeURI('OQTOPUS');
+      const issuer = encodeURI('OQTOPUS Admin');
       const username: string = user.username;
       const code =
         'otpauth://totp/' + issuer + ':' + username + '?secret=' + token + '&issuer=' + issuer;

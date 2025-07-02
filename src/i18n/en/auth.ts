@@ -45,7 +45,7 @@ export default {
   },
   mfa: {
     confirm: {
-      title: 'MFA Confirm',
+      title: 'MFA confirmation',
       placeholder: 'Enter TOTP code',
       button: 'Confirm',
       warn: {
