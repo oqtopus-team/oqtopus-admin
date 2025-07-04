@@ -4,6 +4,7 @@ export default {
   group_id: 'Group ID',
   name: 'Name',
   organization: 'Organization',
+  available_devices: 'Available devices',
   status: {
     name: 'Status',
     approved: 'Approved',

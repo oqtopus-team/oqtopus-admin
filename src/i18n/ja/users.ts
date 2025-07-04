@@ -4,6 +4,7 @@ export default {
   group_id: 'グループID',
   name: '氏名',
   organization: '所属組織',
+  available_devices: '利用可能なデバイス',
   status: {
     name: 'ステータス',
     approved: '承認済み',
