@@ -1,0 +1,16 @@
+.no_announcements {
+    font-size: 20px;
+    text-align: center;
+    color: #9e9e9e;
+    padding: 20px 0;
+}
+
+.action_cell {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.action_button {
+    flex-grow: 1;
+    margin: 2px 5px;
+}

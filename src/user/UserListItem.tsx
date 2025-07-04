@@ -49,7 +49,7 @@ const UserListItem: React.FC<UserProps> = (props) => {
     setLoading(true);
     deleteUser(user.id, auth.idToken)
       .then(() => {
-        alert(t('users.list.operation.delete_success', {user: user.email}));
+        alert(t('users.list.operation.delete_success', { user: user.email }));
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -81,20 +81,21 @@ const UserListItem: React.FC<UserProps> = (props) => {
         <DefaultModal
           show={deleteModalShow}
           onHide={() => setDeleteModalShow(false)}
-          message={t('users.list.operation.delete_confirm', {user: user.email})}
+          message={t('users.list.operation.delete_confirm', { user: user.email })}
           execFunction={onDeleteClick}
         />
         <Button className="mb-1" variant="secondary" onClick={() => setStopModalShow(true)}>
-          {user.status !== 'suspended' ? t('users.list.operation.suspend') : 
-                                          t('users.list.operation.unsuspend')}
+          {user.status !== 'suspended'
+            ? t('users.list.operation.suspend')
+            : t('users.list.operation.unsuspend')}
         </Button>{' '}
         <DefaultModal
           show={stopModalShow}
           onHide={() => setStopModalShow(false)}
           message={
             user.status !== 'suspended'
-              ? t('users.list.operation.suspend_confirm', {user: user.email})
-              : t('users.list.operation.unsuspend_confirm', {user: user.email})
+              ? t('users.list.operation.suspend_confirm', { user: user.email })
+              : t('users.list.operation.unsuspend_confirm', { user: user.email })
           }
           execFunction={
             user.status !== 'suspended' ? () => onStopClick(true) : () => onStopClick(false)

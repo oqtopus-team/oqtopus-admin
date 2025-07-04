@@ -50,10 +50,10 @@ const WhitelistUserListItem: React.FC<UserProps> = (props) => {
       <td>{user.email}</td>
       {useUsername ? <td className="text-break">{user.username}</td> : ''}
       {useOrganization ? <td className="text-break">{user.organization}</td> : ''}
-      <td className="text-break">{user.is_signup_completed ?
-                                    t('users.white_list.is_signup_completed.true') :
-                                    t('users.white_list.is_signup_completed.false')
-                                  }
+      <td className="text-break">
+        {user.is_signup_completed
+          ? t('users.white_list.is_signup_completed.true')
+          : t('users.white_list.is_signup_completed.false')}
       </td>
       <td className="text-break">
         {user.is_signup_completed ? (
@@ -61,7 +61,7 @@ const WhitelistUserListItem: React.FC<UserProps> = (props) => {
         ) : (
           <>
             <Button className="btn-danger" onClick={() => setDeleteModalShow(true)}>
-            {t('users.white_list.operation.delete')}
+              {t('users.white_list.operation.delete')}
             </Button>
             <DefaultModal
               show={deleteModalShow}
