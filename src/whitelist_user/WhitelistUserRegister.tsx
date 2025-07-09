@@ -267,7 +267,13 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
                   const { onChange, name } = register(`whitelist.${index}.available_devices`);
                   onChange({ target: { name, value } });
                 }}
-                options={devices.map(({ id }) => ({ value: id, label: id }))}
+                options={[
+                  { value: '*', label: t('users.white_list.register.all_devices') },
+                  ...devices.map(({ id }) => ({
+                    value: id,
+                    label: id,
+                  })),
+                ]}
                 multiple
                 placeholder={t('users.white_list.register.devices_combobox_placeholder')}
               />

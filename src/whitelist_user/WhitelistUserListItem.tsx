@@ -50,11 +50,7 @@ const WhitelistUserListItem: React.FC<UserProps> = ({ user, execFunction }) => {
       {useUsername ? <td className="text-break">{user.username}</td> : ''}
       {useOrganization ? <td className="text-break">{user.organization}</td> : ''}
       <td className="text-break">
-        {user.available_devices?.map((deviceId) => (
-          <p key={deviceId} className="m-0">
-            {deviceId}
-          </p>
-        ))}
+        {user.available_devices?.join(', ')}
       </td>
       <td className="text-break">
         {user.is_signup_completed

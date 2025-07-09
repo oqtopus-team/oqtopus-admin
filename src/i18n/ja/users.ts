@@ -43,6 +43,7 @@ export default {
       delete_confirm: '{{user}}を削除します。よろしいですか？',
     },
     register: {
+      all_devices: 'すべてのデバイス',
       title: 'ホワイトリスト登録',
       header: 'ホワイトリスト新規登録',
       button: {

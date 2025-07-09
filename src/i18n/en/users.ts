@@ -43,6 +43,7 @@ export default {
       delete_confirm: 'Are you sure you want to delete {{user}}?',
     },
     register: {
+      all_devices: 'All devices',
       title: 'Register Whitelist',
       header: 'Register Whitelist User',
       button: {
