@@ -7,6 +7,7 @@ import { statusChangeUser, deleteUser } from './UserApi';
 import { useAuth } from '../hooks/use-auth';
 import { useSetLoading } from '../common/Loader';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 
@@ -23,6 +24,7 @@ const UserListItem: React.FC<UserProps> = (props) => {
   const [stopModalShow, setStopModalShow] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const onStopClick = (isStop: boolean): void => {
     // Prevent double-click
@@ -75,7 +77,7 @@ const UserListItem: React.FC<UserProps> = (props) => {
       {useUsername ? <td className="text-break">{user.name}</td> : ''}
       {useUsername ? <td className="text-break">{user.organization}</td> : ''}
       <td>
-        <Button className="mb-1" variant="danger" onClick={() => setDeleteModalShow(true)}>
+        <Button className="mb-1 w-100" variant="danger" onClick={() => setDeleteModalShow(true)}>
           {t('users.list.operation.delete')}
         </Button>{' '}
         <DefaultModal
@@ -84,11 +86,12 @@ const UserListItem: React.FC<UserProps> = (props) => {
           message={t('users.list.operation.delete_confirm', { user: user.email })}
           execFunction={onDeleteClick}
         />
-        <Button className="mb-1" variant="secondary" onClick={() => setStopModalShow(true)}>
+        <Button className="mb-1 w-100" variant="secondary" onClick={() => setStopModalShow(true)}>
           {user.status !== 'suspended'
             ? t('users.list.operation.suspend')
             : t('users.list.operation.unsuspend')}
-        </Button>{' '}
+        </Button>
+        <Button className="mb-1 w-100" variant="primary" onClick={() => navigate(`edit/${props.user.id}`)}>{t('users.list.operation.edit')}</Button>
         <DefaultModal
           show={stopModalShow}
           onHide={() => setStopModalShow(false)}

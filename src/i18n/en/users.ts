@@ -15,6 +15,7 @@ export default {
     operations: 'Operations',
     search_button: 'Search',
     operation: {
+      edit: 'Edit',
       delete: 'Delete',
       delete_success: '{{user}} is deleted successfully',
       delete_confirm: 'Are you sure you want to delete {{user}}?',
@@ -97,5 +98,35 @@ export default {
         },
       },
     },
+  },
+  edit: {
+    title: "Profile editing",
+    subtitle: "Update user profile",
+    labels: {
+      username: "Username",
+      group_id: "Group ID",
+      email: "Email",
+      organization: "Organization",
+      available_devices: "Available devices",
+      signup_complete: "Sign up complete",
+      created_at: "Created at",
+      updated_at: "Updated at",
+    },
+    placeholders: {
+      username: "Enter username",
+      group_id: "Select group",
+      email: "Enter email address",
+      organization: "Enter organization name",
+      available_devices: "Chose available devices",
+    },
+    errors: {
+      username: "Username is required",
+      group_id: "Group Id is required",
+      email: "Email is required",
+      email_format: "Invalid email address",
+      organization: "Organization is required",
+    },
+    reset: 'Reset',
+    save_changes: 'Save changes',
   },
 };
