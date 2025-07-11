@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -8,20 +8,30 @@ import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import Stack from 'react-bootstrap/Stack';
 import { useLocation, useNavigate } from 'react-router-dom';
-import InfiniteScroll from 'react-infinite-scroller';
 
 import BaseLayout from '../common/BaseLayout';
-import UserListItem from './UserListItem';
-import { searchUsers } from './UserApi';
+import { getUsers, searchUsers } from './UserApi';
 import { User, UserSearchParams, UserStatus } from '../types/UserType';
 import { useAuth } from '../hooks/use-auth';
 import { useSetLoading } from '../common/Loader';
 import { useTranslation } from 'react-i18next';
+import {
+  ColumnDef,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table';
+import UserListItem from './UserListItem';
+import InfiniteScroll from 'react-infinite-scroller';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 const useOrganization: boolean = import.meta.env.VITE_USE_ORGANIZATION === 'enable';
 const limit = 1000; // the number of users to be fetched at once in infinite scroll
+
+const columnHelper = createColumnHelper<User>();
 
 const UserList: React.FunctionComponent = () => {
   // list users
@@ -29,6 +39,8 @@ const UserList: React.FunctionComponent = () => {
   const [customPage, setCustomPage] = useState(0);
   const [, setResetPage] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const loading = useSetLoading();
   const setLoading = useSetLoading();
   const auth = useAuth();
   const [params, setParams] = useState<UserSearchParams>({});
@@ -70,6 +82,64 @@ const UserList: React.FunctionComponent = () => {
     setParams(userSearchParams);
     return userSearchParams;
   }, [location.search]);
+
+  const columns = useMemo<Array<ColumnDef<User, any>>>(
+    () => [
+      columnHelper.accessor('email', {
+        header: 'users.mail',
+        enableSorting: true,
+        cell: ({ getValue }) => (
+          <div
+            style={{
+              maxWidth: '130px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {getValue()}
+          </div>
+        ),
+      }),
+
+      columnHelper.accessor('group_id', {
+        header: 'users.group_id',
+        enableSorting: true,
+        cell: ({ getValue }) => getValue(),
+      }),
+
+      columnHelper.accessor('name', {
+        header: 'users.name',
+        enableSorting: true,
+        cell: ({ getValue }) => getValue(),
+      }),
+
+      columnHelper.accessor('organization', {
+        header: 'users.organization',
+        enableSorting: true,
+        cell: ({ getValue }) => getValue(),
+      }),
+
+      columnHelper.display({
+        id: 'operations',
+        header: 'users.list.operations',
+        enableSorting: false,
+        cell: ({ row }) => row,
+      }),
+    ],
+    [loading]
+  );
+
+  const table = useReactTable<User>({
+    columns,
+    data: users,
+    getCoreRowModel: getCoreRowModel(),
+    manualSorting: true,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+  });
 
   useLayoutEffect(() => {
     // The processing to be done before drawing the DOM (before firing infinite scroll) at the time of the first reading/search execution (when the query parameter changes)
@@ -138,6 +208,49 @@ const UserList: React.FunctionComponent = () => {
       return false; // Turn off the page reset flag once loaded
     });
   };
+
+  const handleCustomSort = async (columnId: string) => {
+    const currentSort = sorting.find((s) => s.id === columnId);
+    let newDirection: 'asc' | 'desc';
+
+    if (!currentSort) {
+      newDirection = 'asc';
+    } else {
+      newDirection = currentSort.desc ? 'asc' : 'desc';
+    }
+
+    const sortConfig = {
+      columnId,
+      direction: newDirection,
+    };
+
+    try {
+      const result = await getUsers(auth.idToken, {
+        sort: {
+          column: columnId,
+          order: newDirection,
+        },
+      });
+      setSorting([{ id: columnId, desc: sortConfig.direction === 'desc' }]);
+      setUsers(result);
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    async function getUsersList() {
+      setLoading(true);
+      try {
+        const users = await getUsers(auth.idToken);
+        setUsers(users);
+      } catch (e) {
+        console.error('Error fetching announcements:', e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getUsersList();
+  }, []);
 
   return (
     <BaseLayout>
@@ -220,35 +333,51 @@ const UserList: React.FunctionComponent = () => {
             </Form>
           </Card.Body>
         </Card>
-        <Table bordered hover responsive>
+
+        <Table bordered hover responsive style={{ marginTop: '10px' }}>
           <thead className="table-light">
-            <tr>
-              <th>{t('users.mail')}</th>
-              <th>{t('users.group_id')}</th>
-              {useUsername ? <th>{t('users.name')}</th> : ''}
-              {useOrganization ? <th>{t('users.organization')}</th> : ''}
-              <th>{t('users.list.operations')}</th>
-            </tr>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="text-center">
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    onClick={() => {
+                      if (header.column.getCanSort()) {
+                        handleCustomSort(header.column.id);
+                      }
+                    }}
+                    style={{ verticalAlign: 'middle' }}
+                  >
+                    <span>
+                      {flexRender(t(header.column.columnDef.header as string), header.getContext())}
+                    </span>
+                    {header.column.getCanSort() && (
+                      <span className="px-2">
+                        {{
+                          asc: '↑',
+                          desc: '↓',
+                        }[header.column.getIsSorted() as string] ?? '↕'}
+                      </span>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
           </thead>
-          <colgroup>
-            <col style={{ width: '15%' }} />
-            <col style={{ width: '15%' }} />
-            {useUsername ? <col style={{ width: '15%' }} /> : ''}
-            {useOrganization ? <col style={{ width: '15%' }} /> : ''}
-            <col style={{ width: '20%' }} />
-          </colgroup>
-          <InfiniteScroll
-            pageStart={0}
-            loadMore={getUsersScroll}
-            hasMore={hasMore}
-            element={'tbody'}
-            useWindow={true}
-            threshold={1000} // need to be adjusted
-          >
-            {users.map((user) => {
-              return <UserListItem key={user.id} user={user} execFunction={getUsersAgain} />;
-            })}
-          </InfiniteScroll>
+          <tbody>
+            <InfiniteScroll
+              pageStart={0}
+              loadMore={getUsersScroll}
+              hasMore={hasMore}
+              element={'tbody'}
+              useWindow={true}
+              threshold={1000} // need to be adjusted
+            >
+              {users.map((user) => (
+                <UserListItem key={user.id} user={user} execFunction={getUsersAgain} />
+              ))}
+            </InfiniteScroll>
+          </tbody>
         </Table>
       </Stack>
     </BaseLayout>

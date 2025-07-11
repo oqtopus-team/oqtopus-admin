@@ -2,8 +2,28 @@ import { User, UserSearchParams, UserStatus } from '../types/UserType';
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 
-export async function getUsers(idToken: string, offset: number, limit: number): Promise<User[]> {
-  const res = await fetch(`${apiEndpoint}/users?offset=${offset}&limit=${limit}`, {
+export async function getUsers(
+  idToken: string,
+  {
+    offset,
+    limit,
+    sort,
+  }: {
+    offset?: number;
+    limit?: number;
+    sort?: {
+      column: string;
+      order: string;
+    }
+  } = {}
+): Promise<User[]> {
+  const params = new URLSearchParams();
+
+  if (offset !== undefined) params.append('offset', offset.toString());
+  if (limit !== undefined) params.append('limit', limit.toString());
+  if (sort) params.append('sort', `${sort.column},${sort.order}`);
+
+  const res = await fetch(`${apiEndpoint}/users?${params.toString()}`, {
     method: 'GET',
     mode: 'cors',
     headers: {
