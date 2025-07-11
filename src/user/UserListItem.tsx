@@ -12,7 +12,6 @@ const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 
 interface UserProps {
   user: User;
-  execFunction: () => void;
 }
 
 const UserListItem: React.FC<UserProps> = (props) => {
@@ -33,7 +32,6 @@ const UserListItem: React.FC<UserProps> = (props) => {
     statusChangeUser(user.id, status, auth.idToken)
       .then((res: User) => {
         setUser(res);
-        props.execFunction();
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -53,7 +51,6 @@ const UserListItem: React.FC<UserProps> = (props) => {
       })
       .catch((err) => console.log(err))
       .finally(() => {
-        props.execFunction();
         processing.current = false;
         setLoading(false);
       });
