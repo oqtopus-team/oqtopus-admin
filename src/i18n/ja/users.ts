@@ -4,6 +4,7 @@ export default {
   group_id: 'グループID',
   name: '氏名',
   organization: '所属組織',
+  available_devices: '利用可能なデバイス',
   status: {
     name: 'ステータス',
     approved: '承認済み',
@@ -43,6 +44,7 @@ export default {
       delete_confirm: '{{user}}を削除します。よろしいですか？',
     },
     register: {
+      all_devices: 'すべてのデバイス',
       title: 'ホワイトリスト登録',
       header: 'ホワイトリスト新規登録',
       button: {
@@ -78,6 +80,7 @@ export default {
           mail: 'メールアドレス(必須)',
           name: '氏名',
           organization: '所属組織',
+          available_devices: '利用可能なデバイス',
         },
         notice: '※一度に登録できるユーザーは最大100名です。',
         error: {
@@ -94,9 +97,11 @@ export default {
           invalid_email_length: 'メールアドレスは100文字以下で入力してください。',
           invalid_username_length: '氏名は100文字以下で入力してください。',
           invalid_organization_length: '所属組織は100文字以下で入力してください。',
+          invalid_available_device_id: 'ID {{missingIds}} のデバイスが見つかりません',
           duplicated_email: 'メールアドレスが重複しています。',
         },
       },
+      devices_combobox_placeholder: '利用可能なデバイス'
     },
   },
   edit: {

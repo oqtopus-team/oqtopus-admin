@@ -4,6 +4,7 @@ export default {
   group_id: 'Group ID',
   name: 'Name',
   organization: 'Organization',
+  available_devices: 'Available devices',
   status: {
     name: 'Status',
     approved: 'Approved',
@@ -43,6 +44,7 @@ export default {
       delete_confirm: 'Are you sure you want to delete {{user}}?',
     },
     register: {
+      all_devices: 'All devices',
       title: 'Register Whitelist',
       header: 'Register Whitelist User',
       button: {
@@ -78,6 +80,7 @@ export default {
           mail: 'Mail address (Mandatory)',
           name: 'Name',
           organization: 'Organization',
+          available_devices: 'Available devices',
         },
         notice: '* 100 records can be registered at once.',
         error: {
@@ -94,9 +97,11 @@ export default {
           invalid_email_length: 'Email address must be within 100 characters.',
           invalid_username_length: 'User name must be within 100 characters.',
           invalid_organization_length: 'Organization must be within 100 characters.',
+          invalid_available_device_id: 'Devices with ID: {{missingIds}} are missing',
           duplicated_email: 'Duplicated email address.',
         },
       },
+      devices_combobox_placeholder: 'Available devices'
     },
   },
   edit: {

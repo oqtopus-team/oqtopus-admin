@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import BaseLayout from '../common/BaseLayout';
 import { useForm } from 'react-hook-form';
 import { TFunction } from 'i18next';
@@ -8,6 +8,10 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import DatePicker from 'react-datepicker';
 import { useParams } from 'react-router-dom';
+import { Combobox } from '../common/combobox/Combobox';
+import { getDevices } from '../device/DeviceApi';
+import { Device } from '../types/DeviceType';
+import { useAuth } from '../hooks/use-auth';
 
 interface UserEditForm {
   username: string;
@@ -33,6 +37,8 @@ const validationRules = (t: TFunction<'translation', any>) => {
 };
 
 export const UserEdit = () => {
+  const [devices, setDevices] = useState<Device[]>([]);
+  const auth = useAuth();
   const { t, i18n } = useTranslation();
   const {
     register,
@@ -52,7 +58,7 @@ export const UserEdit = () => {
     },
   });
 
-  const values = watch()
+  const [available_devices] = watch(['available_devices'])
 
   const params = useParams<{ userId: string }>();
 
@@ -60,10 +66,11 @@ export const UserEdit = () => {
     const result = new Promise((resolve) => {
       resolve({
         id: params.userId,
-        username: 'testProfileName',
-        group_id: 'testGroupId',
+        username: 'Test User',
+        group_id: 'Test Group Id',
         email: 'testEmail@gmail.com',
-        organization: 'testOrganization',
+        organization: 'Test Organization',
+        available_devices: ['SC', 'Kawasaki'],
         status: 'active',
         signup_completed: true
       });
@@ -71,6 +78,20 @@ export const UserEdit = () => {
 
     reset(await result)
   }
+
+  const fetchDevices = (): void => {
+    getDevices(auth.idToken)
+      .then((devices: Device[]) => {
+        setDevices(devices);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch devices:', error);
+      });
+  };
+
+  useEffect(() => {
+    fetchDevices();
+  }, []);
 
   useEffect(() => {
     getUserData()
@@ -150,7 +171,22 @@ export const UserEdit = () => {
           <div className="row mb-3 p-0">
             <div className="col-md-6">
               <label className="form-label">{t('users.edit.labels.available_devices')}</label>
-              <input type="text" {...register('available_devices')} className="form-control" />
+              <Combobox
+                value={available_devices}
+                onChange={(value) => {
+                  const { onChange, name } = register(`available_devices`);
+                  onChange({ target: { name, value } });
+                }}
+                options={[
+                  { value: '*', label: t('users.white_list.register.all_devices') },
+                  ...devices.map(({ id }) => ({
+                    value: id,
+                    label: id,
+                  })),
+                ]}
+                multiple
+                placeholder={t('users.white_list.register.devices_combobox_placeholder')}
+              />
             </div>
             <div className="col-md-6 d-flex align-items-end mb-2">
               <input
