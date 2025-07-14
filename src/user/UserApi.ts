@@ -20,9 +20,7 @@ export async function getUsers(
   if (sort) params.append('sort', `${sort.id},${sort.desc ? 'desc' : 'asc'}`);
 
   Object.entries(filterFields ?? {}).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      params.append(key, value);
-    }
+    params.append(key, value);
   });
 
   const res = await fetch(`${apiEndpoint}/users?${params.toString()}`, {

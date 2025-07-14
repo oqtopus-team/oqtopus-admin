@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import Stack from 'react-bootstrap/Stack';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   ColumnDef,
@@ -43,9 +43,9 @@ const UserList: React.FunctionComponent = () => {
   const setLoading = useSetLoading();
 
   const auth = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
+  const urlParams = Object.fromEntries(searchParams.entries());
 
   async function getUsersList({
     filterFields,
@@ -82,7 +82,15 @@ const UserList: React.FunctionComponent = () => {
   const { containerRef } = useInfiniteScroll(getUsersList, hasMore, { limit, sort: sorting[0] });
 
   // User list filters form
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register } = useForm({
+    defaultValues: {
+      name: urlParams.name,
+      group_id: urlParams.group_id,
+      email: urlParams.email,
+      organization: urlParams.organization,
+      status: urlParams.status,
+    },
+  });
 
   const columns = useMemo<Array<ColumnDef<User, any>>>(
     () => [
@@ -143,7 +151,11 @@ const UserList: React.FunctionComponent = () => {
   });
 
   const onSubmit = async (formValues: UserSearchParams): Promise<void> => {
-    await getUsersList({ filterFields: formValues });
+    const filtered = Object.fromEntries(
+      Object.entries(formValues).filter(([_, value]) => value !== '' && value != null)
+    );
+
+    setSearchParams(filtered);
   };
 
   const handleCustomSort = async (column: string) => {
@@ -153,14 +165,12 @@ const UserList: React.FunctionComponent = () => {
     const newSorting = [{ id: column, desc: newDesc }];
 
     try {
-      const result = await getUsers(auth.idToken, {
-        offset: 0,
-        limit,
+      await getUsersList({
         sort: newSorting[0],
+        filterFields: urlParams,
       });
 
       setSorting(newSorting);
-      setUsers(result);
     } catch (e) {}
   };
 
@@ -169,8 +179,8 @@ const UserList: React.FunctionComponent = () => {
   }, [auth.idToken]);
 
   useEffect(() => {
-    getUsersList();
-  }, []);
+    getUsersList({ filterFields: urlParams });
+  }, [searchParams]);
 
   return (
     <BaseLayout>
@@ -243,45 +253,49 @@ const UserList: React.FunctionComponent = () => {
         </Card>
 
         <div ref={containerRef} className="vertical-scroll-intermediate-container overflow-x-auto">
-          <Table bordered hover style={{ marginTop: '10px' }}>
-            <thead className="table-light">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="text-center">
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      onClick={() => {
-                        if (header.column.getCanSort()) {
-                          handleCustomSort(header.column.id);
-                        }
-                      }}
-                      style={{ verticalAlign: 'middle' }}
-                    >
-                      <span>
-                        {flexRender(
-                          t(header.column.columnDef.header as string),
-                          header.getContext()
-                        )}
-                      </span>
-                      {header.column.getCanSort() && (
-                        <span className="px-2">
-                          {{
-                            asc: '↑',
-                            desc: '↓',
-                          }[header.column.getIsSorted() as string] ?? '↕'}
+          {users.length > 0 ? (
+            <Table bordered hover style={{ marginTop: '10px' }}>
+              <thead className="table-light">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id} className="text-center">
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        onClick={() => {
+                          if (header.column.getCanSort()) {
+                            handleCustomSort(header.column.id);
+                          }
+                        }}
+                        style={{ verticalAlign: 'middle' }}
+                      >
+                        <span>
+                          {flexRender(
+                            t(header.column.columnDef.header as string),
+                            header.getContext()
+                          )}
                         </span>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <UserListItem key={row.original.email} user={row.original} />
-              ))}
-            </tbody>
-          </Table>
+                        {header.column.getCanSort() && (
+                          <span className="px-2">
+                            {{
+                              asc: '↑',
+                              desc: '↓',
+                            }[header.column.getIsSorted() as string] ?? '↕'}
+                          </span>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <UserListItem key={row.original.email} user={row.original} />
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <p className="mb-0 p-3 text-center" style={{fontSize: '20px'}}>No results found</p>
+          )}
         </div>
       </Stack>
     </BaseLayout>
