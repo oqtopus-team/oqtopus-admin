@@ -289,12 +289,20 @@ const UserList: React.FunctionComponent = () => {
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((row) => (
-                  <UserListItem key={row.original.email} user={row.original} />
+                  <UserListItem
+                    key={row.original.id}
+                    user={row.original}
+                    execFunction={async () => {
+                      await getUsersList({ filterFields: searchParams, sort: sorting[0] });
+                    }}
+                  />
                 ))}
               </tbody>
             </Table>
           ) : (
-            <p className="mb-0 p-3 text-center" style={{fontSize: '20px'}}>No results found</p>
+            <p className="mb-0 p-3 text-center" style={{ fontSize: '20px' }}>
+              No results found
+            </p>
           )}
         </div>
       </Stack>

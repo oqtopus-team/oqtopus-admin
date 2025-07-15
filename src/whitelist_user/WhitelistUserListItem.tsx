@@ -12,7 +12,7 @@ const useOrganization: boolean = import.meta.env.VITE_USE_ORGANIZATION === 'enab
 
 interface UserProps {
   user: WhitelistUser;
-  execFunction: () => void;
+  execFunction: () => Promise<void>;
 }
 
 const WhitelistUserListItem: React.FC<UserProps> = (props) => {
