@@ -174,6 +174,10 @@ const UserList: React.FunctionComponent = () => {
     } catch (e) {}
   };
 
+  const onDeleteUser = (userId: string) => {
+    setUsers((prevUsersState) => prevUsersState.filter(({ id }) => userId !== id));
+  };
+
   useEffect(() => {
     document.title = `${t('users.title')} | ${appName}`;
   }, [auth.idToken]);
@@ -292,9 +296,7 @@ const UserList: React.FunctionComponent = () => {
                   <UserListItem
                     key={row.original.id}
                     user={row.original}
-                    execFunction={async () => {
-                      await getUsersList({ filterFields: searchParams, sort: sorting[0] });
-                    }}
+                    execFunction={onDeleteUser}
                   />
                 ))}
               </tbody>

@@ -181,6 +181,10 @@ const WhitelistUserList: React.FunctionComponent = () => {
     } catch (e) {}
   };
 
+  const onDeleteUser = (userId: string) => {
+    setUsers((prevUsersState) => prevUsersState.filter(({ id }) => userId !== id));
+  };
+
   useEffect(() => {
     document.title = `${t('users.white_list.title')} | ${appName}`;
   }, [auth.idToken]);
@@ -292,12 +296,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
                   <WhitelistUserListItem
                     key={row.original.id}
                     user={row.original}
-                    execFunction={async () => {
-                      await getUsersList({
-                        filterFields: searchParams as WhitelistUserSearchParams,
-                        sort: sorting[0],
-                      });
-                    }}
+                    execFunction={onDeleteUser}
                   />
                 ))}
               </tbody>
