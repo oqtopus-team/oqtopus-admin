@@ -1,7 +1,13 @@
 import clsx from 'clsx';
-import { HTMLAttributes } from 'react';
+import { forwardRef, HTMLAttributes, PropsWithChildren } from 'react';
 
-export const Select = ({
+export const Select = forwardRef<HTMLSelectElement, PropsWithChildren & {
+  value: string;
+  label?: string;
+  labelLeft?: string;
+  errorMessage?: string;
+  size?: 'xs' | 'md';
+} & HTMLAttributes<HTMLSelectElement>>(({
   children,
   value,
   label,
@@ -10,19 +16,14 @@ export const Select = ({
   errorMessage,
   size = 'md',
   ...props
-}: React.PropsWithChildren & {
-  value: string;
-  label?: string;
-  labelLeft?: string;
-  errorMessage?: string;
-  size?: 'xs' | 'md';
-} & HTMLAttributes<HTMLSelectElement>) => {
+}, ref) => {
   return (
     <div className={clsx('flex', 'items-center', 'gap-2')}>
       {labelLeft && <p className="text-xs">{labelLeft}</p>}
       <div className={clsx('grid', 'gap-1')}>
         {label && <p className="text-xs">{label}</p>}
         <select
+          ref={ref}
           className={clsx(
             'w-full',
             ['border', 'focus:border-primary', 'rounded', size == 'md' ? 'p-2' : 'p-1'],
@@ -40,4 +41,4 @@ export const Select = ({
       </div>
     </div>
   );
-};
+});

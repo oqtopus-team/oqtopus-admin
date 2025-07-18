@@ -6,6 +6,7 @@ export interface User {
   group_id: string;
   email: string;
   organization: string;
+  available_devices: string[];
   status: UserStatus;
 }
 

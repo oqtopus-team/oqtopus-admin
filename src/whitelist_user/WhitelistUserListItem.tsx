@@ -15,8 +15,7 @@ interface UserProps {
   execFunction: () => void;
 }
 
-const WhitelistUserListItem: React.FC<UserProps> = (props) => {
-  const [user] = useState<WhitelistUser>(props.user);
+const WhitelistUserListItem: React.FC<UserProps> = ({ user, execFunction }) => {
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const auth = useAuth();
   const processing = useRef(false);
@@ -32,7 +31,7 @@ const WhitelistUserListItem: React.FC<UserProps> = (props) => {
       .then((res) => {
         if (res.success) {
           alert(t('users.white_list.operation.delete_success', { user: user.email }));
-          props.execFunction();
+          execFunction();
         } else {
           alert(t('users.white_list.operation.delete_failure', { user: user.email }));
         }
@@ -50,6 +49,9 @@ const WhitelistUserListItem: React.FC<UserProps> = (props) => {
       <td>{user.email}</td>
       {useUsername ? <td className="text-break">{user.username}</td> : ''}
       {useOrganization ? <td className="text-break">{user.organization}</td> : ''}
+      <td className="text-break">
+        {user.available_devices?.join(', ')}
+      </td>
       <td className="text-break">
         {user.is_signup_completed
           ? t('users.white_list.is_signup_completed.true')
