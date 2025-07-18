@@ -74,6 +74,13 @@ const UserListItem: React.FC<UserProps> = (props) => {
       <td>{user.group_id}</td>
       {useUsername ? <td className="text-break">{user.name}</td> : ''}
       {useUsername ? <td className="text-break">{user.organization}</td> : ''}
+      <td className="text-break">
+        {user.available_devices?.map((deviceId) => (
+          <p key={deviceId} className="m-0">
+            {deviceId}
+          </p>
+        ))}
+      </td>
       <td>
         <Button className="mb-1" variant="danger" onClick={() => setDeleteModalShow(true)}>
           {t('users.list.operation.delete')}

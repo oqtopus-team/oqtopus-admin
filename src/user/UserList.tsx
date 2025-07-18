@@ -222,11 +222,12 @@ const UserList: React.FunctionComponent = () => {
         </Card>
         <Table bordered hover responsive>
           <thead className="table-light">
-            <tr>
+            <tr className="align-middle">
               <th>{t('users.mail')}</th>
               <th>{t('users.group_id')}</th>
               {useUsername ? <th>{t('users.name')}</th> : ''}
               {useOrganization ? <th>{t('users.organization')}</th> : ''}
+              <th>{t('users.available_devices')}</th>
               <th>{t('users.list.operations')}</th>
             </tr>
           </thead>

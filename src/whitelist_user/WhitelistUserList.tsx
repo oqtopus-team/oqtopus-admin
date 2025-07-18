@@ -213,11 +213,12 @@ const WhitelistUserList: React.FunctionComponent = () => {
         </div>
         <Table bordered hover responsive>
           <thead className="table-light">
-            <tr className="text-center">
+            <tr className="text-center align-middle">
               <th>{t('users.group_id')}</th>
               <th>{t('users.mail')}</th>
               {useUsername ? <th>{t('users.name')}</th> : ''}
               {useOrganization ? <th>{t('users.organization')}</th> : ''}
+              <th>{t('users.available_devices')}</th>
               <th>{t('users.white_list.signup')}</th>
               <th>{t('users.white_list.operations')}</th>
             </tr>
