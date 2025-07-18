@@ -73,13 +73,17 @@ const UserList: React.FunctionComponent = () => {
 
       setHasMore(usersResponse?.length >= limit);
     } catch (e) {
-      console.error('Error fetching announcements:', e);
+      console.error('Error fetching users list:', e);
     } finally {
       setLoading(false);
     }
   }
 
-  const { containerRef } = useInfiniteScroll(getUsersList, hasMore, { limit, sort: sorting[0] });
+  const { containerRef } = useInfiniteScroll(getUsersList, hasMore, {
+    limit,
+    sort: sorting[0],
+    filterFields: urlParams as UserSearchParams,
+  });
 
   // User list filters form
   const { handleSubmit, register } = useForm({
@@ -151,6 +155,11 @@ const UserList: React.FunctionComponent = () => {
   });
 
   const onSubmit = async (formValues: UserSearchParams): Promise<void> => {
+    if (containerRef.current) {
+      // Scroll top after applying filter, to avoid bugs related with infinite scroll
+      containerRef.current.scrollTop = 0;
+    }
+
     const filtered = Object.fromEntries(
       Object.entries(formValues).filter(([_, value]) => value !== '' && value != null)
     );
@@ -183,7 +192,7 @@ const UserList: React.FunctionComponent = () => {
   }, [auth.idToken]);
 
   useEffect(() => {
-    getUsersList({ filterFields: urlParams });
+    getUsersList({ filterFields: urlParams, sort: sorting[0] });
   }, [searchParams]);
 
   return (
