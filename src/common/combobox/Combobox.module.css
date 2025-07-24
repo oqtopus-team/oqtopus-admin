@@ -1,7 +1,6 @@
 .combobox {
     position: relative;
     width: 100%;
-    max-width: 384px;
 }
 
 .combobox_input_group {
