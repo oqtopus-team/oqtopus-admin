@@ -12,26 +12,33 @@ import { Combobox } from '../common/combobox/Combobox';
 import { getDevices } from '../device/DeviceApi';
 import { Device } from '../types/DeviceType';
 import { useAuth } from '../hooks/use-auth';
+import { UserStatus } from '../types/UserType';
+import { getUser, updateUser } from './UserApi';
+import { Select } from '../common/Select';
+import { toast } from 'react-toastify';
+import { errorToastConfig, successToastConfig } from '../config/toast-notification';
+import { useNavigate } from 'react-router';
+
+const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 
 interface UserEditForm {
-  username: string;
+  name: string;
   group_id: string;
   email: string;
   organization: string;
-  signup_completed: boolean;
-  available_devices: [];
+  available_devices: string[];
+  status: UserStatus;
 }
 
 const validationRules = (t: TFunction<'translation', any>) => {
   const validationRules = yup.object().shape({
-    username: yup.string().required(t('users.edit.errors.username')),
+    name: yup.string().required(t('users.edit.errors.name')),
     group_id: yup.string().required(t('users.edit.errors.group_id')),
     email: yup
       .string()
       .email(t('users.edit.errors.email_format'))
       .required(t('users.edit.errors.email')),
     organization: yup.string().required(t('users.edit.errors.organization')),
-    signup_completed: yup.boolean(),
   });
   return validationRules;
 };
@@ -39,45 +46,40 @@ const validationRules = (t: TFunction<'translation', any>) => {
 export const UserEdit = () => {
   const [devices, setDevices] = useState<Device[]>([]);
   const auth = useAuth();
-  const { t, i18n } = useTranslation();
+  const params = useParams<{ userId: string }>();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const {
     register,
     reset,
-    formState: { errors },
-    watch
+    formState: { dirtyFields, errors },
+    watch,
+    handleSubmit,
   } = useForm<UserEditForm>({
     mode: 'onChange',
     resolver: yupResolver(validationRules(t)),
     defaultValues: {
       email: '',
       group_id: '',
-      signup_completed: false,
       available_devices: [],
-      username: '',
+      name: '',
       organization: '',
+      status: UserStatus.UNAPPROVED,
     },
   });
 
-  const [available_devices] = watch(['available_devices'])
+  const [available_devices] = watch(['available_devices']);
 
-  const params = useParams<{ userId: string }>();
+  const getUserData = async () => {
+    if (!params.userId) return;
 
-  async function getUserData() {
-    const result = new Promise((resolve) => {
-      resolve({
-        id: params.userId,
-        username: 'Test User',
-        group_id: 'Test Group Id',
-        email: 'testEmail@gmail.com',
-        organization: 'Test Organization',
-        available_devices: ['SC', 'Kawasaki'],
-        status: 'active',
-        signup_completed: true
-      });
-    });
-
-    reset(await result)
-  }
+    try {
+      const userData = await getUser(auth.idToken, params.userId);
+      reset(userData);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const fetchDevices = (): void => {
     getDevices(auth.idToken)
@@ -89,12 +91,33 @@ export const UserEdit = () => {
       });
   };
 
+  const onSubmit = async (userData: UserEditForm) => {
+    if (!params.userId) return;
+    const changedFields = Object.keys(dirtyFields).reduce((acc, key) => {
+      const typedKey = key as keyof UserEditForm;
+      if (dirtyFields[typedKey]) {
+        return { ...acc, [typedKey]: userData[typedKey] };
+      }
+      return acc;
+    }, {} as Partial<UserEditForm>);
+
+    try {
+      await updateUser(auth.idToken, params.userId, changedFields);
+
+      toast(t('users.edit.notifications.update_success'), successToastConfig);
+      navigate('/users');
+    } catch (e) {
+      toast(t('users.edit.notifications.update_failed'), errorToastConfig);
+      console.log('error', e);
+    }
+  };
+
   useEffect(() => {
     fetchDevices();
   }, []);
 
   useEffect(() => {
-    getUserData()
+    getUserData();
   }, []);
 
   return (
@@ -109,16 +132,16 @@ export const UserEdit = () => {
           <div className="row mb-3 p-0">
             <div className="col-md-6">
               <label className="form-label">
-                {t('users.edit.labels.username')} <span className="text-danger">*</span>
+                {t('users.edit.labels.name')} <span className="text-danger">*</span>
               </label>
               <input
                 type="text"
-                className={clsx('form-control', { 'is-invalid': errors.username })}
-                placeholder={t('users.edit.placeholders.username')}
-                {...register('username')}
+                className={clsx('form-control', { 'is-invalid': errors.name })}
+                placeholder={t('users.edit.placeholders.name')}
+                {...register('name')}
               />
-              {errors.username?.message && (
-                <div className="invalid-feedback">{errors.username?.message}</div>
+              {errors.name?.message && (
+                <div className="invalid-feedback">{errors.name?.message}</div>
               )}
             </div>
             <div className="col-md-6">
@@ -188,60 +211,32 @@ export const UserEdit = () => {
                 placeholder={t('users.white_list.register.devices_combobox_placeholder')}
               />
             </div>
-            <div className="col-md-6 d-flex align-items-end mb-2">
-              <input
-                className="form-check-input mt-0"
-                type="checkbox"
-                {...register('signup_completed')}
-                style={{
-                  width: '1.5rem',
-                  height: '1.5rem',
-                }}
-              />
-              <label className="form-label ms-2 mb-0">
-                {t('users.edit.labels.signup_complete')}
-              </label>
-            </div>
-          </div>
-
-          <div className="row mb-3 p-0">
-            <div className="col-md-6 d-flex flex-column">
-              <label className="form-label">{t('users.edit.labels.created_at')}</label>
-              <DatePicker
-                id="created_at"
-                disabled
-                selected={new Date()}
-                dateFormat={t('common.date_format')}
-                showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                timeCaption={t('announcements.time')}
-                className="form-control editor-datepicker"
-                locale={i18n.language}
-              />
-            </div>
-            <div className="col-md-6 d-flex flex-column">
-              <label className="form-label">{t('users.edit.labels.updated_at')}</label>
-              <DatePicker
-                id="updated_at"
-                disabled
-                selected={new Date()}
-                dateFormat={t('common.date_format')}
-                showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                timeCaption={t('announcements.time')}
-                className="form-control editor-datepicker"
-                locale={i18n.language}
-              />
+            <div className="col-md-6">
+              <label className="form-label">{t('users.status.name')}</label>
+              <Select value={''} {...register('status')} className="w-100">
+                <option value={UserStatus.APPROVED}>
+                  {t(`users.status.${UserStatus.APPROVED}`)}
+                </option>
+                <option value={UserStatus.UNAPPROVED}>
+                  {t(`users.status.${UserStatus.UNAPPROVED}`)}
+                </option>
+                <option value={UserStatus.SUSPENDED}>
+                  {t(`users.status.${UserStatus.SUSPENDED}`)}
+                </option>
+              </Select>
             </div>
           </div>
 
           <div className="d-flex gap-2 justify-content-end">
-            <button type="button" onClick={reset} className="btn btn-outline-secondary">
+            <button type="button" onClick={() => reset({})} className="btn btn-outline-secondary">
               {t('users.edit.reset')}
             </button>
-            <button type="button" onClick={() => {}} className="btn btn-primary px-4">
+            <button
+              type="button"
+              disabled={Object.keys(dirtyFields).length === 0}
+              onClick={handleSubmit(onSubmit)}
+              className="btn btn-primary px-4"
+            >
               {t('users.edit.save_changes')}
             </button>
           </div>
