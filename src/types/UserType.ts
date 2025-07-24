@@ -1,4 +1,8 @@
-export type UserStatus = 'approved' | 'unapproved' | 'suspended';
+export enum UserStatus {
+  APPROVED = 'approved',
+  UNAPPROVED = 'unapproved',
+  SUSPENDED = 'suspended',
+}
 
 export interface User {
   id: string;
@@ -17,10 +21,4 @@ export interface UserSearchParams {
   organization?: string;
   status?: string;
   page?: string;
-}
-
-export interface ResponseUser {
-  NextPage: string;
-  MaxPage: string;
-  Data: User[];
 }
