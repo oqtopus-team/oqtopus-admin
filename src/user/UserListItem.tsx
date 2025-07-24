@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
 import DefaultModal from '../common/Modal';
-import { User } from '../types/UserType';
-import { statusChangeUser, deleteUser } from './UserApi';
+import { User, UserStatus } from '../types/UserType';
+import { deleteUser, statusChangeUser } from './UserApi';
 import { useAuth } from '../hooks/use-auth';
 import { useSetLoading } from '../common/Loader';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ const UserListItem: React.FC<UserProps> = (props) => {
     if (processing.current) return;
     processing.current = true;
     setLoading(true);
-    const status = isStop ? 'suspended' : 'approved';
+    const status = isStop ? UserStatus.SUSPENDED : UserStatus.APPROVED;
     statusChangeUser(user.id, status, auth.idToken)
       .then((res: User) => {
         setUser(res);
