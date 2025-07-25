@@ -16,6 +16,7 @@ export default {
     operations: '操作',
     search_button: '検索',
     operation: {
+      edit: 'ボタン',
       delete: '削除',
       delete_success: '{{user}}を削除しました',
       delete_confirm: '{{user}}を削除します。よろしいですか？',
@@ -102,5 +103,37 @@ export default {
       },
       devices_combobox_placeholder: '利用可能なデバイス'
     },
+  },
+  edit: {
+    title: "プロフィール編集",
+    subtitle: "ユーザープロフィールを更新",
+    labels: {
+      name: "ユーザー名",
+      group_id: "グループID",
+      email: "メールアドレス",
+      organization: "組織",
+      available_devices: "利用可能なデバイス",
+      signup_complete: "登録完了"
+    },
+    placeholders: {
+      name: "ユーザー名を入力",
+      group_id: "グループを選択",
+      email: "メールアドレスを入力",
+      organization: "組織名を入力",
+      available_devices: "利用可能なデバイスを選択",
+    },
+    errors: {
+      name: "ユーザー名は必須です",
+      group_id: "グループIDは必須です",
+      email: "メールアドレスは必須です",
+      email_format: "無効なメールアドレスです",
+      organization: "組織は必須です",
+    },
+    notifications: {
+      update_success: 'データが正常に更新されました',
+      update_failed: 'データの更新に失敗しました',
+    },
+    reset: 'リセット',
+    save_changes: '変更を保存',
   },
 };
