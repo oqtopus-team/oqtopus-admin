@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import DatePicker from 'react-datepicker';
 import { useParams } from 'react-router-dom';
 import { Combobox } from '../common/combobox/Combobox';
 import { getDevices } from '../device/DeviceApi';
@@ -18,8 +17,6 @@ import { Select } from '../common/Select';
 import { toast } from 'react-toastify';
 import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 import { useNavigate } from 'react-router';
-
-const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 
 interface UserEditForm {
   name: string;
@@ -75,7 +72,12 @@ export const UserEdit = () => {
 
     try {
       const userData = await getUser(auth.idToken, params.userId);
-      reset(userData);
+      const formattedUserData = {
+        ...userData,
+        available_devices: userData.available_devices === '*' ? ['*'] : userData.available_devices,
+      };
+
+      reset(formattedUserData);
     } catch (e) {
       console.log(e);
     }
