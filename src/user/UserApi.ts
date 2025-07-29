@@ -2,18 +2,28 @@ import { User, UserSearchParams, UserStatus } from '../types/UserType';
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 
+const commonRequestParams = (idToken: string): Partial<RequestInit> => ({
+  method: 'GET',
+  mode: 'cors',
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+    Accept: 'application/json',
+    Authorization: 'Bearer ' + idToken,
+  },
+});
+
 export async function getUsers(idToken: string, offset: number, limit: number): Promise<User[]> {
-  const res = await fetch(`${apiEndpoint}/users?offset=${offset}&limit=${limit}`, {
-    method: 'GET',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
-  });
+  const res = await fetch(
+    `${apiEndpoint}/users?offset=${offset}&limit=${limit}`,
+    commonRequestParams(idToken)
+  );
   const json = await res.json();
   return json.users;
+}
+
+export async function getUser(idToken: string, userId: string): Promise<User> {
+  const res = await fetch(`${apiEndpoint}/users/${userId}`, commonRequestParams(idToken));
+  return await res.json();
 }
 
 export async function searchUsers(
@@ -30,15 +40,7 @@ export async function searchUsers(
     `${apiEndpoint}/users?offset=${offset}&limit=${limit}${
       query.toString() !== '' ? `&${query.toString()}` : ''
     }`,
-    {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-    }
+    commonRequestParams(idToken)
   );
   const json = await res.json();
   return json.users;
@@ -53,13 +55,8 @@ export async function statusChangeUser(
     status: status.toString(),
   };
   const res = await fetch(`${apiEndpoint}/users/${userId}`, {
+    ...commonRequestParams(idToken),
     method: 'PATCH',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
     body: JSON.stringify(data),
   });
   const json = await res.json();
@@ -68,13 +65,22 @@ export async function statusChangeUser(
 
 export async function deleteUser(userId: string, idToken: string): Promise<boolean> {
   await fetch(`${apiEndpoint}/users/${userId}`, {
+    ...commonRequestParams(idToken),
     method: 'DELETE',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
   });
   return true;
+}
+
+export async function updateUser(
+  idToken: string,
+  userId: string,
+  userData: Partial<User>
+): Promise<User> {
+  const response = await fetch(`${apiEndpoint}/users/${userId}`, {
+    ...commonRequestParams(idToken),
+    method: 'PATCH',
+    body: JSON.stringify(userData),
+  });
+
+  return response.json();
 }
