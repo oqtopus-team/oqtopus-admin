@@ -114,6 +114,25 @@ export const UserEdit = () => {
     }
   };
 
+  const onAvailableDevicesChange = (value: string | number | (string | number)[] | null) => {
+    const { onChange, name } = register(`available_devices`);
+
+    if (Array.isArray(value)) {
+      // 'if' order below is important
+      if (available_devices.length === 1 && available_devices[0] === '*') {
+        onChange({ target: { name, value: value.filter((val) => val !== '*') } });
+        return;
+      }
+
+      if (value.includes('*')) {
+        onChange({ target: { name, value: ['*'] } });
+        return;
+      }
+    }
+
+    onChange({ target: { name, value } });
+  };
+
   useEffect(() => {
     fetchDevices();
   }, []);
@@ -198,10 +217,7 @@ export const UserEdit = () => {
               <label className="form-label">{t('users.edit.labels.available_devices')}</label>
               <Combobox
                 value={available_devices}
-                onChange={(value) => {
-                  const { onChange, name } = register(`available_devices`);
-                  onChange({ target: { name, value } });
-                }}
+                onChange={onAvailableDevicesChange}
                 options={[
                   { value: '*', label: t('users.white_list.register.all_devices') },
                   ...devices.map(({ id }) => ({

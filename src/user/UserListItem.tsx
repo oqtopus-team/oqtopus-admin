@@ -77,14 +77,15 @@ const UserListItem: React.FC<UserProps> = (props) => {
       {useUsername ? <td className="text-break">{user.name}</td> : ''}
       {useUsername ? <td className="text-break">{user.organization}</td> : ''}
       <td className="text-break">
-g        {Array.isArray(user.available_devices)
-          ? user.available_devices.map((deviceId) => (
+        {Array.isArray(user.available_devices) ? (
+          user.available_devices.map((deviceId) => (
             <p key={deviceId} className="m-0">
               {deviceId}
             </p>
           ))
-          : <p className="m-0">{user.available_devices}</p>
-        }
+        ) : (
+          <p className="m-0">{user.available_devices}</p>
+        )}
       </td>
       <td>
         <Button className="mb-1 w-100" variant="danger" onClick={() => setDeleteModalShow(true)}>
@@ -101,7 +102,13 @@ g        {Array.isArray(user.available_devices)
             ? t('users.list.operation.suspend')
             : t('users.list.operation.unsuspend')}
         </Button>
-        <Button className="mb-1 w-100" variant="primary" onClick={() => navigate(`edit/${props.user.id}`)}>{t('users.list.operation.edit')}</Button>
+        <Button
+          className="mb-1 w-100"
+          variant="primary"
+          onClick={() => navigate(`edit/${props.user.id}`)}
+        >
+          {t('users.list.operation.edit')}
+        </Button>
         <DefaultModal
           show={stopModalShow}
           onHide={() => setStopModalShow(false)}
@@ -111,7 +118,9 @@ g        {Array.isArray(user.available_devices)
               : t('users.list.operation.unsuspend_confirm', { user: user.email })
           }
           execFunction={
-            user.status !== UserStatus.SUSPENDED ? () => onStopClick(true) : () => onStopClick(false)
+            user.status !== UserStatus.SUSPENDED
+              ? () => onStopClick(true)
+              : () => onStopClick(false)
           }
         />
       </td>
