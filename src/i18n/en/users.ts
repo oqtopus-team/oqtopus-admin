@@ -16,6 +16,7 @@ export default {
     operations: 'Operations',
     search_button: 'Search',
     operation: {
+      edit: 'Edit',
       delete: 'Delete',
       delete_success: '{{user}} is deleted successfully',
       delete_confirm: 'Are you sure you want to delete {{user}}?',
@@ -102,5 +103,37 @@ export default {
       },
       devices_combobox_placeholder: 'Available devices'
     },
+  },
+  edit: {
+    title: "Profile editing",
+    subtitle: "Update user profile",
+    labels: {
+      name: "Name",
+      group_id: "Group ID",
+      email: "Email",
+      organization: "Organization",
+      available_devices: "Available devices",
+      signup_complete: "Sign up complete"
+    },
+    placeholders: {
+      name: "Enter username",
+      group_id: "Select group",
+      email: "Enter email address",
+      organization: "Enter organization name",
+      available_devices: "Chose available devices",
+    },
+    errors: {
+      name: "Username is required",
+      group_id: "Group Id is required",
+      email: "Email is required",
+      email_format: "Invalid email address",
+      organization: "Organization is required",
+    },
+    notifications: {
+      update_success: 'Data updated successfully',
+      update_failed: 'Failed to update data',
+    },
+    reset: 'Reset',
+    save_changes: 'Save changes',
   },
 };
