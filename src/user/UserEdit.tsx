@@ -27,6 +27,10 @@ interface UserEditForm {
   status: UserStatus;
 }
 
+interface UserEditRequest extends Omit<UserEditForm, 'available_devices'> {
+  available_devices: string[] | '*';
+}
+
 const validationRules = (t: TFunction<'translation', any>) => {
   const validationRules = yup.object().shape({
     name: yup.string().required(t('users.edit.errors.name')),
@@ -95,13 +99,19 @@ export const UserEdit = () => {
 
   const onSubmit = async (userData: UserEditForm) => {
     if (!params.userId) return;
-    const changedFields = Object.keys(dirtyFields).reduce((acc, key) => {
+    const changedFields: Partial<UserEditRequest> = Object.keys(dirtyFields).reduce((acc, key) => {
       const typedKey = key as keyof UserEditForm;
       if (dirtyFields[typedKey]) {
+
+        if(typedKey === 'available_devices') {
+          const [value] = userData[typedKey]
+          return { ...acc, [typedKey]: value === '*' ? '*' : userData[typedKey] };
+        }
+
         return { ...acc, [typedKey]: userData[typedKey] };
       }
       return acc;
-    }, {} as Partial<UserEditForm>);
+    }, {} as Partial<UserEditRequest>);
 
     try {
       await updateUser(auth.idToken, params.userId, changedFields);
