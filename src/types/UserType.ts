@@ -1,4 +1,10 @@
-export type UserStatus = 'approved' | 'unapproved' | 'suspended';
+export enum UserStatus {
+  APPROVED = 'approved',
+  UNAPPROVED = 'unapproved',
+  SUSPENDED = 'suspended',
+}
+
+type ALL_ITEMS = '*'
 
 export interface User {
   id: string;
@@ -6,6 +12,7 @@ export interface User {
   group_id: string;
   email: string;
   organization: string;
+  available_devices: string[] | ALL_ITEMS;
   status: UserStatus;
 }
 
@@ -15,10 +22,4 @@ export interface UserSearchParams {
   group_id?: string;
   organization?: string;
   status?: string;
-}
-
-export interface ResponseUser {
-  NextPage: string;
-  MaxPage: string;
-  Data: User[];
 }

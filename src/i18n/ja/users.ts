@@ -4,6 +4,7 @@ export default {
   group_id: 'グループID',
   name: '氏名',
   organization: '所属組織',
+  available_devices: '利用可能なデバイス',
   status: {
     name: 'ステータス',
     approved: '承認済み',
@@ -15,6 +16,7 @@ export default {
     operations: '操作',
     search_button: '検索',
     operation: {
+      edit: 'ボタン',
       delete: '削除',
       delete_success: '{{user}}を削除しました',
       delete_confirm: '{{user}}を削除します。よろしいですか？',
@@ -42,6 +44,7 @@ export default {
       delete_confirm: '{{user}}を削除します。よろしいですか？',
     },
     register: {
+      all_devices: 'すべてのデバイス',
       title: 'ホワイトリスト登録',
       header: 'ホワイトリスト新規登録',
       button: {
@@ -77,6 +80,7 @@ export default {
           mail: 'メールアドレス(必須)',
           name: '氏名',
           organization: '所属組織',
+          available_devices: '利用可能なデバイス',
         },
         notice: '※一度に登録できるユーザーは最大100名です。',
         error: {
@@ -93,9 +97,43 @@ export default {
           invalid_email_length: 'メールアドレスは100文字以下で入力してください。',
           invalid_username_length: '氏名は100文字以下で入力してください。',
           invalid_organization_length: '所属組織は100文字以下で入力してください。',
+          invalid_available_device_id: 'ID {{missingIds}} のデバイスが見つかりません',
           duplicated_email: 'メールアドレスが重複しています。',
         },
       },
+      devices_combobox_placeholder: '利用可能なデバイス'
     },
+  },
+  edit: {
+    title: "プロフィール編集",
+    subtitle: "ユーザープロフィールを更新",
+    labels: {
+      name: "ユーザー名",
+      group_id: "グループID",
+      email: "メールアドレス",
+      organization: "組織",
+      available_devices: "利用可能なデバイス",
+      signup_complete: "登録完了"
+    },
+    placeholders: {
+      name: "ユーザー名を入力",
+      group_id: "グループを選択",
+      email: "メールアドレスを入力",
+      organization: "組織名を入力",
+      available_devices: "利用可能なデバイスを選択",
+    },
+    errors: {
+      name: "ユーザー名は必須です",
+      group_id: "グループIDは必須です",
+      email: "メールアドレスは必須です",
+      email_format: "無効なメールアドレスです",
+      organization: "組織は必須です",
+    },
+    notifications: {
+      update_success: 'データが正常に更新されました',
+      update_failed: 'データの更新に失敗しました',
+    },
+    reset: 'リセット',
+    save_changes: '変更を保存',
   },
 };

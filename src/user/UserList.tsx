@@ -133,6 +133,12 @@ const UserList: React.FunctionComponent = () => {
         cell: ({ getValue }) => getValue(),
       }),
 
+      columnHelper.accessor('available_devices', {
+        header: 'users.available_devices',
+        enableSorting: true,
+        cell: ({ getValue }) => getValue(),
+      }),
+
       columnHelper.display({
         id: 'operations',
         header: 'users.list.operations',

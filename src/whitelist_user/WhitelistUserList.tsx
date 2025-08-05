@@ -134,6 +134,12 @@ const WhitelistUserList: React.FunctionComponent = () => {
         cell: ({ getValue }) => getValue(),
       }),
 
+      columnHelper.accessor('available_devices', {
+        header: 'users.available_devices',
+        enableSorting: true,
+        cell: ({ getValue }) => getValue(),
+      }),
+
       columnHelper.accessor('is_signup_completed', {
         header: 'users.white_list.signup',
         enableSorting: true,
