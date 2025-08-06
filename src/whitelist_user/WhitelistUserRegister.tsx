@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -12,19 +12,29 @@ import { FaPlus } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { TestFunction } from 'yup';
 import DefaultModal from '../common/Modal';
 import { useSetLoading } from '../common/Loader';
 import { registerUsers } from './WhitelistUserApi';
 import { useAuth } from '../hooks/use-auth';
 import { ApiResponse } from '../types/CommonType';
 import WhitelistUserRegisterModal from './WhitelistUserRegisterModal';
-import { TestFunction } from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Combobox } from '../common/combobox/Combobox';
 import { getDevices } from '../device/DeviceApi';
 import { Device } from '../types/DeviceType';
+
+interface WhitelistUserRegisterForm {
+  whitelist: {
+    group_id: string;
+    email: string;
+    username: string;
+    organization: string;
+    available_devices: string[];
+  }[];
+}
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
@@ -116,7 +126,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     reset,
     formState: { errors },
     watch,
-  } = useForm({
+  } = useForm<WhitelistUserRegisterForm>({
     mode: 'onBlur',
     defaultValues: {
       whitelist: [
@@ -141,7 +151,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
 
   const validationErrors = errors.whitelist;
 
-  const onSubmit = (data: any): void => {
+  const onSubmit = (data: WhitelistUserRegisterForm): void => {
     // API request
     if (processing.current) return; // Prevent double-click
     processing.current = true;
@@ -153,8 +163,18 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
       setLoading(false);
       return;
     }
+    debugger;
 
-    registerUsers(data.whitelist, auth.idToken, t)
+    const formattedData = data.whitelist.map((userData) => {
+      return {
+        ...userData,
+        available_devices: userData.available_devices.includes('*')
+          ? '*'
+          : userData.available_devices,
+      };
+    });
+
+    registerUsers(formattedData, auth.idToken, t)
       .then((res: ApiResponse) => {
         if (res.success) {
           alert(res.message);
@@ -190,6 +210,25 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
 
     XLSX.writeFile(workbook, `${t('users.white_list.register.title')}.xlsx`, { compression: true });
   };
+
+  const onAvailableDevicesChange = (value: string | number | (string | number)[] | null, index: number) => {
+    const { onChange, name } = register(`whitelist.${index}.available_devices`);
+
+    if (Array.isArray(value)) {
+      // 'if' order below is important
+      if (whitelistObserved[index].available_devices.length === 1 && whitelistObserved[index].available_devices[0] === '*') {
+        onChange({ target: { name, value: value.filter((val) => val !== '*') } });
+        return;
+      }
+
+      if (value.includes('*')) {
+        onChange({ target: { name, value: ['*'] } });
+        return;
+      }
+    }
+
+    onChange({ target: { name, value } });
+  }
 
   return (
     <BaseLayout>
@@ -264,8 +303,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
               <Combobox
                 value={whitelistObserved[index].available_devices}
                 onChange={(value) => {
-                  const { onChange, name } = register(`whitelist.${index}.available_devices`);
-                  onChange({ target: { name, value } });
+                  onAvailableDevicesChange(value, index);
                 }}
                 options={[
                   { value: '*', label: t('users.white_list.register.all_devices') },
