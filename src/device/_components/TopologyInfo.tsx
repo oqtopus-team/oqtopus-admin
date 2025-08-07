@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 import useWindowSize from '../hook/UseWindowSize';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import JsonFormatter from 'react-json-formatter';
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 
 type NodeObject<NodeType = {}> = NodeType & {
   id?: string | number;
@@ -16,6 +17,9 @@ type NodeObject<NodeType = {}> = NodeType & {
   fy?: number;
   [others: string]: any;
 };
+
+const MIN_ZOOM = 0.1;
+const MAX_ZOOM = 3;
 
 type LinkObject<NodeType = {}, LinkType = {}> = LinkType & {
   source?: string | number | NodeObject<NodeType>;
@@ -41,8 +45,8 @@ const scalePosition = (position: number, scale: number = 50): number => {
   return position * scale;
 };
 
-const normalizePositions = <NodeType,>(
-  nodes: Array<NodeObject<NodeType>>
+const normalizePositions = <NodeType, >(
+  nodes: Array<NodeObject<NodeType>>,
 ): Array<NodeObject<NodeType>> => {
   const sumFx = nodes.reduce((sum, node) => sum + (node.fx ?? 0), 0);
   const sumFy = nodes.reduce((sum, node) => sum + (node.fy ?? 0), 0);
@@ -64,7 +68,7 @@ const createCouplingMapKey = (control: number, target: number): string => {
 };
 
 const createNodeData = (
-  qubits?: Qubit[]
+  qubits?: Qubit[],
 ): { nodeData: any[]; tempNodeMap: Map<string, object> } => {
   try {
     if (qubits === undefined) {
@@ -89,7 +93,7 @@ const createNodeData = (
 };
 
 const createEdgeData = (
-  couplings: Coupling[]
+  couplings: Coupling[],
 ): { edgeData: LinkObject[]; tempCouplingMap: Map<string, object> } => {
   try {
     if (couplings === undefined) {
@@ -129,6 +133,19 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
   const [isValidDeviceInfo, setIsValidDeviceInfo] = useState<boolean>(true);
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [hoveredLinkId, setHoveredLinkId] = useState<string | null>(null);
+
+  // ForceGraph2D not exporting ref types
+  const fgRef = useRef<any>(null);
+  const [zoomLevel, setZoomLevel] = useState<string>('1.00');
+
+  const handleZoom = useCallback(() => {
+    if (fgRef.current && typeof fgRef.current.zoom === 'function') {
+      const zoom = fgRef.current.zoom();
+      requestAnimationFrame(() => {
+        setZoomLevel(zoom.toFixed(2));
+      });
+    }
+  }, []);
 
   useEffect(() => {
     try {
@@ -253,8 +270,25 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
     return <p className="alert alert-danger">Topology information is invalid</p>;
   }
 
+  useEffect(() => {
+    // Delay to ensure the canvas is rendered
+    const timeout = setTimeout(() => {
+      if (fgRef.current && typeof fgRef.current.zoomToFit === 'function') {
+        fgRef.current.zoomToFit(300, 30);
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const handleFitToView = () => {
+    if (fgRef.current) {
+      fgRef.current.zoomToFit(300, 30);
+    }
+  };
+
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 2.0fr', gap: '5vw' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 2.0fr', gap: '5vw', marginTop: '20px' }}>
       <div>
         <h3 ref={headingRef}>Property</h3>
         <Card style={{ height: divSize.height - headingSize.height, backgroundColor: '#f3f4f6' }}>
@@ -276,8 +310,46 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
         </Card>
       </div>
       <div ref={divRef}>
-        <Card>
+        <Card style={{padding: '10px 10px 0 10px'}}>
+          <div style={{ zIndex: 1000, position: 'absolute', bottom: '25px', right: '25px' }}>
+            Zoom: {zoomLevel}x
+          </div>
+          <div
+            style={{
+              marginBottom: '15px',
+              width: '100%',
+              zIndex: 9999,
+              display: 'flex',
+              alignItems: 'center',
+              background: "#fff",
+            }}
+          >
+            <Button onClick={handleFitToView}>Fit to View</Button>
+            <input
+              type="range"
+              min={MIN_ZOOM}
+              max={MAX_ZOOM}
+              step={0.1}
+              value={zoomLevel}
+              onChange={(e) => {
+                if (fgRef.current && typeof fgRef.current.zoom === 'function') {
+                  fgRef.current.zoom(e.target.value);
+                }
+              }}
+              style={{
+                width: '200px',
+                height: '4px',
+                borderRadius: '2px',
+                background: '#ddd',
+                outline: 'none',
+                cursor: 'pointer',
+                flex: 1,
+                marginLeft: '10px',
+              }}
+            />
+          </div>
           <ForceGraph2D
+            ref={fgRef}
             graphData={topologyData}
             nodeCanvasObject={(
               node: NodeObject,
@@ -353,6 +425,9 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
             height={divSize.height}
             width={divSize.width}
             backgroundColor={'white'}
+            maxZoom={MAX_ZOOM}
+            onZoom={handleZoom}
+            onZoomEnd={handleZoom}
           />
         </Card>
       </div>
