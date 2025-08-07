@@ -1,4 +1,5 @@
 import { User, UserSearchParams, UserStatus } from '../types/UserType';
+import { ColumnSort } from '@tanstack/table-core/src/features/RowSorting';
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 
@@ -12,11 +13,35 @@ const commonRequestParams = (idToken: string): Partial<RequestInit> => ({
   },
 });
 
-export async function getUsers(idToken: string, offset: number, limit: number): Promise<User[]> {
-  const res = await fetch(
-    `${apiEndpoint}/users?offset=${offset}&limit=${limit}`,
-    commonRequestParams(idToken)
-  );
+export async function getUsers(
+  idToken: string,
+  options: {
+    offset?: number;
+    limit?: number;
+    sort?: ColumnSort;
+    filterFields?: UserSearchParams;
+  } = {}
+): Promise<User[]> {
+  const { offset, limit, sort, filterFields } = options;
+  const params = new URLSearchParams();
+
+  if (offset !== undefined) params.append('offset', offset.toString());
+  if (limit !== undefined) params.append('limit', limit.toString());
+  if (sort) params.append('sort', `${sort.id},${sort.desc ? 'desc' : 'asc'}`);
+
+  Object.entries(filterFields ?? {}).forEach(([key, value]) => {
+    params.append(key, value);
+  });
+
+  const res = await fetch(`${apiEndpoint}/users?${params.toString()}`, {
+    method: 'GET',
+    mode: 'cors',
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + idToken,
+    },
+  });
   const json = await res.json();
   return json.users;
 }
@@ -25,6 +50,7 @@ export async function getUser(idToken: string, userId: string): Promise<User> {
   const res = await fetch(`${apiEndpoint}/users/${userId}`, commonRequestParams(idToken));
   return await res.json();
 }
+
 
 export async function searchUsers(
   params: UserSearchParams,
@@ -45,7 +71,6 @@ export async function searchUsers(
   const json = await res.json();
   return json.users;
 }
-
 export async function statusChangeUser(
   userId: string,
   status: UserStatus,

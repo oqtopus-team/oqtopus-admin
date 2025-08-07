@@ -17,15 +17,18 @@ const BaseLayout: React.FC<Props> = ({ children }) => {
   return (
     <AuthCheck>
       <Header />
-      <Row className="flex-nowrap m-0">
+      <Row
+        className="flex-nowrap m-0 overflow-hidden"
+        style={{
+          height: 'calc(100vh - 56px)',
+        }}
+      >
         <Col md={3} xl={2} sm={2} xs={1} className="col-auto px-0 border bg-light">
           <Sidebar />
         </Col>
-        <Col className="overflow-hidden">
-          <Container className="py-3">
+        <Col className="overflow-hidden p-3 ps-4 pe-4 vertical-scroll-intermediate-container">
             <Loader loading={loading} />
             {children}
-          </Container>
         </Col>
       </Row>
     </AuthCheck>
