@@ -12,7 +12,7 @@ const useOrganization: boolean = import.meta.env.VITE_USE_ORGANIZATION === 'enab
 
 interface UserProps {
   user: WhitelistUser;
-  execFunction: () => void;
+  execFunction: (userId: string) => void;
 }
 
 const WhitelistUserListItem: React.FC<UserProps> = ({ user, execFunction }) => {
@@ -31,7 +31,7 @@ const WhitelistUserListItem: React.FC<UserProps> = ({ user, execFunction }) => {
       .then((res) => {
         if (res.success) {
           alert(t('users.white_list.operation.delete_success', { user: user.email }));
-          execFunction();
+          execFunction(user.id);
         } else {
           alert(t('users.white_list.operation.delete_failure', { user: user.email }));
         }

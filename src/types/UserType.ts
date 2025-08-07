@@ -22,5 +22,4 @@ export interface UserSearchParams {
   group_id?: string;
   organization?: string;
   status?: string;
-  page?: string;
 }
