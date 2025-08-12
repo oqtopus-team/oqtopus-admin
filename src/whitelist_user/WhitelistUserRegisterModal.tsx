@@ -153,18 +153,6 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
     }
     const sheetJson: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
     const headers: string[] = sheetJson[0];
-    // if (
-    //   header[0] !== t('users.white_list.register.excel.header.group_id') ||
-    //   header[1] !== t('users.white_list.register.excel.header.mail') ||
-    //   (useUsername && header[2] !== t('users.white_list.register.excel.header.name')) ||
-    //   (useOrganization && header[3] !== t('users.white_list.register.excel.header.organization'))
-    // ) {
-    //   errorMessage = t('users.white_list.register.excel.error.invalid_header');
-    //   return {
-    //     hasError,
-    //     errorMessage,
-    //   };
-    // }
 
     if (!validateHeaders(headers)) {
       errorMessage = t('users.white_list.register.excel.error.invalid_header');
