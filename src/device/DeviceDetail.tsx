@@ -48,31 +48,29 @@ export const DeviceDetail: React.FC = () => {
 
   return (
     <BaseLayout>
-      {device != null && <DeviceDetailBasicInfo {...device} />}
-      <div style={{ height: '3vh' }}></div>
-      <div style={{ display: 'flex', justifyContent: 'right' }}>
-        <Button
-          onClick={() => {
-            setShowModal(true);
-          }}
-        >
-          Delete
-        </Button>
-        <div style={{ width: '5vw' }}></div>
-        <Button onClick={handleEdit}>Edit</Button>
-      </div>
-      <DeleteConfirmation
-        showModal={showModal}
-        hideModal={() => setShowModal(false)}
-        deviceId={deviceId}
-        idToken={auth.idToken}
-      />
-      {device?.deviceType === 'QPU' && (
-        <div>
-          <div style={{ height: '3vh' }}></div>
-          <TopologyInfo deviceInfo={device?.deviceInfo} />
+      <div className="vertical-scrollable-container">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+          <Button onClick={handleEdit} className="mx-2">
+            Edit
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setShowModal(true);
+            }}
+          >
+            Delete
+          </Button>
         </div>
-      )}
+        {device != null && <DeviceDetailBasicInfo {...device} />}
+        <DeleteConfirmation
+          showModal={showModal}
+          hideModal={() => setShowModal(false)}
+          deviceId={deviceId}
+          idToken={auth.idToken}
+        />
+        {device?.deviceType === 'QPU' && <TopologyInfo deviceInfo={device?.deviceInfo} />}
+      </div>
     </BaseLayout>
   );
 };
