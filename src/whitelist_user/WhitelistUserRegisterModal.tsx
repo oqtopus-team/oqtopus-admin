@@ -191,7 +191,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
 
       const hasStandaloneStarRegex = /(?:^|,)\s*\*\s*(?:,|$)/g;
       let availableDevicesList: string[] = ['*'];
-      if (availableDevices.match(hasStandaloneStarRegex)) {
+      if (availableDevices !== '*' && availableDevices.match(hasStandaloneStarRegex)) {
         errorMessage = t('users.white_list.register.excel.error.asterixConflictError');
         return {
           hasError,
