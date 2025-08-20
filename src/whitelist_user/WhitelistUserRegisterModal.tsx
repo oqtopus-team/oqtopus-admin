@@ -137,6 +137,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
       const username = row[2];
       const organization = row[3];
       const availableDevices = row[4];
+
       if (groupId === undefined || email === undefined) {
         errorMessage = t('users.white_list.register.excel.error.required_item');
         return {
@@ -188,20 +189,28 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
         };
       }
 
-      const availableDevicesList = availableDevices.split(',').map(deviceId => deviceId.trim())
-      const deviceIds = props.devices.map((device) => device.id);
-      const missingIds = availableDevicesList.filter(id => !deviceIds.includes(id));
-
-      if(missingIds.length > 0) {
-        errorMessage = t(
-          'users.white_list.register.excel.error.invalid_available_device_id', {
-            missingIds
-          }
-        );
+      const hasStandaloneStarRegex = /(?:^|,)\s*\*\s*(?:,|$)/g;
+      let availableDevicesList: string[] = ['*'];
+      if (availableDevices.match(hasStandaloneStarRegex)) {
+        errorMessage = t('users.white_list.register.excel.error.asterixConflictError');
         return {
           hasError,
           errorMessage,
         };
+      } else if (availableDevices !== '*') {
+        availableDevicesList = availableDevices.split(',').map((deviceId) => deviceId.trim());
+        const deviceIds = props.devices.map((device) => device.id);
+        const missingIds = availableDevicesList.filter((id) => !deviceIds.includes(id));
+
+        if (missingIds.length > 0) {
+          errorMessage = t('users.white_list.register.excel.error.invalid_available_device_id', {
+            missingIds,
+          });
+          return {
+            hasError,
+            errorMessage,
+          };
+        }
       }
 
       whitelist.push({
