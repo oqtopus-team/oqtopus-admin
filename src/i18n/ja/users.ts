@@ -99,6 +99,7 @@ export default {
           invalid_organization_length: '所属組織は100文字以下で入力してください。',
           invalid_available_device_id: 'ID {{missingIds}} のデバイスが見つかりません',
           duplicated_email: 'メールアドレスが重複しています。',
+          asterixConflictError: 'すべてのアイテムには（*）か、特定のIDのどちらかを使用してください。両方は使用できません'
         },
       },
       devices_combobox_placeholder: '利用可能なデバイス'
