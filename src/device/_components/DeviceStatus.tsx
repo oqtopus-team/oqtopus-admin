@@ -1,4 +1,5 @@
-import { DevicesDeviceInfoStatusEnum, DeviceStatusType } from '../../types/DeviceType';
+import { DevicesDeviceInfoStatusEnum } from '../../api/generated';
+import { DeviceStatusType } from '../../types/DeviceType';
 
 const Available: DeviceStatusType = DevicesDeviceInfoStatusEnum.Available;
 const UnAvailable: DeviceStatusType = DevicesDeviceInfoStatusEnum.Unavailable;

@@ -7,8 +7,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as XLSX from 'xlsx';
 import * as EmailValidator from 'email-validator';
 import { useSetLoading } from '../common/Loader';
-import { registerUsers } from './WhitelistUserApi';
-import { useAuth } from '../hooks/use-auth';
+import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Device } from '../types/DeviceType';
@@ -27,7 +26,6 @@ interface ModalProps {
 }
 
 const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) => {
-  const auth = useAuth();
   const [file, setFile] = useState<FileList>();
   const [disableButton, setDisableButton] = useState<boolean>(false);
   const setLoading = useSetLoading();
@@ -35,6 +33,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
   const { reset, register, handleSubmit } = useForm<ExcelImportInput>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { registerUsers } = useWhitelistUserAPI();
 
   const onSubmit: SubmitHandler<ExcelImportInput> = async () => {
     setDisableButton(true);
@@ -66,12 +65,12 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
     }
 
     try {
-      const response = await registerUsers(validationResult.whitelist, auth.idToken, t);
+      const response = await registerUsers(validationResult.whitelist, t);
       if (response.success) {
         alert(response.message);
         navigate('/whitelist');
       } else {
-        alert(`${t('users.white_list.register.excel.error.register')}} \n` + response.message);
+        alert(`${t('users.white_list.register.excel.error.register')} \n` + response.message);
       }
     } catch (e) {
       alert(t('users.white_list.register.excel.error.system_error'));
@@ -188,16 +187,14 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
         };
       }
 
-      const availableDevicesList = availableDevices.split(',').map(deviceId => deviceId.trim())
+      const availableDevicesList = availableDevices.split(',').map((deviceId) => deviceId.trim());
       const deviceIds = props.devices.map((device) => device.id);
-      const missingIds = availableDevicesList.filter(id => !deviceIds.includes(id));
+      const missingIds = availableDevicesList.filter((id) => !deviceIds.includes(id));
 
-      if(missingIds.length > 0) {
-        errorMessage = t(
-          'users.white_list.register.excel.error.invalid_available_device_id', {
-            missingIds
-          }
-        );
+      if (missingIds.length > 0) {
+        errorMessage = t('users.white_list.register.excel.error.invalid_available_device_id', {
+          missingIds,
+        });
         return {
           hasError,
           errorMessage,

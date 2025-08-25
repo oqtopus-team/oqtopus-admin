@@ -1,111 +1,114 @@
-import { User, UserSearchParams, UserStatus } from '../types/UserType';
+import { User, UserSearchParams } from '../types/UserType';
 import { ColumnSort } from '@tanstack/table-core/src/features/RowSorting';
+import { UsersGetOneUserResponse, UsersUserStatus } from '../api/generated';
+import { useContext } from 'react';
+import { userApiContext } from '../backend/Provider';
 
-const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
-
-const commonRequestParams = (idToken: string): Partial<RequestInit> => ({
-  method: 'GET',
-  mode: 'cors',
-  headers: {
-    'Content-type': 'application/json; charset=UTF-8',
-    Accept: 'application/json',
-    Authorization: 'Bearer ' + idToken,
-  },
+const convertToUser = (user: UsersGetOneUserResponse): User => ({
+  id: user.id.toString(),
+  name: user.name ?? '',
+  group_id: user.group_id ?? '',
+  email: user.email ?? '',
+  organization: user.organization ?? '',
+  available_devices:
+    user.available_devices === '*'
+      ? '*'
+      : Array.isArray(user.available_devices)
+      ? user.available_devices
+      : [],
+  status: user.status ?? UsersUserStatus.Suspended, // 要検討
 });
 
-export async function getUsers(
-  idToken: string,
-  options: {
-    offset?: number;
-    limit?: number;
-    sort?: ColumnSort;
-    filterFields?: UserSearchParams;
-  } = {}
-): Promise<User[]> {
-  const { offset, limit, sort, filterFields } = options;
-  const params = new URLSearchParams();
-
-  if (offset !== undefined) params.append('offset', offset.toString());
-  if (limit !== undefined) params.append('limit', limit.toString());
-  if (sort) params.append('sort', `${sort.id},${sort.desc ? 'desc' : 'asc'}`);
-
-  Object.entries(filterFields ?? {}).forEach(([key, value]) => {
-    params.append(key, value);
-  });
-
-  const res = await fetch(`${apiEndpoint}/users?${params.toString()}`, {
-    method: 'GET',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
-  });
-  const json = await res.json();
-  return json.users;
-}
-
-export async function getUser(idToken: string, userId: string): Promise<User> {
-  const res = await fetch(`${apiEndpoint}/users/${userId}`, commonRequestParams(idToken));
-  return await res.json();
-}
-
-
-export async function searchUsers(
-  params: UserSearchParams,
-  idToken: string,
-  offset: number,
-  limit: number
-): Promise<User[]> {
-  const query = new URLSearchParams();
-  for (const [key, val] of Object.entries(params)) {
-    query.set(key, val);
+const convertToUsersUserStatus = (statusStr?: string): UsersUserStatus | undefined => {
+  if (statusStr === 'approved') {
+    return UsersUserStatus.Approved;
+  } else if (statusStr === 'unapproved') {
+    return UsersUserStatus.Unapproved;
+  } else if (statusStr === 'suspended') {
+    return UsersUserStatus.Suspended;
   }
-  const res = await fetch(
-    `${apiEndpoint}/users?offset=${offset}&limit=${limit}${
-      query.toString() !== '' ? `&${query.toString()}` : ''
-    }`,
-    commonRequestParams(idToken)
-  );
-  const json = await res.json();
-  return json.users;
-}
-export async function statusChangeUser(
-  userId: string,
-  status: UserStatus,
-  idToken: string
-): Promise<User> {
-  const data = {
-    status: status.toString(),
+  return undefined;
+};
+
+export const useUserAPI = () => {
+  const api = useContext(userApiContext);
+
+  const getUsers = async (
+    offset?: number,
+    limit?: number,
+    sort?: ColumnSort,
+    filterFields?: UserSearchParams
+  ): Promise<User[]> => {
+    const offsetStr = offset != null ? offset.toString() : undefined;
+    const limitStr = limit != null ? limit.toString() : undefined;
+
+    const params: Record<string, string> = {};
+    if (sort) params['sort'] = `${sort.id},${sort.desc ? 'desc' : 'asc'}`;
+
+    try {
+      const res = await api.UserApi.getUsers(
+        offsetStr,
+        limitStr,
+        filterFields?.email,
+        filterFields?.name,
+        filterFields?.organization,
+        convertToUsersUserStatus(filterFields?.status),
+        filterFields?.group_id,
+        { params }
+      );
+      return res.data.users?.map(convertToUser) ?? [];
+    } catch (e) {
+      console.error('Error fetching users:', e);
+      return [];
+    }
   };
-  const res = await fetch(`${apiEndpoint}/users/${userId}`, {
-    ...commonRequestParams(idToken),
-    method: 'PATCH',
-    body: JSON.stringify(data),
-  });
-  const json = await res.json();
-  return json;
-}
 
-export async function deleteUser(userId: string, idToken: string): Promise<boolean> {
-  await fetch(`${apiEndpoint}/users/${userId}`, {
-    ...commonRequestParams(idToken),
-    method: 'DELETE',
-  });
-  return true;
-}
+  const getUser = async (userId: string): Promise<User | null> => {
+    try {
+      const res = await api.UserApi.getOneUserById(Number(userId));
+      return res.data ? convertToUser(res.data) : null;
+    } catch (e) {
+      console.error('Error fetching user:', e);
+      return null;
+    }
+  };
 
-export async function updateUser(
-  idToken: string,
-  userId: string,
-  userData: Partial<User>
-): Promise<User> {
-  const response = await fetch(`${apiEndpoint}/users/${userId}`, {
-    ...commonRequestParams(idToken),
-    method: 'PATCH',
-    body: JSON.stringify(userData),
-  });
+  const statusChangeUser = async (userId: string, status: UsersUserStatus): Promise<User> => {
+    try {
+      const res = await api.UserApi.updatetUserStatusById(Number(userId), { status });
+      if (res.data) return convertToUser(res.data);
+      return Promise.reject('User not found');
+    } catch (e) {
+      console.error('Error changing user status:', e);
+      return Promise.reject(e);
+    }
+  };
 
-  return response.json();
-}
+  const deleteUser = async (userId: string): Promise<boolean> => {
+    try {
+      await api.UserApi.deleteUserById(Number(userId));
+      return true;
+    } catch (e) {
+      console.error('Error deleting user:', e);
+      return false;
+    }
+  };
+
+  const updateUser = async (userId: string, userData: Partial<User>): Promise<User> => {
+    try {
+      const res = await api.UserApi.updatetUserStatusById(Number(userId), userData);
+      if (res.data) return convertToUser(res.data);
+      return Promise.reject('User not found');
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  };
+
+  return {
+    getUsers,
+    getUser,
+    statusChangeUser,
+    deleteUser,
+    updateUser,
+  };
+};

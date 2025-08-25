@@ -3,9 +3,8 @@ import { useAuth } from '../hooks/use-auth';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { getDevice } from './DeviceApi';
+import { useDeviceAPI } from '../device/DeviceApi';
 import { DeviceFormEdit } from './form/DeviceFormEdit';
-import BaseLayout from '../common/BaseLayout';
 import { useTranslation } from 'react-i18next';
 
 const convertDbdataToFormdata = (data: Device): DeviceForm => {
@@ -30,16 +29,21 @@ export const DeviceUpdateEdit: React.FC = () => {
   const auth = useAuth();
   const location = useLocation();
   const { t } = useTranslation();
+  const { getDevice } = useDeviceAPI();
 
   useEffect(() => {
     document.title = `${t('device.update.title')} | ${appName}`;
   }, [auth.idToken]);
 
   useEffect(() => {
-    if (deviceId !== undefined && auth.idToken !== undefined) {
-      getDevice(deviceId, auth.idToken)
-        .then((device: Device) => {
-          setDevice(device);
+    if (deviceId !== undefined) {
+      getDevice(deviceId)
+        .then((device: Device | null) => {
+          if (device != null) {
+            setDevice(device);
+          } else {
+            console.error('Device not found');
+          }
         })
         .catch((error) => {
           console.error('Failed to fetch device:', error);
@@ -58,7 +62,7 @@ export const DeviceUpdateEdit: React.FC = () => {
   })();
 
   return (
-    <BaseLayout>
+    <>
       {device != null && deviceId != null && (
         <DeviceFormEdit
           dbData={convertDbdataToFormdata(device)}
@@ -66,6 +70,6 @@ export const DeviceUpdateEdit: React.FC = () => {
           navigatePath={`/device/form/${deviceId}/confirm`}
         />
       )}
-    </BaseLayout>
+    </>
   );
 };

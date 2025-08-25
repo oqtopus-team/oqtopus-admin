@@ -18,9 +18,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { ColumnSort } from '@tanstack/table-core/src/features/RowSorting';
-
-import BaseLayout from '../common/BaseLayout';
-import { getUsers } from './WhitelistUserApi';
+import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { UserSearchParams } from '../types/UserType';
 import { useAuth } from '../hooks/use-auth';
 import { useLoading, useSetLoading } from '../common/Loader';
@@ -47,6 +45,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
   const urlParams = Object.fromEntries(searchParams.entries());
+  const { getUsers } = useWhitelistUserAPI();
 
   async function getUsersList({
     filterFields,
@@ -59,12 +58,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
   } = {}) {
     setLoading(true);
     try {
-      const usersResponse = await getUsers(auth.idToken, {
-        offset,
-        limit,
-        sort,
-        filterFields,
-      });
+      const usersResponse = await getUsers(offset, limit, sort, filterFields);
 
       if (offset !== undefined) {
         setUsers([...users, ...usersResponse]);
@@ -209,7 +203,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
   }, [searchParams]);
 
   return (
-    <BaseLayout>
+    <>
       <Stack gap={3} className="vertical-scroll-intermediate-container">
         <Card>
           <Card.Header>{t('users.white_list.header')}</Card.Header>
@@ -323,7 +317,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
           )}
         </div>
       </Stack>
-    </BaseLayout>
+    </>
   );
 };
 

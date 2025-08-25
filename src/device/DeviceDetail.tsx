@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getDevice } from './DeviceApi';
+import { useDeviceAPI } from '../device/DeviceApi';
 import { useAuth } from '../hooks/use-auth';
 import { Device } from '../types/DeviceType';
 import { useNavigate } from 'react-router';
 import { DeviceDetailBasicInfo } from './_components/DeviceDetailBasicInfo';
 import { TopologyInfo } from './_components/TopologyInfo';
-import BaseLayout from '../common/BaseLayout';
 import Button from 'react-bootstrap/Button';
 import { DeleteConfirmation } from './_components/DeviceDeleteModal';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +18,7 @@ export const DeviceDetail: React.FC = () => {
   const navigate = useNavigate();
   const auth = useAuth();
   const { t } = useTranslation();
+  const { getDevice } = useDeviceAPI();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -27,10 +27,14 @@ export const DeviceDetail: React.FC = () => {
   }, [auth.idToken]);
 
   useEffect(() => {
-    if (deviceId !== undefined && auth.idToken !== undefined) {
-      getDevice(deviceId, auth.idToken)
-        .then((device: Device) => {
-          setDevice(device);
+    if (deviceId !== undefined) {
+      getDevice(deviceId)
+        .then((device: Device | null) => {
+          if (device !== null) {
+            setDevice(device);
+          } else {
+            console.error('Device not found');
+          }
         })
         .catch((error) => {
           console.error('Failed to fetch device:', error);
@@ -47,7 +51,7 @@ export const DeviceDetail: React.FC = () => {
   };
 
   return (
-    <BaseLayout>
+    <>
       {device != null && <DeviceDetailBasicInfo {...device} />}
       <div style={{ height: '3vh' }}></div>
       <div style={{ display: 'flex', justifyContent: 'right' }}>
@@ -65,7 +69,6 @@ export const DeviceDetail: React.FC = () => {
         showModal={showModal}
         hideModal={() => setShowModal(false)}
         deviceId={deviceId}
-        idToken={auth.idToken}
       />
       {device?.deviceType === 'QPU' && (
         <div>
@@ -73,6 +76,6 @@ export const DeviceDetail: React.FC = () => {
           <TopologyInfo deviceInfo={device?.deviceInfo} />
         </div>
       )}
-    </BaseLayout>
+    </>
   );
 };

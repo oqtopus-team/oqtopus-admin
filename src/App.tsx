@@ -21,6 +21,7 @@ import { DeviceUpdateConfirm } from './device/DeviceUpdateConfirm';
 import AnnouncementsList from './announcements/AnnouncementsList';
 import AnnouncementEditor from './announcements/AnnouncementEditor';
 import { UserEdit } from './user/UserEdit';
+import BaseLayout from './common/BaseLayout';
 
 const App: React.FC = () => {
   const auth = useAuth();
@@ -35,21 +36,23 @@ const App: React.FC = () => {
         <Routes>
           <Route index element={<LogIn />} />
           <Route path="login" element={<LogIn />} />
-          <Route path="users" element={<UserList />}></Route>
-          <Route path="users/edit/:userId" element={<UserEdit />}></Route>
-          <Route path="password-change" element={<PasswordChange />}></Route>
-          <Route path="first-password-change" element={<FirstPasswordChange />}></Route>
-          <Route path="whitelist" element={<WhitelistUserList />} />
-          <Route path="whitelist-register" element={<WhitelistUserRegister />} />
-          <Route path="device" element={<DeviceList />} />
-          <Route path="device/form/edit" element={<DeviceRegisterEdit />} />
-          <Route path="device/form/confirm" element={<DeviceRegisterConfirm />} />
-          <Route path="device/:deviceId" element={<DeviceDetail />} />
-          <Route path="device/form/:deviceId/edit" element={<DeviceUpdateEdit />} />
-          <Route path="device/form/:deviceId/confirm" element={<DeviceUpdateConfirm />} />
-          <Route path="announcements" element={<AnnouncementsList />} />
-          <Route path="announcements/create" element={<AnnouncementEditor />} />
-          <Route path="announcements/edit/:postId" element={<AnnouncementEditor />} />
+          <Route path="first-password-change" element={<FirstPasswordChange />} />
+          <Route element={<BaseLayout />}>
+            <Route path="users" element={<UserList />} />
+            <Route path="users/edit/:userId" element={<UserEdit />} />
+            <Route path="password-change" element={<PasswordChange />} />
+            <Route path="whitelist" element={<WhitelistUserList />} />
+            <Route path="whitelist-register" element={<WhitelistUserRegister />} />
+            <Route path="device" element={<DeviceList />} />
+            <Route path="device/form/edit" element={<DeviceRegisterEdit />} />
+            <Route path="device/form/confirm" element={<DeviceRegisterConfirm />} />
+            <Route path="device/:deviceId" element={<DeviceDetail />} />
+            <Route path="device/form/:deviceId/edit" element={<DeviceUpdateEdit />} />
+            <Route path="device/form/:deviceId/confirm" element={<DeviceUpdateConfirm />} />
+            <Route path="announcements" element={<AnnouncementsList />} />
+            <Route path="announcements/create" element={<AnnouncementEditor />} />
+            <Route path="announcements/edit/:postId" element={<AnnouncementEditor />} />
+          </Route>
           <Route path="*" element={<p>Page Not Found</p>} />
         </Routes>
       </LoadingProvider>

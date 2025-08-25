@@ -87,7 +87,7 @@ export function toggleMarkdownFormat(editor: LexicalEditor, formatMarkers: strin
   });
 }
 
-export function isCaretInsideMarkdownFormat(text:string, offset: number, markers: string) {
+export function isCaretInsideMarkdownFormat(text: string, offset: number, markers: string) {
   const lastMarkerBeforeCursor = findLastMarkerBeforeCursor(text, offset, markers);
   if (lastMarkerBeforeCursor === -1) return false;
 
@@ -101,7 +101,7 @@ export function isCaretInsideMarkdownFormat(text:string, offset: number, markers
   return !middleText.includes(markers);
 }
 
-export function findLastMarkerBeforeCursor(text:string, offset: number, markers: string) {
+export function findLastMarkerBeforeCursor(text: string, offset: number, markers: string) {
   let position = -1;
   let index = 0;
 
@@ -116,11 +116,11 @@ export function findLastMarkerBeforeCursor(text:string, offset: number, markers:
   return position;
 }
 
-export function findFirstMarkerAfterCursor(text:string, offset: number, markers: string) {
+export function findFirstMarkerAfterCursor(text: string, offset: number, markers: string) {
   return text.indexOf(markers, offset);
 }
 
-export function findFormattedTextRange(text:string, offset: number, markers: string) {
+export function findFormattedTextRange(text: string, offset: number, markers: string) {
   const lastMarkerBeforeCursor = findLastMarkerBeforeCursor(text, offset, markers);
   if (lastMarkerBeforeCursor === -1) return null;
 
@@ -141,7 +141,7 @@ export function findFormattedTextRange(text:string, offset: number, markers: str
   };
 }
 
-export function findWordBoundaries(text:string, cursorOffset: number) {
+export function findWordBoundaries(text: string, cursorOffset: number) {
   if (!text) return null;
 
   let start = cursorOffset;
@@ -166,19 +166,19 @@ export function formatLink(t: TFunction, editor: LexicalEditor, payload: string 
     const selection = $getSelection();
 
     if (!$isRangeSelection(selection) || selection.isCollapsed()) {
-      toast(t('announcements.editor.errors.link_empty_string'), infoToastConfig)
+      toast(t('announcements.editor.errors.link_empty_string'), infoToastConfig);
       return false;
     }
 
     const selectedText = selection.getTextContent();
     if (!selectedText.trim()) {
-      toast(t('announcements.editor.errors.link_empty_selection'), errorToastConfig)
+      toast(t('announcements.editor.errors.link_empty_selection'), errorToastConfig);
       return false;
     }
 
     const url = typeof payload === 'string' ? payload : payload?.url ?? '';
     if (!url.trim()) {
-      toast(t('announcements.editor.errors.link_empty_url'), errorToastConfig)
+      toast(t('announcements.editor.errors.link_empty_url'), errorToastConfig);
       return false;
     }
 

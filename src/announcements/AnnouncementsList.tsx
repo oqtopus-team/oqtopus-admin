@@ -13,9 +13,7 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import { useAuth } from '../hooks/use-auth';
-import BaseLayout from '../common/BaseLayout';
-import { Announcement, deleteAnnouncement, getAnnouncements } from './AnnouncementApi';
+import { Announcement, useAnnouncementAPI } from './AnnouncementApi';
 import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 import './announcementsList.css';
 import { DateTimeFormatter } from '../device/common/DateTimeFormatter';
@@ -34,7 +32,7 @@ const AnnouncementsList = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const auth = useAuth();
+  const { getAnnouncements, deleteAnnouncement } = useAnnouncementAPI();
 
   const handleCustomSort = async (columnId: string) => {
     const currentSort = sorting.find((s) => s.id === columnId);
@@ -53,7 +51,7 @@ const AnnouncementsList = () => {
 
     try {
       //TODO: Important! After implementing the backend (sorting for every field), we need to change the sorting logic here.
-      const result = await getAnnouncements(auth.idToken, {
+      const result = await getAnnouncements({
         order: sortConfig.direction.toUpperCase(),
       });
       setSorting([{ id: columnId, desc: sortConfig.direction === 'desc' }]);
@@ -153,7 +151,7 @@ const AnnouncementsList = () => {
   const handleDeletePost = async (announcementId: number) => {
     setLoading({ ...loadingState, delete: true });
     try {
-      await deleteAnnouncement(announcementId, auth.idToken);
+      await deleteAnnouncement(announcementId);
 
       setAnnouncements(announcements.filter((announcement) => announcement.id !== announcementId));
 
@@ -180,7 +178,7 @@ const AnnouncementsList = () => {
   async function getAnnouncementsList(currentTime?: string) {
     setLoading({ ...loadingState, get: true });
     try {
-      const announcements = await getAnnouncements(auth.idToken, { currentTime });
+      const announcements = await getAnnouncements({ currentTime });
       setAnnouncements(announcements);
     } catch (e) {
       console.error('Error fetching announcements:', e);
@@ -202,111 +200,103 @@ const AnnouncementsList = () => {
 
   return (
     <>
-      <BaseLayout>
-        <div className="announcements-list-header">
-          <Link to={'/announcements/create'}>
-            <Button size="sm" style={{ width: '75px' }}>
-              {t('users.white_list.register.button.add')}
-            </Button>
-          </Link>
-          <label className="active-items-toggle">
-            <input type="checkbox" onChange={onActiveInputChange} />
-            <span>Show only active</span>
-          </label>
-        </div>
-        {announcements.length > 0 ? (
-          <Table bordered hover responsive style={{ marginTop: '10px' }}>
-            <thead className="table-light">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="text-center">
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      onClick={() => {
-                        if (header.column.getCanSort()) {
-                          handleCustomSort(header.column.id);
-                        }
-                      }}
-                      style={{ verticalAlign: 'middle' }}
-                    >
-                      <span>
-                        {flexRender(
-                          t(header.column.columnDef.header as string),
-                          header.getContext()
-                        )}
-                      </span>
-                      {header.column.getCanSort() && (
-                        <span className="px-2">
-                          {{
-                            asc: '↑',
-                            desc: '↓',
-                          }[header.column.getIsSorted() as string] ?? '↕'}
-                        </span>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {announcements.map((announcement) => {
-                return (
-                  <tr
-                    key={announcement.id}
-                    style={{ textAlign: 'center', verticalAlign: 'middle' }}
+      <div className="announcements-list-header">
+        <Link to={'/announcements/create'}>
+          <Button size="sm" style={{ width: '75px' }}>
+            {t('users.white_list.register.button.add')}
+          </Button>
+        </Link>
+        <label className="active-items-toggle">
+          <input type="checkbox" onChange={onActiveInputChange} />
+          <span>Show only active</span>
+        </label>
+      </div>
+      {announcements.length > 0 ? (
+        <Table bordered hover responsive style={{ marginTop: '10px' }}>
+          <thead className="table-light">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="text-center">
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    onClick={() => {
+                      if (header.column.getCanSort()) {
+                        handleCustomSort(header.column.id);
+                      }
+                    }}
+                    style={{ verticalAlign: 'middle' }}
                   >
-                    <td
-                      style={{
-                        maxWidth: '130px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
+                    <span>
+                      {flexRender(t(header.column.columnDef.header as string), header.getContext())}
+                    </span>
+                    {header.column.getCanSort() && (
+                      <span className="px-2">
+                        {{
+                          asc: '↑',
+                          desc: '↓',
+                        }[header.column.getIsSorted() as string] ?? '↕'}
+                      </span>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {announcements.map((announcement) => {
+              return (
+                <tr key={announcement.id} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <td
+                    style={{
+                      maxWidth: '130px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {announcement.title}
+                  </td>
+                  <td>{DateTimeFormatter(t, i18n, announcement.start_time)}</td>
+                  <td>{DateTimeFormatter(t, i18n, announcement.end_time)}</td>
+                  <td
+                    style={{
+                      color: announcement.publishable ? '#316cf4' : '#fc6464',
+                    }}
+                  >
+                    {t(
+                      announcement.publishable
+                        ? 'announcements.publishable'
+                        : 'announcements.unpublishable'
+                    )}
+                  </td>
+                  <td className="action_cell">
+                    <Button
+                      disabled={loadingState.delete}
+                      onClick={() => {
+                        handleEditPost(announcement.id);
                       }}
+                      className="action_button"
                     >
-                      {announcement.title}
-                    </td>
-                    <td>{DateTimeFormatter(t, i18n, announcement.start_time)}</td>
-                    <td>{DateTimeFormatter(t, i18n, announcement.end_time)}</td>
-                    <td
-                      style={{
-                        color: announcement.publishable ? '#316cf4' : '#fc6464',
-                      }}
+                      {t('announcements.actions.edit')}
+                    </Button>
+                    <Button
+                      disabled={loadingState.delete}
+                      variant="danger"
+                      onClick={() => handleDeletePost(announcement.id)}
+                      className="action_button"
                     >
-                      {t(
-                        announcement.publishable
-                          ? 'announcements.publishable'
-                          : 'announcements.unpublishable'
-                      )}
-                    </td>
-                    <td className="action_cell">
-                      <Button
-                        disabled={loadingState.delete}
-                        onClick={() => {
-                          handleEditPost(announcement.id);
-                        }}
-                        className="action_button"
-                      >
-                        {t('announcements.actions.edit')}
-                      </Button>
-                      <Button
-                        disabled={loadingState.delete}
-                        variant="danger"
-                        onClick={() => handleDeletePost(announcement.id)}
-                        className="action_button"
-                      >
-                        {t('announcements.actions.delete')}
-                      </Button>
-                    </td>
-                    <td>{DateTimeFormatter(t, i18n, announcement.updated_at)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        ) : (
-          <p className="no_announcements">{t('announcements.no_announcements')}</p>
-        )}
-      </BaseLayout>
+                      {t('announcements.actions.delete')}
+                    </Button>
+                  </td>
+                  <td>{DateTimeFormatter(t, i18n, announcement.updated_at)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      ) : (
+        <p className="no_announcements">{t('announcements.no_announcements')}</p>
+      )}
     </>
   );
 };
