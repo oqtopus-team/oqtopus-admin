@@ -99,6 +99,7 @@ export default {
           invalid_organization_length: 'Organization must be within 100 characters.',
           invalid_available_device_id: 'Devices with ID: {{missingIds}} are missing',
           duplicated_email: 'Duplicated email address.',
+          asterixConflictError: 'Use either (*) for all items OR specific IDs, not both'
         },
       },
       devices_combobox_placeholder: 'Available devices',

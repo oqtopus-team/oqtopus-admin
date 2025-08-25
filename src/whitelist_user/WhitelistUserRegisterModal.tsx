@@ -1,4 +1,6 @@
 import React, { useRef, useState } from 'react';
+import enTranslations from '../i18n/en/users';
+import jaTranslations from '../i18n/ja/users';
 // import {ModalProps} from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -11,9 +13,54 @@ import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Device } from '../types/DeviceType';
+import { toast } from 'react-toastify';
+import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 const useOrganization: boolean = import.meta.env.VITE_USE_ORGANIZATION === 'enable';
+
+type SupportedLanguage = 'en' | 'ja';
+
+type HeaderTranslations = {
+  groupId: string;
+  mail: string;
+  name: string;
+  organization: string;
+};
+
+const EXPECTED_HEADERS: Record<SupportedLanguage, HeaderTranslations> = {
+  en: {
+    groupId: enTranslations.white_list.register.excel.header.group_id,
+    mail: enTranslations.white_list.register.excel.header.mail,
+    name: enTranslations.white_list.register.excel.header.name,
+    organization: enTranslations.white_list.register.excel.header.organization,
+  },
+  ja: {
+    groupId: jaTranslations.white_list.register.excel.header.group_id,
+    mail: jaTranslations.white_list.register.excel.header.mail,
+    name: jaTranslations.white_list.register.excel.header.name,
+    organization: jaTranslations.white_list.register.excel.header.organization,
+  },
+};
+
+function validateHeaders(header: string[]): boolean {
+  const languages: SupportedLanguage[] = ['en', 'ja'];
+
+  for (const lang of languages) {
+    const expectedHeaders = EXPECTED_HEADERS[lang];
+
+    if (
+      header[0] === expectedHeaders.groupId &&
+      header[1] === expectedHeaders.mail &&
+      (!useUsername || header[2] === expectedHeaders.name) &&
+      (!useOrganization || header[3] === expectedHeaders.organization)
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 interface ExcelImportInput {
   file: FileList;
@@ -45,7 +92,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
     if (file === undefined) {
       processing.current = false;
       setLoading(false);
-      alert(t('users.white_list.register.excel.error.load'));
+      toast(t('users.white_list.register.excel.error.load'), errorToastConfig);
       setDisableButton(false);
       reset();
       setFile(undefined);
@@ -57,7 +104,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
     if (validationResult.hasError) {
       processing.current = false;
       setLoading(false);
-      alert(validationResult.errorMessage);
+      toast(validationResult.errorMessage, errorToastConfig);
       setDisableButton(false);
       reset();
       setFile(undefined);
@@ -67,13 +114,16 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
     try {
       const response = await registerUsers(validationResult.whitelist, t);
       if (response.success) {
-        alert(response.message);
+        toast(response.message, successToastConfig);
         navigate('/whitelist');
       } else {
-        alert(`${t('users.white_list.register.excel.error.register')} \n` + response.message);
+        toast(
+          `${t('users.white_list.register.excel.error.register')}} \n` + response.message,
+          errorToastConfig
+        );
       }
     } catch (e) {
-      alert(t('users.white_list.register.excel.error.system_error'));
+      toast(t('users.white_list.register.excel.error.system_error'), errorToastConfig);
     } finally {
       processing.current = false;
       setLoading(false);
@@ -101,13 +151,9 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
       };
     }
     const sheetJson: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    const header: string[] = sheetJson[0];
-    if (
-      header[0] !== t('users.white_list.register.excel.header.group_id') ||
-      header[1] !== t('users.white_list.register.excel.header.mail') ||
-      (useUsername && header[2] !== t('users.white_list.register.excel.header.name')) ||
-      (useOrganization && header[3] !== t('users.white_list.register.excel.header.organization'))
-    ) {
+    const headers: string[] = sheetJson[0];
+
+    if (!validateHeaders(headers)) {
       errorMessage = t('users.white_list.register.excel.error.invalid_header');
       return {
         hasError,
@@ -136,6 +182,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
       const username = row[2];
       const organization = row[3];
       const availableDevices = row[4];
+
       if (groupId === undefined || email === undefined) {
         errorMessage = t('users.white_list.register.excel.error.required_item');
         return {
@@ -187,18 +234,28 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
         };
       }
 
-      const availableDevicesList = availableDevices.split(',').map((deviceId) => deviceId.trim());
-      const deviceIds = props.devices.map((device) => device.id);
-      const missingIds = availableDevicesList.filter((id) => !deviceIds.includes(id));
-
-      if (missingIds.length > 0) {
-        errorMessage = t('users.white_list.register.excel.error.invalid_available_device_id', {
-          missingIds,
-        });
+      const hasStandaloneStarRegex = /(?:^|,)\s*\*\s*(?:,|$)/g;
+      let availableDevicesList: string[] = ['*'];
+      if (availableDevices !== '*' && availableDevices.match(hasStandaloneStarRegex)) {
+        errorMessage = t('users.white_list.register.excel.error.asterixConflictError');
         return {
           hasError,
           errorMessage,
         };
+      } else if (availableDevices !== '*') {
+        availableDevicesList = availableDevices.split(',').map((deviceId) => deviceId.trim());
+        const deviceIds = props.devices.map((device) => device.id);
+        const missingIds = availableDevicesList.filter((id) => !deviceIds.includes(id));
+
+        if (missingIds.length > 0) {
+          errorMessage = t('users.white_list.register.excel.error.invalid_available_device_id', {
+            missingIds,
+          });
+          return {
+            hasError,
+            errorMessage,
+          };
+        }
       }
 
       whitelist.push({
