@@ -83,7 +83,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
   // User list filters form
   const { handleSubmit, register } = useForm({
     defaultValues: {
-      name: urlParams.name,
+      username: urlParams.name,
       group_id: urlParams.group_id,
       email: urlParams.email,
       organization: urlParams.organization,
@@ -235,7 +235,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
                     <Form.Control
                       autoComplete="off"
                       placeholder="Enter Name"
-                      {...register('name')}
+                      {...register('username')}
                     />
                   </Form.Group>
                 ) : (
