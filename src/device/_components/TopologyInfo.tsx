@@ -45,8 +45,8 @@ const scalePosition = (position: number, scale: number = 50): number => {
   return position * scale;
 };
 
-const normalizePositions = <NodeType, >(
-  nodes: Array<NodeObject<NodeType>>,
+const normalizePositions = <NodeType,>(
+  nodes: Array<NodeObject<NodeType>>
 ): Array<NodeObject<NodeType>> => {
   const sumFx = nodes.reduce((sum, node) => sum + (node.fx ?? 0), 0);
   const sumFy = nodes.reduce((sum, node) => sum + (node.fy ?? 0), 0);
@@ -68,7 +68,7 @@ const createCouplingMapKey = (control: number, target: number): string => {
 };
 
 const createNodeData = (
-  qubits?: Qubit[],
+  qubits?: Qubit[]
 ): { nodeData: any[]; tempNodeMap: Map<string, object> } => {
   try {
     if (qubits === undefined) {
@@ -93,7 +93,7 @@ const createNodeData = (
 };
 
 const createEdgeData = (
-  couplings: Coupling[],
+  couplings: Coupling[]
 ): { edgeData: LinkObject[]; tempCouplingMap: Map<string, object> } => {
   try {
     if (couplings === undefined) {
@@ -266,11 +266,7 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
 
   const strHoveredInfo = JSON.stringify(hoveredInfo);
 
-  if (!isValidDeviceInfo) {
-    return <p className="alert alert-danger">Topology information is invalid</p>;
-  }
-
-  useEffect(() => {
+   useEffect(() => {
     // Delay to ensure the canvas is rendered
     const timeout = setTimeout(() => {
       if (fgRef.current && typeof fgRef.current.zoomToFit === 'function') {
@@ -286,6 +282,10 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
       fgRef.current.zoomToFit(300, 30);
     }
   };
+
+  if (!isValidDeviceInfo) {
+    return <p className="alert alert-danger">Topology information is invalid</p>;
+  }
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 2.0fr', gap: '5vw', marginTop: '20px' }}>
@@ -310,7 +310,7 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
         </Card>
       </div>
       <div ref={divRef}>
-        <Card style={{padding: '10px 10px 0 10px'}}>
+        <Card style={{ padding: '10px 10px 0 10px' }}>
           <div style={{ zIndex: 1000, position: 'absolute', bottom: '25px', right: '25px' }}>
             Zoom: {zoomLevel}x
           </div>
@@ -321,7 +321,7 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
               zIndex: 9999,
               display: 'flex',
               alignItems: 'center',
-              background: "#fff",
+              background: '#fff',
             }}
           >
             <Button onClick={handleFitToView}>Fit to View</Button>
