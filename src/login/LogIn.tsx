@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 const appName: string = import.meta.env.VITE_APP_NAME;
 
 // Validation Rule
-const   validationRules = (t: TFunction<'translation', any>) => {
+const validationRules = (t: TFunction<'translation', any>) => {
   const schema = yup.object({
     username: yup
       .string()
@@ -81,7 +81,7 @@ const LogIn: React.FunctionComponent = () => {
       <AuthHeader />
       <Container className="auth-container">
         <Card>
-          <Card.Header as="h4">{appName}</Card.Header>
+          <Card.Header as="h4">{t('auth.signin.title')}</Card.Header>
           <Card.Body>
             <Form noValidate onSubmit={handleSubmit(onSubmit)}>
               <Form.Group className="mb-3" controlId="email">
