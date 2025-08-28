@@ -22,6 +22,7 @@ import ConfirmMFA from './mfa/ConfirmMFA';
 import SetupMFA from './mfa/SetupMFA';
 import AnnouncementsList from './announcements/AnnouncementsList';
 import AnnouncementEditor from './announcements/AnnouncementEditor';
+import { UserEdit } from './user/UserEdit';
 
 const App: React.FC = () => {
   const auth = useAuth();
@@ -37,6 +38,7 @@ const App: React.FC = () => {
           <Route index element={<LogIn />} />
           <Route path="login" element={<LogIn />} />
           <Route path="users" element={<UserList />}></Route>
+          <Route path="users/edit/:userId" element={<UserEdit />}></Route>
           <Route path="password-change" element={<PasswordChange />}></Route>
           <Route path="first-password-change" element={<FirstPasswordChange />}></Route>
           <Route path="whitelist" element={<WhitelistUserList />} />

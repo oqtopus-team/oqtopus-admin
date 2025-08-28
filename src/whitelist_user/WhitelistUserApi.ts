@@ -1,19 +1,32 @@
-import {
-  WhitelistUser,
-  WhitelistUserRequest,
-  WhitelistUserSearchParams,
-} from '../types/WhitelistUserType';
+import { WhitelistUser, WhitelistUserRequest } from '../types/WhitelistUserType';
 import { ApiResponse } from '../types/CommonType';
 import { TFunction } from 'i18next';
+import { ColumnSort } from '@tanstack/table-core/src/features/RowSorting';
+import { UserSearchParams } from '../types/UserType';
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 
 export async function getUsers(
   idToken: string,
-  offset: number,
-  limit: number
+  options: {
+    offset?: number;
+    limit?: number;
+    sort?: ColumnSort;
+    filterFields?: UserSearchParams;
+  } = {}
 ): Promise<WhitelistUser[]> {
-  const res = await fetch(`${apiEndpoint}/users?offset=${offset}&limit=${limit}`, {
+  const { offset, limit, sort, filterFields } = options;
+  const params = new URLSearchParams();
+
+  if (offset !== undefined) params.append('offset', offset.toString());
+  if (limit !== undefined) params.append('limit', limit.toString());
+  if (sort) params.append('sort', `${sort.id},${sort.desc ? 'desc' : 'asc'}`);
+
+  Object.entries(filterFields ?? {}).forEach(([key, value]) => {
+    params.append(key, value);
+  });
+
+  const res = await fetch(`${apiEndpoint}/whitelist_users?${params.toString()}`, {
     method: 'GET',
     mode: 'cors',
     headers: {
@@ -22,34 +35,6 @@ export async function getUsers(
       Authorization: 'Bearer ' + idToken,
     },
   });
-  const json = await res.json();
-  return json.users;
-}
-
-export async function searchUsers(
-  params: WhitelistUserSearchParams,
-  idToken: string,
-  offset: number,
-  limit: number
-): Promise<WhitelistUser[]> {
-  const query = new URLSearchParams();
-  for (const [key, val] of Object.entries(params)) {
-    query.set(key, val);
-  }
-  const res = await fetch(
-    `${apiEndpoint}/whitelist_users?offset=${offset}&limit=${limit}${
-      query.toString() !== '' ? `&${query.toString()}` : ''
-    }`,
-    {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-    }
-  );
   const json = await res.json();
   return json.users;
 }

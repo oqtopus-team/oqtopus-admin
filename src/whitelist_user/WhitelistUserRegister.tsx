@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -12,16 +12,29 @@ import { FaPlus } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { TestFunction } from 'yup';
 import DefaultModal from '../common/Modal';
 import { useSetLoading } from '../common/Loader';
 import { registerUsers } from './WhitelistUserApi';
 import { useAuth } from '../hooks/use-auth';
 import { ApiResponse } from '../types/CommonType';
 import WhitelistUserRegisterModal from './WhitelistUserRegisterModal';
-import { TestFunction } from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { Combobox } from '../common/combobox/Combobox';
+import { getDevices } from '../device/DeviceApi';
+import { Device } from '../types/DeviceType';
+
+interface WhitelistUserRegisterForm {
+  whitelist: {
+    group_id: string;
+    email: string;
+    username: string;
+    organization: string;
+    available_devices: string[];
+  }[];
+}
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
@@ -71,6 +84,7 @@ const validationRules = (t: TFunction<'translation', any>) => {
         organization: yup
           .string()
           .max(100, t('users.white_list.register.warn.organization_length')),
+        available_devices: yup.array(yup.string()),
       })
     ),
   });
@@ -81,14 +95,29 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
   const auth = useAuth();
   const [registerConfirmModalShow, setRegisterConfirmModalShow] = useState(false);
   const [registerImportModalShow, setRegisterImportModalShow] = useState(false);
+  const [devices, setDevices] = useState<Device[]>([]);
   const processing = useRef(false);
   const setLoading = useSetLoading();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const fetchDevices = (): void => {
+    getDevices(auth.idToken)
+      .then((devices: Device[]) => {
+        setDevices(devices);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch devices:', error);
+      });
+  };
+
   useEffect(() => {
     document.title = `${t('users.white_list.register.title')} | ${appName}`;
   }, [auth.idToken]);
+
+  useEffect(() => {
+    fetchDevices();
+  }, []);
 
   const {
     register,
@@ -96,7 +125,8 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm({
+    watch,
+  } = useForm<WhitelistUserRegisterForm>({
     mode: 'onBlur',
     defaultValues: {
       whitelist: [
@@ -105,6 +135,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
           email: '',
           username: '',
           organization: '',
+          available_devices: [],
         },
       ],
     },
@@ -116,9 +147,11 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     name: 'whitelist',
   });
 
+  const [whitelistObserved] = watch(['whitelist']);
+
   const validationErrors = errors.whitelist;
 
-  const onSubmit = (data: any): void => {
+  const onSubmit = (data: WhitelistUserRegisterForm): void => {
     // API request
     if (processing.current) return; // Prevent double-click
     processing.current = true;
@@ -130,8 +163,18 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
       setLoading(false);
       return;
     }
+    debugger;
 
-    registerUsers(data.whitelist, auth.idToken, t)
+    const formattedData = data.whitelist.map((userData) => {
+      return {
+        ...userData,
+        available_devices: userData.available_devices.includes('*')
+          ? '*'
+          : userData.available_devices,
+      };
+    });
+
+    registerUsers(formattedData, auth.idToken, t)
       .then((res: ApiResponse) => {
         if (res.success) {
           alert(res.message);
@@ -161,11 +204,31 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     header.push(t('users.white_list.register.excel.header.mail'));
     if (useUsername) header.push(t('users.white_list.register.excel.header.name'));
     if (useOrganization) header.push(t('users.white_list.register.excel.header.organization'));
+    header.push(t('users.white_list.register.excel.header.available_devices'));
     XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
-    worksheet['!cols'] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 30 }];
+    worksheet['!cols'] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 30 }, { wch: 20 }];
 
     XLSX.writeFile(workbook, `${t('users.white_list.register.title')}.xlsx`, { compression: true });
   };
+
+  const onAvailableDevicesChange = (value: string | number | (string | number)[] | null, index: number) => {
+    const { onChange, name } = register(`whitelist.${index}.available_devices`);
+
+    if (Array.isArray(value)) {
+      // 'if' order below is important
+      if (whitelistObserved[index].available_devices.length === 1 && whitelistObserved[index].available_devices[0] === '*') {
+        onChange({ target: { name, value: value.filter((val) => val !== '*') } });
+        return;
+      }
+
+      if (value.includes('*')) {
+        onChange({ target: { name, value: ['*'] } });
+        return;
+      }
+    }
+
+    onChange({ target: { name, value } });
+  }
 
   return (
     <BaseLayout>
@@ -236,6 +299,26 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
             ) : (
               ''
             )}
+            <Form.Group as={Col}>
+              <Combobox
+                value={whitelistObserved[index].available_devices}
+                onChange={(value) => {
+                  onAvailableDevicesChange(value, index);
+                }}
+                options={[
+                  { value: '*', label: t('users.white_list.register.all_devices') },
+                  ...devices.map(({ id }) => ({
+                    value: id,
+                    label: id,
+                  })),
+                ]}
+                multiple
+                placeholder={t('users.white_list.register.devices_combobox_placeholder')}
+              />
+              <p style={{ color: 'red' }} className="small">
+                <span>{validationErrors?.[index]?.available_devices?.message}</span>
+              </p>
+            </Form.Group>
             <Col className="text-center col-1 pt-1">
               <GrClose onClick={() => remove(index)}></GrClose>
             </Col>
@@ -252,6 +335,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
                     email: '',
                     username: '',
                     organization: '',
+                    available_devices: [],
                   })
                 }
               >
@@ -291,6 +375,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
         <WhitelistUserRegisterModal
           show={registerImportModalShow}
           onHide={() => setRegisterImportModalShow(false)}
+          devices={devices}
         />
       </Stack>
     </BaseLayout>

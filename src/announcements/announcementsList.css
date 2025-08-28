@@ -14,3 +14,19 @@
     flex-grow: 1;
     margin: 2px 5px;
 }
+
+.active-items-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+        padding-left: 10px;
+    }
+}
+
+.announcements-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

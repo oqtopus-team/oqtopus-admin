@@ -4,6 +4,7 @@ export default {
   group_id: 'Group ID',
   name: 'Name',
   organization: 'Organization',
+  available_devices: 'Available devices',
   status: {
     name: 'Status',
     approved: 'Approved',
@@ -15,6 +16,7 @@ export default {
     operations: 'Operations',
     search_button: 'Search',
     operation: {
+      edit: 'Edit',
       delete: 'Delete',
       delete_success: '{{user}} is deleted successfully',
       delete_confirm: 'Are you sure you want to delete {{user}}?',
@@ -42,6 +44,7 @@ export default {
       delete_confirm: 'Are you sure you want to delete {{user}}?',
     },
     register: {
+      all_devices: 'All devices',
       title: 'Register Whitelist',
       header: 'Register Whitelist User',
       button: {
@@ -77,6 +80,7 @@ export default {
           mail: 'Mail address (Mandatory)',
           name: 'Name',
           organization: 'Organization',
+          available_devices: 'Available devices',
         },
         notice: '* 100 records can be registered at once.',
         error: {
@@ -93,9 +97,44 @@ export default {
           invalid_email_length: 'Email address must be within 100 characters.',
           invalid_username_length: 'User name must be within 100 characters.',
           invalid_organization_length: 'Organization must be within 100 characters.',
+          invalid_available_device_id: 'Devices with ID: {{missingIds}} are missing',
           duplicated_email: 'Duplicated email address.',
+          asterixConflictError: 'Use either (*) for all items OR specific IDs, not both'
         },
       },
+      devices_combobox_placeholder: 'Available devices'
     },
+  },
+  edit: {
+    title: "Profile editing",
+    subtitle: "Update user profile",
+    labels: {
+      name: "Name",
+      group_id: "Group ID",
+      email: "Email",
+      organization: "Organization",
+      available_devices: "Available devices",
+      signup_complete: "Sign up complete"
+    },
+    placeholders: {
+      name: "Enter username",
+      group_id: "Select group",
+      email: "Enter email address",
+      organization: "Enter organization name",
+      available_devices: "Chose available devices",
+    },
+    errors: {
+      name: "Username is required",
+      group_id: "Group Id is required",
+      email: "Email is required",
+      email_format: "Invalid email address",
+      organization: "Organization is required",
+    },
+    notifications: {
+      update_success: 'Data updated successfully',
+      update_failed: 'Failed to update data',
+    },
+    reset: 'Reset',
+    save_changes: 'Save changes',
   },
 };
