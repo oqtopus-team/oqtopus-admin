@@ -320,7 +320,7 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
             style={{
               marginBottom: '15px',
               width: '100%',
-              zIndex: 9999,
+              zIndex: 10,
               display: 'flex',
               alignItems: 'center',
               background: '#fff',
