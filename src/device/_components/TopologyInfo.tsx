@@ -266,7 +266,7 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
 
   const strHoveredInfo = JSON.stringify(hoveredInfo);
 
-  useEffect(() => {
+   useEffect(() => {
     // Delay to ensure the canvas is rendered
     const timeout = setTimeout(() => {
       if (fgRef.current && typeof fgRef.current.zoomToFit === 'function') {
@@ -288,9 +288,7 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
   }
 
   return (
-    <div
-      style={{ display: 'grid', gridTemplateColumns: '1.3fr 2.0fr', gap: '5vw', marginTop: '20px' }}
-    >
+    <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 2.0fr', gap: '5vw', marginTop: '20px' }}>
       <div>
         <h3 ref={headingRef}>Property</h3>
         <Card style={{ height: divSize.height - headingSize.height, backgroundColor: '#f3f4f6' }}>
@@ -320,7 +318,7 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
             style={{
               marginBottom: '15px',
               width: '100%',
-              zIndex: 9999,
+              zIndex: 10,
               display: 'flex',
               alignItems: 'center',
               background: '#fff',
