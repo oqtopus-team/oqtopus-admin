@@ -80,13 +80,13 @@ const validationRules = (t: TFunction<'translation', any>) => {
             t('users.white_list.register.warn.email_duplicated'),
             validateDuplicatedEmail
           ),
-        username: yup.string().max(100, t('users.white_list.register.warn.username_length')),
+        username: yup.string().max(100, t('users.white_list.register.warn.username_length')).required(),
         organization: yup
           .string()
-          .max(100, t('users.white_list.register.warn.organization_length')),
-        available_devices: yup.array(yup.string()),
+          .max(100, t('users.white_list.register.warn.organization_length')).required(),
+        available_devices: yup.array(yup.string().required()).min(1).required(),
       })
-    ),
+    ).required(),
   });
   return schema;
 };
