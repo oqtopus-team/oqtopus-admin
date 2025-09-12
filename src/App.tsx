@@ -18,6 +18,8 @@ import { DeviceRegisterConfirm } from './device/DeviceRegisterConfirm';
 import { DeviceDetail } from './device/DeviceDetail';
 import { DeviceUpdateEdit } from './device/DeviceUpdateEdit';
 import { DeviceUpdateConfirm } from './device/DeviceUpdateConfirm';
+import ConfirmMFA from './mfa/ConfirmMFA';
+import SetupMFA from './mfa/SetupMFA';
 import AnnouncementsList from './announcements/AnnouncementsList';
 import AnnouncementEditor from './announcements/AnnouncementEditor';
 import { UserEdit } from './user/UserEdit';
@@ -47,6 +49,8 @@ const App: React.FC = () => {
           <Route path="device/:deviceId" element={<DeviceDetail />} />
           <Route path="device/form/:deviceId/edit" element={<DeviceUpdateEdit />} />
           <Route path="device/form/:deviceId/confirm" element={<DeviceUpdateConfirm />} />
+          <Route path="confirm-mfa" element={<ConfirmMFA />} />
+          <Route path="setup-mfa" element={<SetupMFA />} />
           <Route path="announcements" element={<AnnouncementsList />} />
           <Route path="announcements/create" element={<AnnouncementEditor />} />
           <Route path="announcements/edit/:postId" element={<AnnouncementEditor />} />

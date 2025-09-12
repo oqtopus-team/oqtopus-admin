@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import AuthHeader from '../common/AuthHeader';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 
@@ -68,7 +69,7 @@ const FirstPasswordChange: React.FunctionComponent = () => {
       .then((result) => {
         if (result.success) {
           alert(t('auth.password_change.success'));
-          navigate({ pathname: '/users' });
+          navigate({ pathname: '/setup-mfa' });
         } else {
           alert(result.message);
         }
@@ -83,9 +84,10 @@ const FirstPasswordChange: React.FunctionComponent = () => {
 
   return (
     <LogInRoute>
-      <Container className="login-container">
+      <AuthHeader />
+      <Container className="auth-container">
         <Card>
-          <Card.Header as="h4">{appName}</Card.Header>
+          <Card.Header as="h4">{t('auth.password_change.title')}</Card.Header>
           <Card.Body>
             <Form noValidate onSubmit={handleSubmit(onSubmit)}>
               <Form.Group className="mb-3" controlId="email">
