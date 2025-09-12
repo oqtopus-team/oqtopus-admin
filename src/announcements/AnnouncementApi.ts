@@ -10,6 +10,7 @@ interface OptionalRequestParams {
   offset?: number;
   limit?: number;
   order?: string;
+  currentTime?: string;
 }
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
@@ -48,12 +49,13 @@ export async function createAnnouncement(announcementsData: AnnouncementsData, i
 
 export async function getAnnouncements(
   idToken: string,
-  { offset, limit, order }: OptionalRequestParams = {}
+  { offset, limit, order, currentTime }: OptionalRequestParams = {}
 ): Promise<Announcement[]> {
   const params = new URLSearchParams();
 
   if (offset !== undefined) params.append('offset', offset.toString());
   if (limit !== undefined) params.append('limit', limit.toString());
+  if (currentTime !== undefined) params.append('current_time', currentTime);
   if (order) params.append('order', order);
 
   try {

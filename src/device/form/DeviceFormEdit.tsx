@@ -12,6 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './DeviceFormEdit.css';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { Resolver } from 'react-hook-form/dist/types/resolvers';
 
 const isJsonParsable = (value: string): boolean => {
   try {
@@ -23,7 +24,7 @@ const isJsonParsable = (value: string): boolean => {
 };
 
 const validationRules = (t: TFunction<'translation', any>) => {
-  const validationRules = yup.object().shape({
+  const validationRules = yup.object({
     deviceType: yup.string().required(t('device.form.warn.required')),
     deviceInfo: yup
       .string()
@@ -38,10 +39,11 @@ const validationRules = (t: TFunction<'translation', any>) => {
       .min(1, t('device.form.warn.not_integer')),
     availableAt: yup.date().required(t('device.form.warn.required')),
     calibratedAt: yup.date().required(t('device.form.warn.required')),
-    basisGates: yup.string(),
-    instructions: yup.string(),
+    basisGates: yup.string().optional(),
+    instructions: yup.string().optional(),
     description: yup.string().required(t('device.form.warn.required')),
   });
+
   return validationRules;
 };
 
@@ -73,7 +75,7 @@ export const DeviceFormEdit: React.FC<DeviceFormEditProps> = ({
     control,
     getValues,
   } = useForm<DeviceForm>({
-    resolver: yupResolver(validationRules(t)),
+    resolver: yupResolver(validationRules(t)) as unknown as Resolver<DeviceForm, any, DeviceForm>,
   });
 
   const isFromNavigate: boolean = inputData !== undefined;

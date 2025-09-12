@@ -5,6 +5,7 @@ export interface WhitelistUser {
   username: string;
   organization: string;
   is_signup_completed: boolean;
+  available_devices: string[];
 }
 
 export interface WhitelistUserSearchParams {

@@ -7,7 +7,7 @@
 ![React](https://img.shields.io/badge/React-18.2.0-blue)
 ![AWS Amplify](https://img.shields.io/badge/AWS%20Amplify-4.3.32-orange)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![slack](https://img.shields.io/badge/slack-OQTOPUS-pink.svg?logo=slack&style=plastic")](https://oqtopus.slack.com/archives/C08KMHXKT40)
+[![slack](https://img.shields.io/badge/slack-OQTOPUS-pink.svg?logo=slack&style=plastic")](https://join.slack.com/t/oqtopus/shared_invite/zt-3bpjb7yc3-Vg8IYSMY1m5wV3DR~TMSnw)
 
 ## Overview
 
@@ -33,6 +33,10 @@ Citation information is also available in the [CITATION](./CITATION.cff) file.
 You can contact us by creating an issue in this repository or by email:
 
 - [oqtopus-team[at]googlegroups.com](mailto:oqtopus-team[at]googlegroups.com)
+
+or you can join our Slack workspace:
+
+[![slack](https://img.shields.io/badge/slack-OQTOPUS-pink.svg?logo=slack&style=plastic")](https://join.slack.com/t/oqtopus/shared_invite/zt-3bpjb7yc3-Vg8IYSMY1m5wV3DR~TMSnw)
 
 ## License
 

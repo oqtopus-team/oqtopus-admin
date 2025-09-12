@@ -177,20 +177,25 @@ const AnnouncementsList = () => {
     onSortingChange: setSorting,
   });
 
+  async function getAnnouncementsList(currentTime?: string) {
+    setLoading({ ...loadingState, get: true });
+    try {
+      const announcements = await getAnnouncements(auth.idToken, { currentTime });
+      setAnnouncements(announcements);
+    } catch (e) {
+      console.error('Error fetching announcements:', e);
+    } finally {
+      setLoading({ ...loadingState, get: false });
+    }
+  }
+
+  async function onActiveInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const checked = e.target.checked;
+    await getAnnouncementsList(checked ? new Date().toISOString() : undefined);
+  }
+
   useEffect(() => {
     if (announcements.length > 0) return;
-
-    async function getAnnouncementsList() {
-      setLoading({ ...loadingState, get: true });
-      try {
-        const announcements = await getAnnouncements(auth.idToken);
-        setAnnouncements(announcements);
-      } catch (e) {
-        console.error('Error fetching announcements:', e);
-      } finally {
-        setLoading({ ...loadingState, get: false });
-      }
-    }
 
     getAnnouncementsList();
   }, []);
@@ -198,11 +203,17 @@ const AnnouncementsList = () => {
   return (
     <>
       <BaseLayout>
-        <Link to={'/announcements/create'}>
-          <Button size="sm" style={{ width: '75px' }}>
-            {t('users.white_list.register.button.add')}
-          </Button>
-        </Link>
+        <div className="announcements-list-header">
+          <Link to={'/announcements/create'}>
+            <Button size="sm" style={{ width: '75px' }}>
+              {t('users.white_list.register.button.add')}
+            </Button>
+          </Link>
+          <label className="active-items-toggle">
+            <input type="checkbox" onChange={onActiveInputChange} />
+            <span>Show only active</span>
+          </label>
+        </div>
         {announcements.length > 0 ? (
           <Table bordered hover responsive style={{ marginTop: '10px' }}>
             <thead className="table-light">
@@ -218,7 +229,12 @@ const AnnouncementsList = () => {
                       }}
                       style={{ verticalAlign: 'middle' }}
                     >
-                      <span>{flexRender(t(header.column.columnDef.header as string), header.getContext())}</span>
+                      <span>
+                        {flexRender(
+                          t(header.column.columnDef.header as string),
+                          header.getContext()
+                        )}
+                      </span>
                       {header.column.getCanSort() && (
                         <span className="px-2">
                           {{
