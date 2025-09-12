@@ -39,6 +39,10 @@ const validationRules = (t: TFunction<'translation', any>) => {
       .email(t('users.edit.errors.email_format'))
       .required(t('users.edit.errors.email')),
     organization: yup.string().required(t('users.edit.errors.organization')),
+    available_devices: yup.array(yup.string().required()).min(1).required(),
+    status: yup
+      .mixed<UserStatus>()
+      .required(t('users.edit.errors.status_required')),
   });
   return validationRules;
 };

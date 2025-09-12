@@ -78,13 +78,13 @@ const validationRules = (t: TFunction<'translation', any>) => {
             t('users.white_list.register.warn.email_duplicated'),
             validateDuplicatedEmail
           ),
-        username: yup.string().max(100, t('users.white_list.register.warn.username_length')),
+        username: yup.string().max(100, t('users.white_list.register.warn.username_length')).required(),
         organization: yup
           .string()
-          .max(100, t('users.white_list.register.warn.organization_length')),
-        available_devices: yup.array(yup.string()),
+          .max(100, t('users.white_list.register.warn.organization_length')).required(),
+        available_devices: yup.array(yup.string().required()).min(1).required(),
       })
-    ),
+    ).required(),
   });
   return schema;
 };
@@ -103,6 +103,16 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
 
   const fetchDevices = (): void => {
     getDevices()
+      .then((devices: Device[]) => {
+        setDevices(devices);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch devices:', error);
+      });
+  };
+
+  const fetchDevices = (): void => {
+    getDevices(auth.idToken)
       .then((devices: Device[]) => {
         setDevices(devices);
       })
@@ -163,6 +173,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
       setLoading(false);
       return;
     }
+    debugger;
 
     const formattedData = data.whitelist.map((userData) => {
       return {

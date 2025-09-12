@@ -14,7 +14,7 @@ export const DeviceFormConfirm: React.FC<DeviceFormConfirmProps> = ({ inputData 
   const calibratedAtString = DateTimeFormatter(t, i18n, inputData.calibratedAt?.toISOString());
 
   return (
-    <div>
+    <div className="vertical-scrollable-container">
       <DisplayInfo title={t('device.device_type')} info={inputData.deviceType}></DisplayInfo>
 
       <DisplayInfo

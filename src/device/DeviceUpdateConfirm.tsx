@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 const appName: string = import.meta.env.VITE_APP_NAME;
 
 const generatePatchDevice = (formData: DeviceForm, dbData: DeviceForm): DeviceForm => {
-  const patchData: Partial<DeviceForm> = {};
+  const patchData: DeviceForm = {} as DeviceForm;
 
   Object.keys(formData).forEach((key) => {
     if (key in formData) {
@@ -31,7 +31,7 @@ const generatePatchDevice = (formData: DeviceForm, dbData: DeviceForm): DeviceFo
         const dbValue = dbData[key as keyof DeviceForm];
         if (formValue !== dbValue) {
           if (formValue !== undefined) {
-            patchData[key as keyof DeviceForm] = formValue as any;
+            patchData[key as keyof DeviceForm] = formValue as never;
           }
         }
       }
