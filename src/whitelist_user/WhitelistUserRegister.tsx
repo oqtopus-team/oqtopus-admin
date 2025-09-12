@@ -111,16 +111,6 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
       });
   };
 
-  const fetchDevices = (): void => {
-    getDevices(auth.idToken)
-      .then((devices: Device[]) => {
-        setDevices(devices);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch devices:', error);
-      });
-  };
-
   useEffect(() => {
     document.title = `${t('users.white_list.register.title')} | ${appName}`;
   }, [auth.idToken]);

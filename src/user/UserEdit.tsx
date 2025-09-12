@@ -41,7 +41,7 @@ const validationRules = (t: TFunction<'translation', any>) => {
     organization: yup.string().required(t('users.edit.errors.organization')),
     available_devices: yup.array(yup.string().required()).min(1).required(),
     status: yup
-      .mixed<UserStatus>()
+      .mixed<UsersUserStatus>()
       .required(t('users.edit.errors.status_required')),
   });
   return validationRules;
