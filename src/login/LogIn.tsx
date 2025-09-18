@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 const appName: string = import.meta.env.VITE_APP_NAME;
 
 // Validation Rule
-const   validationRules = (t: TFunction<'translation', any>) => {
+const validationRules = (t: TFunction<'translation', any>) => {
   const schema = yup.object({
     username: yup
       .string()

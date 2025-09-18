@@ -13,13 +13,11 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import BaseLayout from '../common/BaseLayout';
 import { ToolbarPlugin } from './ToolbarPlugin';
 import EditorPreview from './EditorPreview';
 import MarkdownUnorderedListPlugin from './plugins/MarkdownUnorderedListPlugin';
 import { Select } from '../common/Select';
 import { editorConfig } from './editorSettings';
-
 import './editor.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import MarkdownOrderedListPlugin from './plugins/MarkdownOrderedListPlugin';
@@ -27,7 +25,7 @@ import MarkdownCodeBlockPlugin from './plugins/MarkdownCodeBlockPlugin';
 import MarkdownCheckListPlugin from './plugins/MarkdownCheckListPlugin';
 import { useAuth } from '../hooks/use-auth';
 import { ComposerWrapper } from './ComposerWrapper/ComposerWrapper';
-import { createAnnouncement, editAnnouncement, getSingleAnnouncement } from './AnnouncementApi';
+import { useAnnouncementAPI } from './AnnouncementApi';
 import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 
 const AnnouncementEditor = () => {
@@ -41,6 +39,7 @@ const AnnouncementEditor = () => {
   const [initialContent, setInitialContent] = useState('');
   const auth = useAuth();
   const { t, i18n } = useTranslation();
+  const { createAnnouncement, editAnnouncement, getSingleAnnouncement } = useAnnouncementAPI();
 
   const navigate = useNavigate();
   const params = useParams<{ postId: string }>();
@@ -52,15 +51,17 @@ const AnnouncementEditor = () => {
       if (params.postId === undefined) return;
 
       try {
-        const announcement = await getSingleAnnouncement(params.postId, auth.idToken);
+        const announcement = await getSingleAnnouncement(params.postId);
 
-        setPublishable(announcement.publishable ? 1 : 0);
-        setSelectedDate({
-          start: new Date(announcement.start_time),
-          end: new Date(announcement.end_time),
-        });
-        setPostTitle(announcement.title);
-        setInitialContent(announcement.content);
+        if (announcement) {
+          setPublishable(announcement.publishable ? 1 : 0);
+          setSelectedDate({
+            start: new Date(announcement.start_time),
+            end: new Date(announcement.end_time),
+          });
+          setPostTitle(announcement.title);
+          setInitialContent(announcement.content);
+        }
       } catch (e) {
         console.error('Error fetching announcement:', e);
       }
@@ -91,10 +92,10 @@ const AnnouncementEditor = () => {
 
     try {
       if (params.postId) {
-        await editAnnouncement(params.postId, postData, auth.idToken);
+        await editAnnouncement(params.postId, postData);
         toast(t('announcements.updated_success'), successToastConfig);
       } else {
-        await createAnnouncement(postData, auth.idToken);
+        await createAnnouncement(postData);
         toast(t('announcements.created_success'), successToastConfig);
       }
 
@@ -114,7 +115,7 @@ const AnnouncementEditor = () => {
   };
 
   return (
-    <BaseLayout>
+    <div>
       <Stack direction="horizontal" gap={2} className="flex-wrap py-2 align-items-end">
         <Stack direction="horizontal" gap={2} className="flex-wrap">
           <Stack direction="vertical">
@@ -211,7 +212,7 @@ const AnnouncementEditor = () => {
           </ComposerWrapper>
         </LexicalComposer>
       </Stack>
-    </BaseLayout>
+    </div>
   );
 };
 

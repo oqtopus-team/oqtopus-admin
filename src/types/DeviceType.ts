@@ -1,12 +1,4 @@
-export enum DevicesDeviceInfoDeviceTypeEnum {
-  QPU = 'QPU',
-  Simulator = 'simulator',
-}
-
-export enum DevicesDeviceInfoStatusEnum {
-  Available = 'available',
-  Unavailable = 'unavailable',
-}
+import { DevicesDeviceInfoDeviceTypeEnum, DevicesDeviceInfoStatusEnum } from '../api/generated';
 
 export type DeviceType = DevicesDeviceInfoDeviceTypeEnum;
 export type DeviceStatusType = DevicesDeviceInfoStatusEnum;
