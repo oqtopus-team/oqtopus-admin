@@ -115,7 +115,7 @@ const AnnouncementEditor = () => {
   };
 
   return (
-    <div>
+    <div className="vertical-scrollable-container">
       <Stack direction="horizontal" gap={2} className="flex-wrap py-2 align-items-end">
         <Stack direction="horizontal" gap={2} className="flex-wrap">
           <Stack direction="vertical">

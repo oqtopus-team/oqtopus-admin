@@ -62,29 +62,35 @@ const validateDuplicatedEmail: TestFunction = (email: unknown, context): boolean
 
 const validationRules = (t: TFunction<'translation', any>) => {
   const schema = yup.object().shape({
-    whitelist: yup.array(
-      yup.object().shape({
-        group_id: yup
-          .string()
-          .required(t('users.white_list.register.warn.group_id'))
-          .max(100, t('users.white_list.register.warn.group_id_length')),
-        email: yup
-          .string()
-          .required(t('users.white_list.register.warn.email'))
-          .email(t('users.white_list.register.warn.email_invalid'))
-          .max(100, t('users.white_list.register.warn.email_length'))
-          .test(
-            'email-dup',
-            t('users.white_list.register.warn.email_duplicated'),
-            validateDuplicatedEmail
-          ),
-        username: yup.string().max(100, t('users.white_list.register.warn.username_length')).required(),
-        organization: yup
-          .string()
-          .max(100, t('users.white_list.register.warn.organization_length')).required(),
-        available_devices: yup.array(yup.string().required()).min(1).required(),
-      })
-    ).required(),
+    whitelist: yup
+      .array(
+        yup.object().shape({
+          group_id: yup
+            .string()
+            .required(t('users.white_list.register.warn.group_id'))
+            .max(100, t('users.white_list.register.warn.group_id_length')),
+          email: yup
+            .string()
+            .required(t('users.white_list.register.warn.email'))
+            .email(t('users.white_list.register.warn.email_invalid'))
+            .max(100, t('users.white_list.register.warn.email_length'))
+            .test(
+              'email-dup',
+              t('users.white_list.register.warn.email_duplicated'),
+              validateDuplicatedEmail
+            ),
+          username: yup
+            .string()
+            .max(100, t('users.white_list.register.warn.username_length'))
+            .required(),
+          organization: yup
+            .string()
+            .max(100, t('users.white_list.register.warn.organization_length'))
+            .required(),
+          available_devices: yup.array(yup.string().required()).min(1).required(),
+        })
+      )
+      .required(),
   });
   return schema;
 };
@@ -238,7 +244,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
 
   return (
     <>
-      <Stack gap={3}>
+      <Stack gap={3} className="vertical-scrollable-container">
         <Row className="mb-5 pb-3">
           <h1>{t('users.white_list.register.header')}</h1>
           <div className="text-end">
