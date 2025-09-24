@@ -28,8 +28,8 @@ interface WhitelistUserRegisterForm {
   whitelist: {
     group_id: string;
     email: string;
-    username: string;
-    organization: string;
+    username?: string;
+    organization?: string;
     available_devices: string[];
   }[];
 }
@@ -62,29 +62,38 @@ const validateDuplicatedEmail: TestFunction = (email: unknown, context): boolean
 
 const validationRules = (t: TFunction<'translation', any>) => {
   const schema = yup.object().shape({
-    whitelist: yup.array(
-      yup.object().shape({
-        group_id: yup
-          .string()
-          .required(t('users.white_list.register.warn.group_id'))
-          .max(100, t('users.white_list.register.warn.group_id_length')),
-        email: yup
-          .string()
-          .required(t('users.white_list.register.warn.email'))
-          .email(t('users.white_list.register.warn.email_invalid'))
-          .max(100, t('users.white_list.register.warn.email_length'))
-          .test(
-            'email-dup',
-            t('users.white_list.register.warn.email_duplicated'),
-            validateDuplicatedEmail
-          ),
-        username: yup.string().max(100, t('users.white_list.register.warn.username_length')).required(),
-        organization: yup
-          .string()
-          .max(100, t('users.white_list.register.warn.organization_length')).required(),
-        available_devices: yup.array(yup.string().required()).min(1).required(),
-      })
-    ).required(),
+    whitelist: yup
+      .array(
+        yup.object().shape({
+          group_id: yup
+            .string()
+            .required(t('users.white_list.register.warn.group_id'))
+            .max(100, t('users.white_list.register.warn.group_id_length')),
+          email: yup
+            .string()
+            .required(t('users.white_list.register.warn.email'))
+            .email(t('users.white_list.register.warn.email_invalid'))
+            .max(100, t('users.white_list.register.warn.email_length'))
+            .test(
+              'email-dup',
+              t('users.white_list.register.warn.email_duplicated'),
+              validateDuplicatedEmail
+            ),
+          username: yup
+            .string()
+            .max(100, t('users.white_list.register.warn.username_length'))
+            .optional(),
+          organization: yup
+            .string()
+            .max(100, t('users.white_list.register.warn.organization_length'))
+            .optional(),
+          available_devices: yup
+            .array(yup.string().required())
+            .min(1, t('users.white_list.register.warn.invalid_available_device_length'))
+            .required(),
+        })
+      )
+      .required(),
   });
   return schema;
 };
