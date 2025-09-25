@@ -247,7 +247,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
 
   return (
     <>
-      <Stack gap={3}>
+      <Stack gap={3} className="vertical-scrollable-container">
         <Row className="mb-5 pb-3">
           <h1>{t('users.white_list.register.header')}</h1>
           <div className="text-end">

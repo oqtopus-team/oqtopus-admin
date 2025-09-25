@@ -199,7 +199,7 @@ const AnnouncementsList = () => {
   }, []);
 
   return (
-    <>
+    <div className="vertical-scrollable-container">
       <div className="announcements-list-header">
         <Link to={'/announcements/create'}>
           <Button size="sm" style={{ width: '75px' }}>
@@ -297,7 +297,7 @@ const AnnouncementsList = () => {
       ) : (
         <p className="no_announcements">{t('announcements.no_announcements')}</p>
       )}
-    </>
+    </div>
   );
 };
 
