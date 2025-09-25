@@ -28,8 +28,8 @@ interface WhitelistUserRegisterForm {
   whitelist: {
     group_id: string;
     email: string;
-    username: string;
-    organization: string;
+    username?: string;
+    organization?: string;
     available_devices: string[];
   }[];
 }
@@ -82,12 +82,15 @@ const validationRules = (t: TFunction<'translation', any>) => {
           username: yup
             .string()
             .max(100, t('users.white_list.register.warn.username_length'))
-            .required(),
+            .optional(),
           organization: yup
             .string()
             .max(100, t('users.white_list.register.warn.organization_length'))
+            .optional(),
+          available_devices: yup
+            .array(yup.string().required())
+            .min(1, t('users.white_list.register.warn.invalid_available_device_length'))
             .required(),
-          available_devices: yup.array(yup.string().required()).min(1).required(),
         })
       )
       .required(),

@@ -63,6 +63,7 @@ export default {
         email_duplicated: 'メールアドレスが重複しています。',
         username_length: '100文字以下で入力してください。',
         organization_length: '100文字以下で入力してください。',
+        invalid_available_device_length: '利用可能なデバイスには、少なくとも1台のデバイスが含まれている必要があります。',
         no_data: '登録するデータがありません。',
       },
       failure: '登録処理が失敗しました。\n',

@@ -56,7 +56,7 @@ export const useWhitelistUserAPI = () => {
   };
 
   const registerUsers = async (
-    whitelist: WhitelistUserRequest[],
+    whitelist: Partial<WhitelistUserRequest>[],
     t: TFunction<'translation', any>
   ) => {
     try {

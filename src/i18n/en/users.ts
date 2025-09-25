@@ -59,6 +59,7 @@ export default {
         group_id_length: 'Enter within 100 characters',
         email: 'Enter email address',
         email_invalid: 'Invalid email address',
+        invalid_available_device_length: 'Available devices must contain at least one device.',
         email_length: 'Enter within 100 characters',
         email_duplicated: 'Duplicated email address.',
         username_length: 'Enter within 100 characters',
