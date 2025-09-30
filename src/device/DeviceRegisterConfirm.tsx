@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from 'react-router';
-import BaseLayout from '../common/BaseLayout';
 import { DeviceForm } from '../types/DeviceType';
-import { postDevice } from './DeviceApi';
+import { useDeviceAPI } from '../device/DeviceApi';
 import { useAuth } from '../hooks/use-auth';
 import { Spacer } from '../common/Spacer';
 import { DeviceFormConfirm } from './form/DeviceFormConfirm';
@@ -18,6 +17,7 @@ export const DeviceRegisterConfirm: React.FC = () => {
   const [formData, setFormData] = useState<DeviceForm>();
   const [failedSubmissionMessage, setFailedSubmissionMessage] = useState('');
   const { t } = useTranslation();
+  const { postDevice } = useDeviceAPI();
 
   useEffect(() => {
     document.title = `${t('device.register.title')} | ${appName}`;
@@ -37,7 +37,7 @@ export const DeviceRegisterConfirm: React.FC = () => {
 
   const handleSubmit = async (): Promise<void> => {
     if (formData != null) {
-      const res = await postDevice(formData, auth.idToken);
+      const res = await postDevice(formData);
       if (res.success) {
         navigate('/device');
       } else {
@@ -49,7 +49,7 @@ export const DeviceRegisterConfirm: React.FC = () => {
   };
 
   return (
-    <BaseLayout>
+    <>
       {formData != null && <DeviceFormConfirm inputData={formData} />}
       <Spacer size={30} horizontal={true} />
       {failedSubmissionMessage !== '' && (
@@ -64,6 +64,6 @@ export const DeviceRegisterConfirm: React.FC = () => {
         <div style={{ width: '10vw' }}></div>
         <Button onClick={handleSubmit}>{t('device.confirm.register_button')}</Button>
       </div>
-    </BaseLayout>
+    </>
   );
 };

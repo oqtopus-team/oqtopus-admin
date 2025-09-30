@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import BaseLayout from '../common/BaseLayout';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router';
-import { getDevices } from './DeviceApi';
+import { useDeviceAPI } from '../device/DeviceApi';
 import { SortDeviceTable } from './SortDeviceTable';
 import { Device } from '../types/DeviceType';
 import { useAuth } from '../hooks/use-auth';
@@ -13,6 +12,7 @@ const appName: string = import.meta.env.VITE_APP_NAME;
 const DeviceList: React.FC = () => {
   const [devices, setDevices] = useState<Device[]>([]);
   const auth = useAuth();
+  const { getDevices } = useDeviceAPI();
   const navigate = useNavigate();
   const handleRegisterDevice = (): void => {
     navigate('/device/form/edit');
@@ -24,7 +24,7 @@ const DeviceList: React.FC = () => {
   }, [auth.idToken]);
 
   const fetchDevices = (): void => {
-    getDevices(auth.idToken)
+    getDevices()
       .then((devices: Device[]) => {
         setDevices(devices);
       })
@@ -42,13 +42,13 @@ const DeviceList: React.FC = () => {
   }, []);
 
   return (
-    <BaseLayout>
+    <>
       <Button className="mb-3" variant="primary" onClick={handleRegisterDevice}>
         {' '}
         {t('device.register.button')}{' '}
       </Button>
       <SortDeviceTable devices={devices} />
-    </BaseLayout>
+    </>
   );
 };
 

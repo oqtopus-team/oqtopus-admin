@@ -14,6 +14,6 @@ export default {
     auth,
     users,
     announcements,
-    common
+    common,
   },
 };

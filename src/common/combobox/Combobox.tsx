@@ -227,11 +227,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
             disabled={disabled}
             className={clsx(styles.combobox_button, styles.combobox_dropdown_button)}
           >
-            <span
-              className={clsx(styles.dropdown_icon, { [styles.open]: isOpen })}
-            >
-              ▼
-            </span>
+            <span className={clsx(styles.dropdown_icon, { [styles.open]: isOpen })}>▼</span>
           </button>
         </div>
       </div>

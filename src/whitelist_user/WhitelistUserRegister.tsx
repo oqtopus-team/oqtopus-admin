@@ -6,8 +6,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Stack from 'react-bootstrap/Stack';
 import * as XLSX from 'xlsx';
-
-import BaseLayout from '../common/BaseLayout';
 import { FaPlus } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,7 +13,7 @@ import * as yup from 'yup';
 import { TestFunction } from 'yup';
 import DefaultModal from '../common/Modal';
 import { useSetLoading } from '../common/Loader';
-import { registerUsers } from './WhitelistUserApi';
+import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { useAuth } from '../hooks/use-auth';
 import { ApiResponse } from '../types/CommonType';
 import WhitelistUserRegisterModal from './WhitelistUserRegisterModal';
@@ -23,15 +21,15 @@ import { useNavigate } from 'react-router-dom';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Combobox } from '../common/combobox/Combobox';
-import { getDevices } from '../device/DeviceApi';
+import { useDeviceAPI } from '../device/DeviceApi';
 import { Device } from '../types/DeviceType';
 
 interface WhitelistUserRegisterForm {
   whitelist: {
     group_id: string;
     email: string;
-    username: string;
-    organization: string;
+    username?: string;
+    organization?: string;
     available_devices: string[];
   }[];
 }
@@ -64,29 +62,38 @@ const validateDuplicatedEmail: TestFunction = (email: unknown, context): boolean
 
 const validationRules = (t: TFunction<'translation', any>) => {
   const schema = yup.object().shape({
-    whitelist: yup.array(
-      yup.object().shape({
-        group_id: yup
-          .string()
-          .required(t('users.white_list.register.warn.group_id'))
-          .max(100, t('users.white_list.register.warn.group_id_length')),
-        email: yup
-          .string()
-          .required(t('users.white_list.register.warn.email'))
-          .email(t('users.white_list.register.warn.email_invalid'))
-          .max(100, t('users.white_list.register.warn.email_length'))
-          .test(
-            'email-dup',
-            t('users.white_list.register.warn.email_duplicated'),
-            validateDuplicatedEmail
-          ),
-        username: yup.string().max(100, t('users.white_list.register.warn.username_length')).required(),
-        organization: yup
-          .string()
-          .max(100, t('users.white_list.register.warn.organization_length')).required(),
-        available_devices: yup.array(yup.string().required()).min(1).required(),
-      })
-    ).required(),
+    whitelist: yup
+      .array(
+        yup.object().shape({
+          group_id: yup
+            .string()
+            .required(t('users.white_list.register.warn.group_id'))
+            .max(100, t('users.white_list.register.warn.group_id_length')),
+          email: yup
+            .string()
+            .required(t('users.white_list.register.warn.email'))
+            .email(t('users.white_list.register.warn.email_invalid'))
+            .max(100, t('users.white_list.register.warn.email_length'))
+            .test(
+              'email-dup',
+              t('users.white_list.register.warn.email_duplicated'),
+              validateDuplicatedEmail
+            ),
+          username: yup
+            .string()
+            .max(100, t('users.white_list.register.warn.username_length'))
+            .optional(),
+          organization: yup
+            .string()
+            .max(100, t('users.white_list.register.warn.organization_length'))
+            .optional(),
+          available_devices: yup
+            .array(yup.string().required())
+            .min(1, t('users.white_list.register.warn.invalid_available_device_length'))
+            .required(),
+        })
+      )
+      .required(),
   });
   return schema;
 };
@@ -100,9 +107,11 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
   const setLoading = useSetLoading();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { getDevices } = useDeviceAPI();
+  const { registerUsers } = useWhitelistUserAPI();
 
   const fetchDevices = (): void => {
-    getDevices(auth.idToken)
+    getDevices()
       .then((devices: Device[]) => {
         setDevices(devices);
       })
@@ -174,7 +183,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
       };
     });
 
-    registerUsers(formattedData, auth.idToken, t)
+    registerUsers(formattedData, t)
       .then((res: ApiResponse) => {
         if (res.success) {
           alert(res.message);
@@ -211,12 +220,18 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     XLSX.writeFile(workbook, `${t('users.white_list.register.title')}.xlsx`, { compression: true });
   };
 
-  const onAvailableDevicesChange = (value: string | number | (string | number)[] | null, index: number) => {
+  const onAvailableDevicesChange = (
+    value: string | number | (string | number)[] | null,
+    index: number
+  ) => {
     const { onChange, name } = register(`whitelist.${index}.available_devices`);
 
     if (Array.isArray(value)) {
       // 'if' order below is important
-      if (whitelistObserved[index].available_devices.length === 1 && whitelistObserved[index].available_devices[0] === '*') {
+      if (
+        whitelistObserved[index].available_devices.length === 1 &&
+        whitelistObserved[index].available_devices[0] === '*'
+      ) {
         onChange({ target: { name, value: value.filter((val) => val !== '*') } });
         return;
       }
@@ -228,11 +243,11 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     }
 
     onChange({ target: { name, value } });
-  }
+  };
 
   return (
-    <BaseLayout>
-      <Stack gap={3}>
+    <>
+      <Stack gap={3} className="vertical-scrollable-container">
         <Row className="mb-5 pb-3">
           <h1>{t('users.white_list.register.header')}</h1>
           <div className="text-end">
@@ -378,7 +393,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
           devices={devices}
         />
       </Stack>
-    </BaseLayout>
+    </>
   );
 };
 
