@@ -163,7 +163,7 @@ export const SortDeviceTable: React.FC<TableProps> = ({ devices }): JSX.Element 
                       ? ' ↓'
                       : header.column.getIsSorted() === 'asc'
                       ? ' ↑'
-                      : ' ⇅')}
+                      : ' ↕')}
                 </span>
               </th>
             ))}
