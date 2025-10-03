@@ -77,7 +77,7 @@ const SignIn: React.FunctionComponent = () => {
     <SignInRoute>
       <Container className="signin-container">
         <Card>
-          <Card.Header as="h4">{appName}</Card.Header>
+          <Card.Header as="h4">{t('auth.signin.title')}</Card.Header>
           <Card.Body>
             <Form noValidate onSubmit={handleSubmit(onSubmit)}>
               <Form.Group className="mb-3" controlId="email">
