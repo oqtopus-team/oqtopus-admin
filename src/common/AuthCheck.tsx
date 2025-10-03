@@ -8,7 +8,7 @@ interface Props {
 
 const AuthCheck: React.FC<Props> = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+  return isAuthenticated ? <>{children}</> : <Navigate to="/signin" />;
 };
 
 export default AuthCheck;

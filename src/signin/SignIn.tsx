@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
-import LogInRoute from './LogInRoute';
+import SignInRoute from './SignInRoute';
 import { useAuth } from '../hooks/use-auth';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -27,12 +27,12 @@ const validationRules = (t: TFunction<'translation', any>) => {
 };
 
 // type definition of form inputs
-interface LoginInputs {
+interface SignInInputs {
   username: string;
   password: string;
 }
 
-const LogIn: React.FunctionComponent = () => {
+const SignIn: React.FunctionComponent = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
@@ -43,13 +43,13 @@ const LogIn: React.FunctionComponent = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginInputs>({
+  } = useForm<SignInInputs>({
     resolver: yupResolver(validationRules(t)),
   });
   useEffect(() => {
     document.title = `${t('auth.signin.title')} | ${appName}`;
   });
-  const onSubmit: SubmitHandler<LoginInputs> = () => {
+  const onSubmit: SubmitHandler<SignInInputs> = () => {
     // Prevent double-click
     if (processing.current) return;
     processing.current = true;
@@ -74,10 +74,10 @@ const LogIn: React.FunctionComponent = () => {
   };
 
   return (
-    <LogInRoute>
-      <Container className="login-container">
+    <SignInRoute>
+      <Container className="signin-container">
         <Card>
-          <Card.Header as="h4">{appName}</Card.Header>
+          <Card.Header as="h4">{t('auth.signin.title')}</Card.Header>
           <Card.Body>
             <Form noValidate onSubmit={handleSubmit(onSubmit)}>
               <Form.Group className="mb-3" controlId="email">
@@ -118,8 +118,8 @@ const LogIn: React.FunctionComponent = () => {
           </Card.Body>
         </Card>
       </Container>
-    </LogInRoute>
+    </SignInRoute>
   );
 };
 
-export default LogIn;
+export default SignIn;
