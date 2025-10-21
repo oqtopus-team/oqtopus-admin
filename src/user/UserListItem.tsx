@@ -86,8 +86,8 @@ const UserListItem: React.FC<UserProps> = (props) => {
           <p className="m-0">{user.available_devices}</p>
         )}
       </td>
-      <td>
-        <Button className="mb-1 w-100" variant="danger" onClick={() => setDeleteModalShow(true)}>
+      <td className="d-flex">
+        <Button className="mx-1 w-100" variant="danger" onClick={() => setDeleteModalShow(true)}>
           {t('users.list.operation.delete')}
         </Button>{' '}
         <DefaultModal
@@ -96,13 +96,13 @@ const UserListItem: React.FC<UserProps> = (props) => {
           message={t('users.list.operation.delete_confirm', { user: user.email })}
           execFunction={onDeleteClick}
         />
-        <Button className="mb-1 w-100" variant="secondary" onClick={() => setStopModalShow(true)}>
+        <Button className="mx-1 w-100" variant="secondary" onClick={() => setStopModalShow(true)}>
           {user.status !== UsersUserStatus.Suspended
             ? t('users.list.operation.suspend')
             : t('users.list.operation.unsuspend')}
         </Button>
         <Button
-          className="mb-1 w-100"
+          className="mx-1 w-100"
           variant="primary"
           onClick={() => navigate(`edit/${props.user.id}`)}
         >
