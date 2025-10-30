@@ -23,6 +23,8 @@ import { useTranslation } from 'react-i18next';
 import { Combobox } from '../common/combobox/Combobox';
 import { useDeviceAPI } from '../device/DeviceApi';
 import { Device } from '../types/DeviceType';
+import { toast } from 'react-toastify';
+import { errorToastConfig, infoToastConfig, successToastConfig } from '../config/toast-notification';
 
 interface WhitelistUserRegisterForm {
   whitelist: {
@@ -167,12 +169,11 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     setLoading(true);
 
     if (data.whitelist.length === 0) {
-      alert(t('users.white_list.register.warn.no_data'));
+      toast(t('users.white_list.register.warn.no_data'), infoToastConfig);
       processing.current = false;
       setLoading(false);
       return;
     }
-    debugger;
 
     const formattedData = data.whitelist.map((userData) => {
       return {
@@ -186,10 +187,10 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     registerUsers(formattedData, t)
       .then((res: ApiResponse) => {
         if (res.success) {
-          alert(res.message);
+          toast(res.message, successToastConfig);
           navigate('/whitelist');
         } else {
-          alert(t('users.white_list.register.failure') + res.message);
+          toast(t('users.white_list.register.failure') + res.message, errorToastConfig);
         }
       })
       .catch((err) => console.log(err))
@@ -200,7 +201,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
   };
 
   const confirmDataClear = (): void => {
-    alert(t('users.white_list.register.clear_confirm'));
+    toast(t('users.white_list.register.clear_confirm'), successToastConfig);
     reset();
   };
 

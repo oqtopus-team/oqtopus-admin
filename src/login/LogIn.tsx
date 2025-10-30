@@ -11,6 +11,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { errorToastConfig } from '../config/toast-notification';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 
@@ -62,7 +64,7 @@ const LogIn: React.FunctionComponent = () => {
           if (result.message === t('auth.signin.require_password_change')) {
             navigate({ pathname: '/first-password-change' });
           }
-          alert(result.message);
+          toast(result.message, errorToastConfig);
         }
       })
       .catch((error) => {

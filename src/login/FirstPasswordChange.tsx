@@ -11,6 +11,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 
@@ -67,10 +69,10 @@ const FirstPasswordChange: React.FunctionComponent = () => {
       .firstChangePassword(username, currentPassword, newPassword, t)
       .then((result) => {
         if (result.success) {
-          alert(t('auth.password_change.success'));
+          toast(t('auth.password_change.success'), successToastConfig);
           navigate({ pathname: '/users' });
         } else {
-          alert(result.message);
+          toast(result.message, errorToastConfig);
         }
       })
       .catch((error) => {

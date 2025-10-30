@@ -5,6 +5,8 @@ import DefaultModal from '../common/Modal';
 import { useSetLoading } from '../common/Loader';
 import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 const useOrganization: boolean = import.meta.env.VITE_USE_ORGANIZATION === 'enable';
@@ -29,10 +31,10 @@ const WhitelistUserListItem: React.FC<UserProps> = ({ user, execFunction }) => {
     deleteUser([user.email], t)
       .then((res) => {
         if (res.success) {
-          alert(t('users.white_list.operation.delete_success', { user: user.email }));
+          toast(t('users.white_list.operation.delete_success', { user: user.email }), successToastConfig);
           execFunction(user.id);
         } else {
-          alert(t('users.white_list.operation.delete_failure', { user: user.email }));
+          toast(t('users.white_list.operation.delete_failure', { user: user.email }), errorToastConfig);
         }
       })
       .catch((err) => console.log(err))

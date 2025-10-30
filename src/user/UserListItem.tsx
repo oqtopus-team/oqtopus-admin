@@ -8,6 +8,8 @@ import { useUserAPI } from './UserApi';
 import { useSetLoading } from '../common/Loader';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+import { successToastConfig } from '../config/toast-notification';
 
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 
@@ -50,7 +52,7 @@ const UserListItem: React.FC<UserProps> = (props) => {
     setLoading(true);
     deleteUser(user.id)
       .then(() => {
-        alert(t('users.list.operation.delete_success', { user: user.email }));
+        toast(t('users.list.operation.delete_success', { user: user.email }), successToastConfig);
         props.execFunction(user.id);
       })
       .catch((err) => console.log(err))
