@@ -39,7 +39,7 @@ const Header: React.FunctionComponent = () => {
                 .signOut(t)
                 .then((res) => {
                   if (res.success) {
-                    navigate({ pathname: '/login' });
+                    navigate({ pathname: '/signin' });
                   }
                 })
                 .catch(() => {

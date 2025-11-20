@@ -44,8 +44,7 @@ const DeviceList: React.FC = () => {
   return (
     <>
       <Button className="mb-3" variant="primary" onClick={handleRegisterDevice}>
-        {' '}
-        {t('device.register.button')}{' '}
+        {t('device.register.button')}
       </Button>
       <SortDeviceTable devices={devices} />
     </>

@@ -6,10 +6,10 @@ import 'aframe';
 import 'aframe-extras';
 import { useAuth } from './hooks/use-auth';
 import { LoadingProvider } from './common/Loader';
-import LogIn from './login/LogIn';
+import SignIn from './signin/SignIn';
 import UserList from './user/UserList';
-import PasswordChange from './login/PasswordChange';
-import FirstPasswordChange from './login/FirstPasswordChange';
+import PasswordChange from './signin/PasswordChange';
+import FirstPasswordChange from './signin/FirstPasswordChange';
 import WhitelistUserList from './whitelist_user/WhitelistUserList';
 import WhitelistUserRegister from './whitelist_user/WhitelistUserRegister';
 import DeviceList from './device/DeviceList';
@@ -34,8 +34,8 @@ const App: React.FC = () => {
     <BrowserRouter>
       <LoadingProvider>
         <Routes>
-          <Route index element={<LogIn />} />
-          <Route path="login" element={<LogIn />} />
+          <Route index element={<SignIn />} />
+          <Route path="signin" element={<SignIn />} />
           <Route path="first-password-change" element={<FirstPasswordChange />} />
           <Route element={<BaseLayout />}>
             <Route path="users" element={<UserList />} />

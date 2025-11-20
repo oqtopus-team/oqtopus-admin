@@ -27,7 +27,7 @@ export default {
     },
   },
   signin: {
-    title: 'ログイン',
+    title: 'サインイン',
     auth_failed: '認証に失敗しました',
     require_password_change: 'パスワードを変更してください。',
     mail: 'メールアドレス',
