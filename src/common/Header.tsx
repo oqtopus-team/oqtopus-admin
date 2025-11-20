@@ -10,6 +10,8 @@ import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { ja, enUS } from 'date-fns/locale';
 import { registerLocale } from 'react-datepicker';
+import { errorToastConfig } from '../config/toast-notification';
+import { toast } from 'react-toastify';
 
 registerLocale('ja', ja);
 registerLocale('en', enUS);
@@ -41,7 +43,7 @@ const Header: React.FunctionComponent = () => {
                   }
                 })
                 .catch(() => {
-                  alert(t('header.logout.failure'));
+                  toast(t('header.logout.failure'), errorToastConfig);
                 });
             }}
           >

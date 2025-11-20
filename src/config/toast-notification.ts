@@ -1,4 +1,4 @@
-import { Flip, ToastOptions } from 'react-toastify';
+import { ToastOptions } from 'react-toastify';
 
 const baseToastConfig: ToastOptions = {
   closeOnClick: true,
