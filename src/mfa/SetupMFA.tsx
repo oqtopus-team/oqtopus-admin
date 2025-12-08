@@ -49,9 +49,8 @@ export default function SetupMFA() {
         if (result.success) {
           setQRLoading(true);
         } else {
-          alert(result.message);
           if (result.message === t('auth.mfa.error_alert.failed_get_setup_info')) {
-            navigate({ pathname: '/login' });
+            navigate({ pathname: '/signin' });
           }
         }
       })
