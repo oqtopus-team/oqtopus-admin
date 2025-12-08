@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { DeviceForm } from '../types/DeviceType';
 import { useLocation } from 'react-router';
 import { DeviceFormEdit } from './form/DeviceFormEdit';
-import BaseLayout from '../common/BaseLayout';
 import { useAuth } from '../hooks/use-auth';
 import { useTranslation } from 'react-i18next';
 
@@ -27,8 +26,8 @@ export const DeviceRegisterEdit: React.FC = () => {
     }
   })();
   return (
-    <BaseLayout>
+    <>
       <DeviceFormEdit inputData={inputData} navigatePath="/device/form/confirm" />
-    </BaseLayout>
+    </>
   );
 };

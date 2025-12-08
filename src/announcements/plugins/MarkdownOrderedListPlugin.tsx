@@ -1,8 +1,10 @@
 import {
   $createTextNode,
   $getSelection,
-  $isRangeSelection, COMMAND_PRIORITY_HIGH,
-  COMMAND_PRIORITY_LOW, ElementNode,
+  $isRangeSelection,
+  COMMAND_PRIORITY_HIGH,
+  COMMAND_PRIORITY_LOW,
+  ElementNode,
   KEY_ENTER_COMMAND,
   KEY_TAB_COMMAND,
   LexicalCommand,
@@ -59,7 +61,7 @@ export default function MarkdownOrderedListPlugin() {
 
             const anchorNode = selection.anchor.getNode();
             const currentParagraph = anchorNode.getTopLevelElementOrThrow();
-            const previousSibling = currentParagraph.getPreviousSibling() as ElementNode
+            const previousSibling = currentParagraph.getPreviousSibling() as ElementNode;
 
             if (previousSibling && previousSibling.getType() === 'paragraph') {
               const prevText = previousSibling.getTextContent();
@@ -102,38 +104,42 @@ export default function MarkdownOrderedListPlugin() {
         },
         COMMAND_PRIORITY_LOW
       ),
-      editor.registerCommand(KEY_TAB_COMMAND, (event) => {
-        let commandHandled = false;
+      editor.registerCommand(
+        KEY_TAB_COMMAND,
+        (event) => {
+          let commandHandled = false;
 
-        editor.update(() => {
-          const selection = $getSelection();
-          if (!$isRangeSelection(selection) || !selection.isCollapsed()) return;
+          editor.update(() => {
+            const selection = $getSelection();
+            if (!$isRangeSelection(selection) || !selection.isCollapsed()) return;
 
-          const anchorNode = selection.anchor.getNode();
-          const currentParagraph = anchorNode.getTopLevelElementOrThrow();
-          const currentParagraphText = currentParagraph.getTextContent();
+            const anchorNode = selection.anchor.getNode();
+            const currentParagraph = anchorNode.getTopLevelElementOrThrow();
+            const currentParagraphText = currentParagraph.getTextContent();
 
-          const match = currentParagraphText.match(/^(\s*)(\d+)\./);
-          if (match) {
-            const currentIndentation = match[1];
-            const number = match[2];
+            const match = currentParagraphText.match(/^(\s*)(\d+)\./);
+            if (match) {
+              const currentIndentation = match[1];
+              const number = match[2];
 
-            const newIndentation = currentIndentation + '    ';
+              const newIndentation = currentIndentation + '    ';
 
-            currentParagraph.clear();
-            currentParagraph.append($createTextNode(newIndentation + number + '. '));
-            currentParagraph.selectEnd();
-            commandHandled = true;
-            if (event) {
-              // Prevent changing focus to browser buttons
-              event.preventDefault();
+              currentParagraph.clear();
+              currentParagraph.append($createTextNode(newIndentation + number + '. '));
+              currentParagraph.selectEnd();
+              commandHandled = true;
+              if (event) {
+                // Prevent changing focus to browser buttons
+                event.preventDefault();
+              }
+              return;
             }
-            return;
-          }
-        });
+          });
 
-        return commandHandled;
-      }, COMMAND_PRIORITY_HIGH),
+          return commandHandled;
+        },
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [editor]);
 

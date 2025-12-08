@@ -71,13 +71,7 @@ const theme: EditorThemeClasses = {
     nested: {
       listitem: 'editor-nestedListItem',
     },
-    olDepth: [
-      'editor-ol1',
-      'editor-ol2',
-      'editor-ol3',
-      'editor-ol4',
-      'editor-ol5',
-    ],
+    olDepth: ['editor-ol1', 'editor-ol2', 'editor-ol3', 'editor-ol4', 'editor-ol5'],
     ul: 'editor-ul',
   },
   ltr: 'editor-ltr',
@@ -97,8 +91,7 @@ const theme: EditorThemeClasses = {
   },
   tableCell: 'editor-tableCell',
   tableCellActionButton: 'editor-tableCellActionButton',
-  tableCellActionButtonContainer:
-    'editor-tableCellActionButtonContainer',
+  tableCellActionButtonContainer: 'editor-tableCellActionButtonContainer',
   tableCellHeader: 'editor-tableCellHeader',
   tableCellResizer: 'editor-tableCellResizer',
   tableCellSelected: 'editor-tableCellSelected',
@@ -129,28 +122,12 @@ export const editorPreviewConfig: InitialConfigType = {
   editable: false,
   theme,
   onError: (error) => console.error(error),
-  nodes: [
-    HeadingNode,
-    QuoteNode,
-    ListNode,
-    ListItemNode,
-    LinkNode,
-    AutoLinkNode,
-    CodeNode,
-  ],
+  nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, AutoLinkNode, CodeNode],
 };
 
 export const editorConfig: InitialConfigType = {
   namespace: 'MyRichTextEditor',
   theme,
   onError: (error) => console.error(error),
-  nodes: [
-    HeadingNode,
-    QuoteNode,
-    ListNode,
-    ListItemNode,
-    LinkNode,
-    AutoLinkNode,
-    CodeNode,
-  ],
+  nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, AutoLinkNode, CodeNode],
 };

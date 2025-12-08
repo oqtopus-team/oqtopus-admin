@@ -2,10 +2,10 @@
     padding-top: 56px;
 }
 
-.auth-container {
-  margin: 0 auto;
-  padding: 2rem;
-  max-width: 600px !important;
+.signin-container {
+    margin: 0 auto;
+    padding: 2rem;
+    max-width: 600px !important;
 }
 
 .logo {
@@ -64,17 +64,5 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-}
-
-.vertical-scroll-intermediate-container {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.vertical-scrollable-container {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
+    overflow-x: hidden;
 }

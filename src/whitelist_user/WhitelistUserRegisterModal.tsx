@@ -9,8 +9,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as XLSX from 'xlsx';
 import * as EmailValidator from 'email-validator';
 import { useSetLoading } from '../common/Loader';
-import { registerUsers } from './WhitelistUserApi';
-import { useAuth } from '../hooks/use-auth';
+import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Device } from '../types/DeviceType';
@@ -74,7 +73,6 @@ interface ModalProps {
 }
 
 const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) => {
-  const auth = useAuth();
   const [file, setFile] = useState<FileList>();
   const [disableButton, setDisableButton] = useState<boolean>(false);
   const setLoading = useSetLoading();
@@ -82,6 +80,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
   const { reset, register, handleSubmit } = useForm<ExcelImportInput>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { registerUsers } = useWhitelistUserAPI();
 
   const onSubmit: SubmitHandler<ExcelImportInput> = async () => {
     setDisableButton(true);
@@ -113,7 +112,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
     }
 
     try {
-      const response = await registerUsers(validationResult.whitelist, auth.idToken, t);
+      const response = await registerUsers(validationResult.whitelist, t);
       if (response.success) {
         toast(response.message, successToastConfig);
         navigate('/whitelist');

@@ -1,4 +1,4 @@
-import { Flip, ToastOptions } from 'react-toastify';
+import { ToastOptions } from 'react-toastify';
 
 const baseToastConfig: ToastOptions = {
   closeOnClick: true,
@@ -7,15 +7,15 @@ const baseToastConfig: ToastOptions = {
 
 export const errorToastConfig: ToastOptions = {
   ...baseToastConfig,
-  type: 'error'
+  type: 'error',
 };
 
 export const successToastConfig: ToastOptions = {
   ...baseToastConfig,
-  type: 'success'
-}
+  type: 'success',
+};
 
 export const infoToastConfig: ToastOptions = {
   ...baseToastConfig,
-  type: 'info'
-}
+  type: 'info',
+};

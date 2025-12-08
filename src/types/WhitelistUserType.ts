@@ -1,3 +1,5 @@
+type ALL_ITEMS = '*';
+
 export interface WhitelistUser {
   id: string;
   group_id: string;
@@ -5,7 +7,7 @@ export interface WhitelistUser {
   username: string;
   organization: string;
   is_signup_completed: boolean;
-  available_devices: string[];
+  available_devices: string[] | ALL_ITEMS;
 }
 
 export interface WhitelistUserSearchParams {

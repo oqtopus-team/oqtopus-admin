@@ -14,8 +14,8 @@ export default {
     errors: {
       link_empty_string: 'Please select the text that should be a link',
       link_empty_selection: 'The selected text must not be empty.',
-      link_empty_url: 'The URL must not be an empty string.'
-    }
+      link_empty_url: 'The URL must not be an empty string.',
+    },
   },
   publishable: 'Publishable',
   unpublishable: 'Unpublishable',
@@ -32,4 +32,4 @@ export default {
   updated_failed: 'Failed to update announcement',
   deleted_success: 'Announcement deleted successfully.',
   deleted_failed: 'Failed to delete announcement.',
-}
+};

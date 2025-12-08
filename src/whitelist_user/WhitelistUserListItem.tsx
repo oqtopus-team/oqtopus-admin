@@ -2,10 +2,11 @@ import React, { useRef, useState } from 'react';
 import { WhitelistUser } from '../types/WhitelistUserType';
 import Button from 'react-bootstrap/Button';
 import DefaultModal from '../common/Modal';
-import { useAuth } from '../hooks/use-auth';
 import { useSetLoading } from '../common/Loader';
-import { deleteUser } from './WhitelistUserApi';
+import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 const useOrganization: boolean = import.meta.env.VITE_USE_ORGANIZATION === 'enable';
@@ -17,23 +18,23 @@ interface UserProps {
 
 const WhitelistUserListItem: React.FC<UserProps> = ({ user, execFunction }) => {
   const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const auth = useAuth();
   const processing = useRef(false);
   const setLoading = useSetLoading();
   const { t } = useTranslation();
+  const { deleteUser } = useWhitelistUserAPI();
 
   const onDeleteClick = (): void => {
     // Prevent double-click
     if (processing.current) return;
     processing.current = true;
     setLoading(true);
-    deleteUser([user.email], auth.idToken, t)
+    deleteUser([user.email], t)
       .then((res) => {
         if (res.success) {
-          alert(t('users.white_list.operation.delete_success', { user: user.email }));
+          toast(t('users.white_list.operation.delete_success', { user: user.email }), successToastConfig);
           execFunction(user.id);
         } else {
-          alert(t('users.white_list.operation.delete_failure', { user: user.email }));
+          toast(t('users.white_list.operation.delete_failure', { user: user.email }), errorToastConfig);
         }
       })
       .catch((err) => console.log(err))
@@ -50,14 +51,15 @@ const WhitelistUserListItem: React.FC<UserProps> = ({ user, execFunction }) => {
       {useUsername ? <td className="text-break">{user.username}</td> : ''}
       {useOrganization ? <td className="text-break">{user.organization}</td> : ''}
       <td className="text-break">
-        {Array.isArray(user.available_devices)
-          ? user.available_devices.map((deviceId) => (
+        {Array.isArray(user.available_devices) ? (
+          user.available_devices.map((deviceId) => (
             <p key={deviceId} className="m-0">
               {deviceId}
             </p>
           ))
-          : <p className="m-0">{user.available_devices}</p>
-        }
+        ) : (
+          <p className="m-0">{user.available_devices}</p>
+        )}
       </td>
       <td className="text-break">
         {user.is_signup_completed

@@ -1,8 +1,7 @@
 import { useNavigate, useLocation } from 'react-router';
-import BaseLayout from '../common/BaseLayout';
 import { DeviceForm } from '../types/DeviceType';
 import { useParams } from 'react-router-dom';
-import { patchDevice } from './DeviceApi';
+import { useDeviceAPI } from '../device/DeviceApi';
 import { useAuth } from '../hooks/use-auth';
 import { Spacer } from '../common/Spacer';
 import { DeviceFormConfirm } from './form/DeviceFormConfirm';
@@ -52,6 +51,7 @@ export const DeviceUpdateConfirm: React.FC = () => {
   const [failedSubmissionMessage, setFailedSubmissionMessage] = useState('');
   const [isFailedEdit, setIsFailedEdit] = useState(false);
   const { t } = useTranslation();
+  const { patchDevice } = useDeviceAPI();
 
   useEffect(() => {
     document.title = `${t('device.update.title')} | ${appName}`;
@@ -80,8 +80,8 @@ export const DeviceUpdateConfirm: React.FC = () => {
   };
 
   const handleSubmit = async (): Promise<void> => {
-    if (deviceId != null && formData != null && dbData != null && auth.idToken != null) {
-      const res = await patchDevice(deviceId, generatePatchDevice(formData, dbData), auth.idToken);
+    if (deviceId != null && formData != null && dbData != null) {
+      const res = await patchDevice(deviceId, generatePatchDevice(formData, dbData));
       if (res.success) {
         navigate('/device');
       } else {
@@ -93,7 +93,7 @@ export const DeviceUpdateConfirm: React.FC = () => {
   };
 
   return (
-    <BaseLayout>
+    <>
       {formData != null && <DeviceFormConfirm inputData={formData} />}
       <Spacer size={30} horizontal={true} />
       {failedSubmissionMessage !== '' && (
@@ -114,6 +114,6 @@ export const DeviceUpdateConfirm: React.FC = () => {
         <div style={{ width: '10vw' }}></div>
         <Button onClick={handleSubmit}>{t('device.confirm.register_button')}</Button>
       </div>
-    </BaseLayout>
+    </>
   );
 };

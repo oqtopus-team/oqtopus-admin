@@ -1,10 +1,5 @@
-export enum UserStatus {
-  APPROVED = 'approved',
-  UNAPPROVED = 'unapproved',
-  SUSPENDED = 'suspended',
-}
-
-type ALL_ITEMS = '*'
+import { UsersUserStatus } from '../api/generated';
+type ALL_ITEMS = '*';
 
 export interface User {
   id: string;
@@ -13,7 +8,7 @@ export interface User {
   email: string;
   organization: string;
   available_devices: string[] | ALL_ITEMS;
-  status: UserStatus;
+  status: UsersUserStatus;
 }
 
 export interface UserSearchParams {

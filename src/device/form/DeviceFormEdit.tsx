@@ -198,161 +198,167 @@ export const DeviceFormEdit: React.FC<DeviceFormEditProps> = ({
   }, [dbData, inputData, isExistingDbData, isFromNavigate, reset]);
 
   return (
-    <form
-      title={t('device.update.title')}
-      onSubmit={onSubmit}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Headding
-        title={`* ${t('device.device_type')}`}
-        isStyle={changedFields.deviceType}
-      ></Headding>
-      <select
-        title={t('device.device_type')}
-        {...register('deviceType')}
-        defaultValue={'simulator'}
-        onChange={handleBasicRegisterChange}
+    <div className="vertical-scrollable-container">
+      <form
+        title={t('device.update.title')}
+        onSubmit={onSubmit}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
       >
-        <option value="QPU">QPU</option>
-        <option value="simulator">Simulator</option>
-      </select>
+        <Headding
+          title={`* ${t('device.device_type')}`}
+          isStyle={changedFields.deviceType}
+        ></Headding>
+        <select
+          title={t('device.device_type')}
+          {...register('deviceType')}
+          defaultValue={'simulator'}
+          onChange={handleBasicRegisterChange}
+        >
+          <option value="QPU">QPU</option>
+          <option value="simulator">Simulator</option>
+        </select>
 
-      <Spacer size={15} horizontal={true} />
+        <Spacer size={15} horizontal={true} />
 
-      <Headding
-        title={`* ${t('device.form.device_info')}`}
-        isStyle={changedFields.deviceInfo}
-      ></Headding>
-      <textarea
-        {...register('deviceInfo')}
-        placeholder={'{...}'}
-        name="deviceInfo"
-        onChange={handleBasicRegisterChange}
-      ></textarea>
-      {typeof errors.deviceInfo?.message === 'string' && <p>{errors.deviceInfo?.message}</p>}
+        <Headding
+          title={`* ${t('device.form.device_info')}`}
+          isStyle={changedFields.deviceInfo}
+        ></Headding>
+        <textarea
+          {...register('deviceInfo')}
+          placeholder={'{...}'}
+          name="deviceInfo"
+          onChange={handleBasicRegisterChange}
+        ></textarea>
+        {typeof errors.deviceInfo?.message === 'string' && <p>{errors.deviceInfo?.message}</p>}
 
-      <Spacer size={15} horizontal={true} />
+        <Spacer size={15} horizontal={true} />
 
-      <Headding title={`* ${t('device.status')}`} isStyle={changedFields.status}></Headding>
-      <select
-        title="Status"
-        {...register('status')}
-        defaultValue={'Unavailable'}
-        onChange={handleBasicRegisterChange}
-      >
-        <option value="available">Available</option>
-        <option value="unavailable">Unavailable</option>
-      </select>
+        <Headding title={`* ${t('device.status')}`} isStyle={changedFields.status}></Headding>
+        <select
+          title="Status"
+          {...register('status')}
+          defaultValue={'Unavailable'}
+          onChange={handleBasicRegisterChange}
+        >
+          <option value="available">Available</option>
+          <option value="unavailable">Unavailable</option>
+        </select>
 
-      <Spacer size={15} horizontal={true} />
+        <Spacer size={15} horizontal={true} />
 
-      <Headding title={`* ${t('device.qubits')}`} isStyle={changedFields.qubits}></Headding>
-      <textarea
-        title="Qubits"
-        {...register('qubits')}
-        placeholder={'1'}
-        name="qubits"
-        onChange={handleBasicRegisterChange}
-      ></textarea>
-      {typeof errors.qubits?.message === 'string' && <p>{errors.qubits?.message}</p>}
+        <Headding title={`* ${t('device.qubits')}`} isStyle={changedFields.qubits}></Headding>
+        <textarea
+          title="Qubits"
+          {...register('qubits')}
+          placeholder={'1'}
+          name="qubits"
+          onChange={handleBasicRegisterChange}
+        ></textarea>
+        {typeof errors.qubits?.message === 'string' && <p>{errors.qubits?.message}</p>}
 
-      <Spacer size={15} horizontal={true} />
+        <Spacer size={15} horizontal={true} />
 
-      <Headding
-        title={`* ${t('device.form.available_at')}`}
-        isStyle={changedFields.availableAt}
-      ></Headding>
-      <Controller
-        name="availableAt"
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <DatePicker
-            dateFormat="yyyy-MM-dd HH:mm:ss"
-            showTimeSelect
-            timeIntervals={1}
-            selected={value !== null && value !== undefined ? new Date(value) : undefined}
-            onChange={(date: Date | null) => {
-              onChange(date);
-              handleDateChange('availableAt');
-            }}
-          />
-        )}
-      />
-      {typeof errors.availableAt?.message === 'string' && <p>{errors.availableAt?.message}</p>}
+        <Headding
+          title={`* ${t('device.form.available_at')}`}
+          isStyle={changedFields.availableAt}
+        ></Headding>
+        <Controller
+          name="availableAt"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <DatePicker
+              dateFormat="yyyy-MM-dd HH:mm:ss"
+              showTimeSelect
+              timeIntervals={1}
+              selected={value !== null && value !== undefined ? new Date(value) : undefined}
+              onChange={(date: Date | null) => {
+                onChange(date);
+                handleDateChange('availableAt');
+              }}
+            />
+          )}
+        />
+        {typeof errors.availableAt?.message === 'string' && <p>{errors.availableAt?.message}</p>}
 
-      <Spacer size={15} horizontal={true} />
+        <Spacer size={15} horizontal={true} />
 
-      <Headding
-        title={`* ${t('device.form.calibrated_at')}`}
-        isStyle={changedFields.calibratedAt}
-      ></Headding>
-      <Controller
-        name="calibratedAt"
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <DatePicker
-            dateFormat="yyyy-MM-dd HH:mm:ss"
-            showTimeSelect
-            timeIntervals={1}
-            selected={value !== null && value !== undefined ? new Date(value) : undefined}
-            onChange={(date: Date | null) => {
-              onChange(date);
-              handleDateChange('calibratedAt');
-            }}
-          />
-        )}
-      />
-      {typeof errors.calibratedAt?.message === 'string' && <p>{errors.calibratedAt?.message}</p>}
+        <Headding
+          title={`* ${t('device.form.calibrated_at')}`}
+          isStyle={changedFields.calibratedAt}
+        ></Headding>
+        <Controller
+          name="calibratedAt"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <DatePicker
+              dateFormat="yyyy-MM-dd HH:mm:ss"
+              showTimeSelect
+              timeIntervals={1}
+              selected={value !== null && value !== undefined ? new Date(value) : undefined}
+              onChange={(date: Date | null) => {
+                onChange(date);
+                handleDateChange('calibratedAt');
+              }}
+            />
+          )}
+        />
+        {typeof errors.calibratedAt?.message === 'string' && <p>{errors.calibratedAt?.message}</p>}
 
-      <Spacer size={15} horizontal={true} />
+        <Spacer size={15} horizontal={true} />
 
-      <Headding title={t('device.form.basis_gates')} isStyle={changedFields.basisGates}></Headding>
-      <textarea
-        title="Basis Gates"
-        {...register('basisGates')}
-        name="basisGates"
-        onChange={handleBasicRegisterChange}
-      ></textarea>
-      {typeof errors.basisGates?.message === 'string' && <p>{errors.basisGates?.message}</p>}
+        <Headding
+          title={t('device.form.basis_gates')}
+          isStyle={changedFields.basisGates}
+        ></Headding>
 
-      <Spacer size={15} horizontal={true} />
+        <textarea
+          title="Basis Gates"
+          {...register('basisGates')}
+          name="basisGates"
+          onChange={handleBasicRegisterChange}
+        ></textarea>
+        {typeof errors.basisGates?.message === 'string' && <p>{errors.basisGates?.message}</p>}
 
-      <Headding
-        title={t('device.form.instructions')}
-        isStyle={changedFields.instructions}
-      ></Headding>
-      <textarea
-        title="Supported Instructions"
-        {...register('instructions')}
-        name="instructions"
-        onChange={handleBasicRegisterChange}
-      ></textarea>
-      {typeof errors.instructions?.message === 'string' && <p>{errors.instructions?.message}</p>}
+        <Spacer size={15} horizontal={true} />
 
-      <Spacer size={15} horizontal={true} />
+        <Headding
+          title={t('device.form.instructions')}
+          isStyle={changedFields.instructions}
+        ></Headding>
+        <textarea
+          title="Supported Instructions"
+          {...register('instructions')}
+          name="instructions"
+          onChange={handleBasicRegisterChange}
+        ></textarea>
+        {typeof errors.instructions?.message === 'string' && <p>{errors.instructions?.message}</p>}
 
-      <Headding
-        title={`* ${t('device.description')}`}
-        isStyle={changedFields.description}
-      ></Headding>
-      <textarea
-        title="Description"
-        {...register('description')}
-        placeholder={'...'}
-        name="description"
-        onChange={handleBasicRegisterChange}
-      ></textarea>
-      {typeof errors.description?.message === 'string' && <p>{errors.description?.message}</p>}
+        <Spacer size={15} horizontal={true} />
 
-      <Spacer size={15} horizontal={true} />
+        <Headding
+          title={`* ${t('device.description')}`}
+          isStyle={changedFields.description}
+        ></Headding>
+        <textarea
+          title="Description"
+          {...register('description')}
+          placeholder={'...'}
+          name="description"
+          onChange={handleBasicRegisterChange}
+        ></textarea>
+        {typeof errors.description?.message === 'string' && <p>{errors.description?.message}</p>}
 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Button type="submit">Confirm</Button>
-      </div>
-    </form>
+        <Spacer size={15} horizontal={true} />
+
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Button type="submit">Confirm</Button>
+        </div>
+      </form>
+    </div>
   );
 };

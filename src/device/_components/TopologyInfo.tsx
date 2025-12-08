@@ -266,7 +266,7 @@ export const TopologyInfo: React.FC<{ deviceInfo: string | undefined }> = ({ dev
 
   const strHoveredInfo = JSON.stringify(hoveredInfo);
 
-   useEffect(() => {
+  useEffect(() => {
     // Delay to ensure the canvas is rendered
     const timeout = setTimeout(() => {
       if (fgRef.current && typeof fgRef.current.zoomToFit === 'function') {

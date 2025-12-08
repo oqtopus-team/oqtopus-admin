@@ -90,9 +90,9 @@ export function ToolbarPlugin() {
   };
 
   const insertCode = () => {
-    const languageKey = Object.entries(PROGRAMMING_LANGUAGES).find(
-      ([, value]) => value === currentLanguage
-    )?.[0] || currentLanguage.toLowerCase();
+    const languageKey =
+      Object.entries(PROGRAMMING_LANGUAGES).find(([, value]) => value === currentLanguage)?.[0] ||
+      currentLanguage.toLowerCase();
 
     editor.dispatchCommand(INSERT_CODE_BLOCK_COMMAND, languageKey);
   };

@@ -14,8 +14,8 @@ export default {
     errors: {
       link_empty_string: 'リンクとなるテキストを選択してください',
       link_empty_selection: '選択されたテキストは空にできません。',
-      link_empty_url: 'URLは空にできません。'
-    }
+      link_empty_url: 'URLは空にできません。',
+    },
   },
   publishable: '公開可能',
   unpublishable: '公開不可',
@@ -32,4 +32,4 @@ export default {
   updated_failed: 'お知らせの更新に失敗しました。',
   deleted_success: 'お知らせが正常に削除されました',
   deleted_failed: 'お知らせの削除に失敗しました。',
-}
+};

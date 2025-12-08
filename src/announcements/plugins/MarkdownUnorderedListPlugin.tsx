@@ -3,7 +3,8 @@ import {
   $createTextNode,
   $getSelection,
   $isRangeSelection,
-  COMMAND_PRIORITY_HIGH, ElementNode,
+  COMMAND_PRIORITY_HIGH,
+  ElementNode,
   KEY_ENTER_COMMAND,
   KEY_TAB_COMMAND,
   LexicalCommand,
@@ -56,7 +57,7 @@ export default function MarkdownUnorderedListPlugin() {
 
             const anchorNode = selection.anchor.getNode();
             const currentParagraph = anchorNode.getTopLevelElementOrThrow();
-            const previousSibling = currentParagraph.getPreviousSibling() as ElementNode
+            const previousSibling = currentParagraph.getPreviousSibling() as ElementNode;
 
             if (previousSibling && previousSibling.getType() === 'paragraph') {
               const prevText = previousSibling.getTextContent();

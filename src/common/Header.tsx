@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from './_components/LanguageSelector';
 import { ja, enUS } from 'date-fns/locale';
 import { registerLocale } from 'react-datepicker';
+import { errorToastConfig } from '../config/toast-notification';
+import { toast } from 'react-toastify';
 
 registerLocale('ja', ja);
 registerLocale('en', enUS);
@@ -34,11 +36,11 @@ const Header: React.FunctionComponent = () => {
                 .signOut(t)
                 .then((res) => {
                   if (res.success) {
-                    navigate({ pathname: '/login' });
+                    navigate({ pathname: '/signin' });
                   }
                 })
                 .catch(() => {
-                  alert(t('header.logout.failure'));
+                  toast(t('header.logout.failure'), errorToastConfig);
                 });
             }}
           >

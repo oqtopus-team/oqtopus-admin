@@ -1,9 +1,10 @@
-import { Device, DevicesDeviceInfo, DeviceForm, SendDbDevice } from '../types/DeviceType';
+import { Device, DeviceForm, SendDbDevice } from '../types/DeviceType';
 import { ApiResponse } from '../types/CommonType';
+import { useContext } from 'react';
+import { DevicesDeviceInfo as ApiDevicesDeviceInfo } from '../api/generated';
+import { userApiContext } from '../backend/Provider';
 
-const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
-
-const convertDeviceResult = (device: DevicesDeviceInfo): Device => ({
+const convertDeviceResult = (device: ApiDevicesDeviceInfo): Device => ({
   id: device.device_id,
   deviceType: device.device_type,
   status: device.status,
@@ -47,125 +48,71 @@ const convertDeviceForm = (device: DeviceForm): SendDbDevice => {
   return result;
 };
 
-export async function getDevices(idToken: string): Promise<Device[]> {
-  try {
-    const res = await fetch(`${apiEndpoint}/devices`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-    });
+export const useDeviceAPI = () => {
+  const api = useContext(userApiContext);
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+  const getDevices = async (): Promise<Device[]> => {
+    try {
+      const res = await api.device.listDevices();
+      return res.data.map(convertDeviceResult);
+    } catch (e) {
+      console.error('Error fetching devices:', e);
+      return [];
     }
+  };
 
-    const data = await res.json();
-    return data.map(convertDeviceResult);
-  } catch (error) {
-    console.error('Failed to fetch devices:', error);
-    throw error;
-  }
-}
-
-export async function getDevice(deviceId: string, idToken: string): Promise<Device> {
-  try {
-    const res = await fetch(`${apiEndpoint}/devices/${deviceId}`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-    });
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+  const getDevice = async (id: string): Promise<Device | null> => {
+    try {
+      const res = await api.device.getDevice(id);
+      if (res.status === 200) {
+        return convertDeviceResult(res.data);
+      }
+      return null;
+    } catch (e) {
+      console.error('Error fetching device:', e);
+      return null;
     }
-    const data = await res.json();
-    return convertDeviceResult(data);
-  } catch (error) {
-    console.error('Failed to fetch device:', error);
-    throw error;
-  }
-}
-
-export async function postDevice(device: DeviceForm, idToken: string): Promise<ApiResponse> {
-  const res = await fetch(`${apiEndpoint}/devices`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
-    body: JSON.stringify(convertDeviceForm(device)),
-  });
-  const body = await res.json();
-  if (!res.ok) {
-    return {
-      success: false,
-      message: body.message,
-    };
-  }
-  return {
-    success: true,
-    message: 'Succeeded to register device',
   };
-}
 
-export async function patchDevice(
-  deviceId: string,
-  device: DeviceForm,
-  idToken: string
-): Promise<ApiResponse> {
-  const res = await fetch(`${apiEndpoint}/devices/${deviceId}`, {
-    method: 'PATCH',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
-    body: JSON.stringify(convertDeviceForm(device)),
-  });
-
-  const body = await res.json();
-  if (!res.ok) {
-    return {
-      success: false,
-      message: body.message,
-    };
-  }
-  return {
-    success: true,
-    message: 'Succeeded to update device',
+  const postDevice = async (device: DeviceForm): Promise<ApiResponse> => {
+    try {
+      const res = await api.device.registerDevice(convertDeviceForm(device));
+      return {
+        success: res.status === 200,
+        message:
+          res.status === 200 ? 'Device registered successfully' : 'Failed to register device',
+      };
+    } catch (e) {
+      console.error('Error registering device:', e);
+      return { success: false, message: 'Failed to register device' };
+    }
   };
-}
 
-export async function deleteDevice(deviceId: string, idToken: string): Promise<ApiResponse> {
-  const res = await fetch(`${apiEndpoint}/devices/${deviceId}`, {
-    method: 'DELETE',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
-  });
-
-  if (!res.ok) {
-    return {
-      success: false,
-      message: 'Succeeded to delete device',
-    };
-  }
-  return {
-    success: true,
-    message: 'Failed to delete device',
+  const patchDevice = async (deviceId: string, device: DeviceForm): Promise<ApiResponse> => {
+    try {
+      const res = await api.device.updateDeviceData(deviceId, convertDeviceForm(device));
+      return {
+        success: res.status === 200,
+        message: res.status === 200 ? 'Device updated successfully' : 'Failed to update device',
+      };
+    } catch (e) {
+      console.error('Error updating device:', e);
+      return { success: false, message: 'Failed to update device' };
+    }
   };
-}
+
+  const deleteDevice = async (deviceId: string): Promise<ApiResponse> => {
+    try {
+      const res = await api.device.deleteDevice(deviceId);
+      return {
+        success: res.status === 204,
+        message: res.status === 204 ? 'Device deleted successfully' : 'Failed to delete device',
+      };
+    } catch (e) {
+      console.error('Error deleting device:', e);
+      return { success: false, message: 'Failed to delete device' };
+    }
+  };
+
+  return { getDevices, getDevice, postDevice, patchDevice, deleteDevice };
+};

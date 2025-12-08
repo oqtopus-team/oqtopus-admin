@@ -6,9 +6,9 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const LogInRoute: React.FC<Props> = ({ children }) => {
+const SignInRoute: React.FC<Props> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? <Navigate to="/users" /> : <>{children}</>;
 };
 
-export default LogInRoute;
+export default SignInRoute;

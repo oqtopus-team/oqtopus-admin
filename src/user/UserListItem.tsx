@@ -2,12 +2,14 @@ import React, { useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
 import DefaultModal from '../common/Modal';
-import { User, UserStatus } from '../types/UserType';
-import { deleteUser, statusChangeUser } from './UserApi';
-import { useAuth } from '../hooks/use-auth';
+import { User } from '../types/UserType';
+import { UsersUserStatus } from '../api/generated';
+import { useUserAPI } from './UserApi';
 import { useSetLoading } from '../common/Loader';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+import { successToastConfig } from '../config/toast-notification';
 
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
 
@@ -18,21 +20,21 @@ interface UserProps {
 
 const UserListItem: React.FC<UserProps> = (props) => {
   const [user, setUser] = useState<User>(props.user);
-  const auth = useAuth();
   const processing = useRef(false);
   const setLoading = useSetLoading();
   const [stopModalShow, setStopModalShow] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { statusChangeUser, deleteUser } = useUserAPI();
 
   const onStopClick = (isStop: boolean): void => {
     // Prevent double-click
     if (processing.current) return;
     processing.current = true;
     setLoading(true);
-    const status = isStop ? UserStatus.SUSPENDED : UserStatus.APPROVED;
-    statusChangeUser(user.id, status, auth.idToken)
+    const status = isStop ? UsersUserStatus.Suspended : UsersUserStatus.Approved;
+    statusChangeUser(user.id, status)
       .then((res: User) => {
         setUser(res);
       })
@@ -48,10 +50,10 @@ const UserListItem: React.FC<UserProps> = (props) => {
     if (processing.current) return;
     processing.current = true;
     setLoading(true);
-    deleteUser(user.id, auth.idToken)
+    deleteUser(user.id)
       .then(() => {
-        alert(t('users.list.operation.delete_success', { user: user.email }));
-        props.execFunction(user.id)
+        toast(t('users.list.operation.delete_success', { user: user.email }), successToastConfig);
+        props.execFunction(user.id);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -64,7 +66,7 @@ const UserListItem: React.FC<UserProps> = (props) => {
     <tr>
       <td>
         {user.email}
-        {user.status === UserStatus.SUSPENDED ? (
+        {user.status === UsersUserStatus.Suspended ? (
           <Badge pill bg="secondary">
             {t('users.status.suspended')}
           </Badge>
@@ -86,8 +88,8 @@ const UserListItem: React.FC<UserProps> = (props) => {
           <p className="m-0">{user.available_devices}</p>
         )}
       </td>
-      <td>
-        <Button className="mb-1 w-100" variant="danger" onClick={() => setDeleteModalShow(true)}>
+      <td className="d-flex">
+        <Button className="mx-1 w-100" variant="danger" onClick={() => setDeleteModalShow(true)}>
           {t('users.list.operation.delete')}
         </Button>{' '}
         <DefaultModal
@@ -96,13 +98,13 @@ const UserListItem: React.FC<UserProps> = (props) => {
           message={t('users.list.operation.delete_confirm', { user: user.email })}
           execFunction={onDeleteClick}
         />
-        <Button className="mb-1 w-100" variant="secondary" onClick={() => setStopModalShow(true)}>
-          {user.status !== UserStatus.SUSPENDED
+        <Button className="mx-1 w-100" variant="secondary" onClick={() => setStopModalShow(true)}>
+          {user.status !== UsersUserStatus.Suspended
             ? t('users.list.operation.suspend')
             : t('users.list.operation.unsuspend')}
         </Button>
         <Button
-          className="mb-1 w-100"
+          className="mx-1 w-100"
           variant="primary"
           onClick={() => navigate(`edit/${props.user.id}`)}
         >
@@ -112,12 +114,12 @@ const UserListItem: React.FC<UserProps> = (props) => {
           show={stopModalShow}
           onHide={() => setStopModalShow(false)}
           message={
-            user.status !== UserStatus.SUSPENDED
+            user.status !== UsersUserStatus.Suspended
               ? t('users.list.operation.suspend_confirm', { user: user.email })
               : t('users.list.operation.unsuspend_confirm', { user: user.email })
           }
           execFunction={
-            user.status !== UserStatus.SUSPENDED
+            user.status !== UsersUserStatus.Suspended
               ? () => onStopClick(true)
               : () => onStopClick(false)
           }

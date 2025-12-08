@@ -1,6 +1,6 @@
 import { Modal } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
-import { deleteDevice } from '../DeviceApi';
+import { useDeviceAPI } from '../../device/DeviceApi';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
@@ -15,14 +15,14 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   showModal,
   hideModal,
   deviceId,
-  idToken,
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { deleteDevice } = useDeviceAPI();
 
-  const handleDelete = async (deviceId?: string, idToken?: string): Promise<void> => {
-    if (deviceId !== undefined && idToken !== undefined) {
-      const res = await deleteDevice(deviceId, idToken);
+  const handleDelete = async (deviceId?: string): Promise<void> => {
+    if (deviceId !== undefined) {
+      const res = await deleteDevice(deviceId);
       if (res.success) {
         navigate('/device', { replace: true });
       } else {
@@ -50,7 +50,7 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
         <Button
           variant="danger"
           onClick={async () => {
-            await handleDelete(deviceId, idToken);
+            await handleDelete(deviceId);
           }}
         >
           Delete

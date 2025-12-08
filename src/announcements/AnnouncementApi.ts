@@ -1,3 +1,10 @@
+import { useContext } from 'react';
+import { userApiContext } from '../backend/Provider';
+import {
+  GetAnnouncementsListOrderEnum,
+  AnnouncementsGetAnnouncementResponse,
+} from '../api/generated';
+
 interface AnnouncementsData {
   title: string;
   content: string;
@@ -13,9 +20,7 @@ interface OptionalRequestParams {
   currentTime?: string;
 }
 
-const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
-
-interface AnnouncementBase {
+export interface AnnouncementBase {
   title: string;
   content: string;
   start_time: string;
@@ -28,114 +33,88 @@ export interface Announcement extends AnnouncementBase {
   id: number;
 }
 
-export async function createAnnouncement(announcementsData: AnnouncementsData, idToken: string) {
-  await fetch(`${apiEndpoint}/announcements`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
-    body: JSON.stringify({
-      title: announcementsData.title,
-      content: announcementsData.content,
-      start_time: announcementsData.start_time,
-      end_time: announcementsData.end_time,
-      publishable: announcementsData.publishable,
-    }),
-  });
-}
+const convertToGetAnnouncementsListOrderEnum = (
+  order?: string
+): GetAnnouncementsListOrderEnum | undefined => {
+  if (!order) return undefined;
 
-export async function getAnnouncements(
-  idToken: string,
-  { offset, limit, order, currentTime }: OptionalRequestParams = {}
-): Promise<Announcement[]> {
-  const params = new URLSearchParams();
-
-  if (offset !== undefined) params.append('offset', offset.toString());
-  if (limit !== undefined) params.append('limit', limit.toString());
-  if (currentTime !== undefined) params.append('current_time', currentTime);
-  if (order) params.append('order', order);
-
-  try {
-    const response = await fetch(`${apiEndpoint}/announcements?${params.toString()}`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-    });
-
-    return response.json().then((json) => json.announcements);
-  } catch (error) {
-    console.error('Failed to fetch announcements:', error);
-    throw error;
+  if (order === 'asc') {
+    return GetAnnouncementsListOrderEnum.Asc;
+  } else if (order === 'desc') {
+    return GetAnnouncementsListOrderEnum.Desc;
+  } else {
+    return undefined;
   }
-}
+};
 
-export async function getSingleAnnouncement(
-  announcementId: string | number,
-  idToken: string
-): Promise<Announcement> {
-  try {
-    const response = await fetch(`${apiEndpoint}/announcements/${announcementId}`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-    });
+const correctIdType = (id: string | number): number => {
+  return typeof id === 'string' ? Number(id) : id;
+};
 
-    return response.json();
-  } catch (error) {
-    console.error('Failed to fetch announcements:', error);
-    throw error;
-  }
-}
+const convertToAnnouncement = (data: AnnouncementsGetAnnouncementResponse): Announcement => ({
+  id: data.id,
+  title: data.title,
+  content: data.content,
+  start_time: data.start_time,
+  end_time: data.end_time,
+  updated_at: data.updated_at,
+  publishable: data.publishable,
+});
 
-export async function editAnnouncement(
-  announcementId: string,
-  announcementsData: AnnouncementsData,
-  idToken: string
-) {
-  await fetch(`${apiEndpoint}/announcements/${announcementId}`, {
-    method: 'PATCH',
-    mode: 'cors',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
-    body: JSON.stringify({
-      title: announcementsData.title,
-      content: announcementsData.content,
-      start_time: announcementsData.start_time,
-      end_time: announcementsData.end_time,
-      publishable: announcementsData.publishable,
-    }),
-  });
-}
+export const useAnnouncementAPI = () => {
+  const api = useContext(userApiContext);
 
-export async function deleteAnnouncement(announcementId: number, idToken: string) {
-  try {
-    await fetch(`${apiEndpoint}/announcements/${announcementId}`, {
-      method: 'DELETE',
-      mode: 'cors',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-    });
+  const createAnnouncement = async (announcementsData: AnnouncementsData) => {
+    await api.announcements.announcement(announcementsData);
+  };
 
-    return true;
-  } catch (error) {
-    console.error('Failed to fetch announcements:', error);
-    throw error;
-  }
-}
+  const getAnnouncements = async (params: OptionalRequestParams): Promise<Announcement[]> => {
+    try {
+      const res = await api.announcements.getAnnouncementsList(
+        params.offset?.toString(),
+        params.limit?.toString(),
+        convertToGetAnnouncementsListOrderEnum(params.order),
+        params.currentTime
+      );
+      return (res.data.announcements ?? []).map(convertToAnnouncement);
+    } catch (error) {
+      console.error('Failed to fetch announcements:', error);
+      throw error;
+    }
+  };
+
+  const getSingleAnnouncement = async (id: string | number): Promise<Announcement | null> => {
+    try {
+      const res = await api.announcements.getAnnouncement(correctIdType(id));
+      return res.data ? convertToAnnouncement(res.data) : null;
+    } catch (error) {
+      console.error('Failed to fetch announcements:', error);
+      throw error;
+    }
+  };
+
+  const editAnnouncement = async (
+    announcementId: string | number,
+    announcementsData: AnnouncementsData
+  ) => {
+    await api.announcements.updateAnnouncement(correctIdType(announcementId), announcementsData);
+  };
+
+  const deleteAnnouncement = async (announcementId: string | number) => {
+    try {
+      await api.announcements.deleteAnnouncement(correctIdType(announcementId));
+      return true;
+    } catch (error) {
+      console.error('Failed to delete announcement:', error);
+      throw error;
+    }
+  };
+
+  return {
+    createAnnouncement,
+    getAnnouncements,
+    getSingleAnnouncement,
+    editAnnouncement,
+    deleteAnnouncement,
+  };
+};

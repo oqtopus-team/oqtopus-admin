@@ -9,6 +9,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 
@@ -59,10 +61,10 @@ const PasswordChange: React.FunctionComponent = () => {
       .changePassword(currentPassword, newPassword, t)
       .then((result) => {
         if (result.success) {
-          alert(t('auth.password_change.success'));
+          toast(t('auth.password_change.success'), successToastConfig);
           reset();
         } else {
-          alert(result.message);
+          toast(result.message, errorToastConfig);
         }
       })
       .catch((error) => {
@@ -74,56 +76,54 @@ const PasswordChange: React.FunctionComponent = () => {
   };
 
   return (
-    <BaseLayout>
-      <Card>
-        <Card.Body>
-          <Form noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Form.Group className="mb-3" controlId="currentPassword">
-              <Form.Label className="text-start">{t('auth.password_change.current')}</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="Enter Current Password"
-                {...register('currentPassword', {
-                  onChange: (e) => setCurrentPassword(e.target.value),
-                })}
-                isInvalid={errors.currentPassword != null}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.currentPassword?.message}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="newPassword">
-              <Form.Label>{t('auth.password_change.new')}</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter New Password"
-                {...register('newPassword', {
-                  onChange: (e) => setNewPassword(e.target.value),
-                })}
-                isInvalid={errors.newPassword != null}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.newPassword?.message}
-              </Form.Control.Feedback>
-              <Form.Text muted>
-                {t('auth.password_change.rule')}
-                <br />- {t('auth.password_change.rule1')}
-                <br />- {t('auth.password_change.rule2')}
-                <br />- {t('auth.password_change.rule3')}
-                <br />- {t('auth.password_change.rule4')}
-                <br />- {t('auth.password_change.rule5')}
-              </Form.Text>
-            </Form.Group>
-            <div className="float-end">
-              <Button variant="primary" type="submit">
-                {t('auth.password_change.submit')}
-              </Button>
-            </div>
-          </Form>
-        </Card.Body>
-      </Card>
-    </BaseLayout>
+    <Card>
+      <Card.Body>
+        <Form noValidate onSubmit={handleSubmit(onSubmit)}>
+          <Form.Group className="mb-3" controlId="currentPassword">
+            <Form.Label className="text-start">{t('auth.password_change.current')}</Form.Label>
+            <Form.Control
+              required
+              type="password"
+              placeholder="Enter Current Password"
+              {...register('currentPassword', {
+                onChange: (e) => setCurrentPassword(e.target.value),
+              })}
+              isInvalid={errors.currentPassword != null}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.currentPassword?.message}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="newPassword">
+            <Form.Label>{t('auth.password_change.new')}</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Enter New Password"
+              {...register('newPassword', {
+                onChange: (e) => setNewPassword(e.target.value),
+              })}
+              isInvalid={errors.newPassword != null}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.newPassword?.message}
+            </Form.Control.Feedback>
+            <Form.Text muted>
+              {t('auth.password_change.rule')}
+              <br />- {t('auth.password_change.rule1')}
+              <br />- {t('auth.password_change.rule2')}
+              <br />- {t('auth.password_change.rule3')}
+              <br />- {t('auth.password_change.rule4')}
+              <br />- {t('auth.password_change.rule5')}
+            </Form.Text>
+          </Form.Group>
+          <div className="float-end">
+            <Button variant="primary" type="submit">
+              {t('auth.password_change.submit')}
+            </Button>
+          </div>
+        </Form>
+      </Card.Body>
+    </Card>
   );
 };
 
