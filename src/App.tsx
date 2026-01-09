@@ -18,6 +18,8 @@ import { DeviceRegisterConfirm } from './device/DeviceRegisterConfirm';
 import { DeviceDetail } from './device/DeviceDetail';
 import { DeviceUpdateEdit } from './device/DeviceUpdateEdit';
 import { DeviceUpdateConfirm } from './device/DeviceUpdateConfirm';
+import ConfirmMFA from './mfa/ConfirmMFA';
+import SetupMFA from './mfa/SetupMFA';
 import AnnouncementsList from './announcements/AnnouncementsList';
 import AnnouncementEditor from './announcements/AnnouncementEditor';
 import { UserEdit } from './user/UserEdit';
@@ -37,6 +39,8 @@ const App: React.FC = () => {
           <Route index element={<SignIn />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="first-password-change" element={<FirstPasswordChange />} />
+          <Route path="confirm-mfa" element={<ConfirmMFA />} />
+          <Route path="setup-mfa" element={<SetupMFA />} />
           <Route element={<BaseLayout />}>
             <Route path="users" element={<UserList />} />
             <Route path="users/edit/:userId" element={<UserEdit />} />

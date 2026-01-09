@@ -6,6 +6,7 @@ import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
 import SignInRoute from './SignInRoute';
 import { useAuth } from '../hooks/use-auth';
+import AuthHeader from '../common/AuthHeader';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -59,10 +60,12 @@ const SignIn: React.FunctionComponent = () => {
       .signIn(username, password, t)
       .then((result) => {
         if (result.success) {
-          navigate({ pathname: '/users' });
+          navigate({ pathname: '/confirm-mfa' });
         } else {
           if (result.message === t('auth.signin.require_password_change')) {
             navigate({ pathname: '/first-password-change' });
+          } else if (result.message === t('auth.signin.require_mfa_setup')) {
+            navigate({ pathname: '/setup-mfa' });
           }
           toast(result.message, errorToastConfig);
         }
@@ -77,6 +80,7 @@ const SignIn: React.FunctionComponent = () => {
 
   return (
     <SignInRoute>
+      <AuthHeader />
       <Container className="signin-container">
         <Card>
           <Card.Header as="h4">{t('auth.signin.title')}</Card.Header>

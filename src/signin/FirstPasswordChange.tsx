@@ -13,6 +13,7 @@ import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { errorToastConfig, successToastConfig } from '../config/toast-notification';
+import AuthHeader from '../common/AuthHeader';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 
@@ -70,7 +71,7 @@ const FirstPasswordChange: React.FunctionComponent = () => {
       .then((result) => {
         if (result.success) {
           toast(t('auth.password_change.success'), successToastConfig);
-          navigate({ pathname: '/users' });
+          navigate({ pathname: '/setup-mfa' });
         } else {
           toast(result.message, errorToastConfig);
         }
@@ -85,9 +86,10 @@ const FirstPasswordChange: React.FunctionComponent = () => {
 
   return (
     <SignInRoute>
+      <AuthHeader />
       <Container className="signin-container">
         <Card>
-          <Card.Header as="h4">{appName}</Card.Header>
+          <Card.Header as="h4">{t('auth.password_change.title')}</Card.Header>
           <Card.Body>
             <Form noValidate onSubmit={handleSubmit(onSubmit)}>
               <Form.Group className="mb-3" controlId="email">
