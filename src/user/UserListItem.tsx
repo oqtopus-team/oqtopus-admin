@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { successToastConfig } from '../config/toast-notification';
 
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
+const useOrganization: boolean = import.meta.env.VITE_USE_ORGANIZATION === 'enable';
 
 interface UserProps {
   user: User;
@@ -75,8 +76,8 @@ const UserListItem: React.FC<UserProps> = (props) => {
         )}
       </td>
       <td>{user.group_id}</td>
-      {useUsername ? <td className="text-break">{user.name}</td> : ''}
-      {useUsername ? <td className="text-break">{user.organization}</td> : ''}
+      <td className="text-break">{useUsername ? user.name : '-'}</td>
+      <td className="text-break">{useOrganization ? user.organization : '-'}</td>
       <td className="text-break">
         {Array.isArray(user.available_devices) ? (
           user.available_devices.map((deviceId) => (

@@ -222,15 +222,13 @@ const UserList: React.FunctionComponent = () => {
               </Form.Group>
             </Row>
             <Row className="mb-3">
-              {useUsername ? (
+              {useUsername && (
                 <Form.Group as={Col}>
                   <Form.Label>{t('users.name')}</Form.Label>
                   <Form.Control autoComplete="off" placeholder="Enter Name" {...register('name')} />
                 </Form.Group>
-              ) : (
-                ''
               )}
-              {useOrganization ? (
+              {useOrganization && (
                 <Form.Group as={Col}>
                   <Form.Label>{t('users.organization')}</Form.Label>
                   <Form.Control
@@ -239,8 +237,6 @@ const UserList: React.FunctionComponent = () => {
                     {...register('organization')}
                   />
                 </Form.Group>
-              ) : (
-                ''
               )}
             </Row>
             <Row>

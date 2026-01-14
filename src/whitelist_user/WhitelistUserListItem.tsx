@@ -48,8 +48,8 @@ const WhitelistUserListItem: React.FC<UserProps> = ({ user, execFunction }) => {
     <tr className="">
       <td>{user.group_id}</td>
       <td>{user.email}</td>
-      {useUsername ? <td className="text-break">{user.username}</td> : ''}
-      {useOrganization ? <td className="text-break">{user.organization}</td> : ''}
+      <td className="text-break">{useUsername ? user.username : '-'}</td>
+      <td className="text-break">{useOrganization ? user.organization : '-'}</td>
       <td className="text-break">
         {Array.isArray(user.available_devices) ? (
           user.available_devices.map((deviceId) => (
