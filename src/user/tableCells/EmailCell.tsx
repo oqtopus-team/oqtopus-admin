@@ -2,13 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { UsersUserStatus } from '../../api/generated';
 import Badge from 'react-bootstrap/Badge';
 import React from 'react';
-import { User } from '../../types/UserType';
 
-interface EmailCellProps {
-  user: User;
+interface EmailCellProps<T extends { email: string; status?: UsersUserStatus }> {
+  user: T;
 }
 
-export const EmailCell = ({ user }: EmailCellProps) => {
+export const EmailCell = <T extends { email: string; status?: UsersUserStatus }>({
+  user,
+}: EmailCellProps<T>) => {
   const { t } = useTranslation();
   return (
     <div>

@@ -4,21 +4,25 @@ import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import DefaultModal from '../../common/Modal';
 import { UsersUserStatus } from '../../api/generated';
-import { User } from '../../types/UserType';
 import { successToastConfig } from '../../config/toast-notification';
 import { useSetLoading } from '../../common/Loader';
 import { useNavigate } from 'react-router';
 import { useUserAPI } from '../UserApi';
 
-interface OperationsCellCellProps {
-  user: User;
+interface OperationsCellProps<T extends { id: string; email: string; status?: UsersUserStatus }> {
+  user: T;
+  isEditable?: boolean;
   execFunctions: {
     delete: (userId: string) => void;
     changeStatus?: (userId: string, status: UsersUserStatus) => void;
-  }
+  };
 }
 
-export const OperationsCell = ({execFunctions, user}: OperationsCellCellProps) => {
+export const OperationsCell = <T extends { id: string; email: string; status?: UsersUserStatus }>({
+  execFunctions,
+  user,
+  isEditable = true,
+}: OperationsCellProps<T>) => {
   const { t } = useTranslation();
   const [stopModalShow, setStopModalShow] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
@@ -36,8 +40,11 @@ export const OperationsCell = ({execFunctions, user}: OperationsCellCellProps) =
     const status = isStop ? UsersUserStatus.Suspended : UsersUserStatus.Approved;
     statusChangeUser(user.id, status)
       .then(() => {
-        toast(t('users.list.operation.status_change_success', { user: user.email }), successToastConfig);
-        execFunctions.changeStatus?.(user.id, status)
+        toast(
+          t('users.list.operation.status_change_success', { user: user.email }),
+          successToastConfig
+        );
+        execFunctions.changeStatus?.(user.id, status);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -75,18 +82,22 @@ export const OperationsCell = ({execFunctions, user}: OperationsCellCellProps) =
         message={t('users.list.operation.delete_confirm', { user: user.email })}
         execFunction={onDeleteClick}
       />
-      <Button className="mx-1 w-100" variant="secondary" onClick={() => setStopModalShow(true)}>
-        {user.status !== UsersUserStatus.Suspended
-          ? t('users.list.operation.suspend')
-          : t('users.list.operation.unsuspend')}
-      </Button>
-      <Button
-        className="mx-1 w-100"
-        variant="primary"
-        onClick={() => navigate(`edit/${user.id}`)}
-      >
-        {t('users.list.operation.edit')}
-      </Button>
+      {Boolean(user.status) && (
+        <Button className="mx-1 w-100" variant="secondary" onClick={() => setStopModalShow(true)}>
+          {user.status !== UsersUserStatus.Suspended
+            ? t('users.list.operation.suspend')
+            : t('users.list.operation.unsuspend')}
+        </Button>
+      )}
+      {isEditable && (
+        <Button
+          className="mx-1 w-100"
+          variant="primary"
+          onClick={() => navigate(`edit/${user.id}`)}
+        >
+          {t('users.list.operation.edit')}
+        </Button>
+      )}
       <DefaultModal
         show={stopModalShow}
         onHide={() => setStopModalShow(false)}
