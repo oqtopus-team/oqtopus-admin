@@ -22,8 +22,11 @@ import { useUserAPI } from './UserApi';
 import { User, UserSearchParams } from '../types/UserType';
 import { useAuth } from '../hooks/use-auth';
 import { useLoading, useSetLoading } from '../common/Loader';
-import UserListItem from './UserListItem';
 import { useInfiniteScroll } from '../hooks/use-infinite-scroll';
+import { EmailCell } from './tableCells/EmailCell';
+import { AvailableDevicesCell } from './tableCells/AvailableDevicesCell';
+import { OperationsCell } from './tableCells/OperationsCell';
+import { UsersUserStatus } from '../api/generated';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
@@ -96,18 +99,7 @@ const UserList: React.FunctionComponent = () => {
       columnHelper.accessor('email', {
         header: 'users.mail',
         enableSorting: true,
-        cell: ({ getValue }) => (
-          <div
-            style={{
-              maxWidth: '130px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {getValue()}
-          </div>
-        ),
+        cell: ({ row }) => <EmailCell user={row.original} />,
       }),
 
       columnHelper.accessor('group_id', {
@@ -131,14 +123,16 @@ const UserList: React.FunctionComponent = () => {
       columnHelper.accessor('available_devices', {
         header: 'users.available_devices',
         enableSorting: true,
-        cell: ({ getValue }) => getValue(),
+        cell: ({ row }) => <AvailableDevicesCell user={row.original} />,
       }),
 
       columnHelper.display({
         id: 'operations',
         header: 'users.list.operations',
         enableSorting: false,
-        cell: ({ row }) => row,
+        cell: ({ row }) => (
+          <OperationsCell user={row.original} execFunctions={{ delete: onDeleteUser, changeStatus: onStatusChangeUser }} />
+        ),
       }),
     ],
     [loading]
@@ -151,6 +145,10 @@ const UserList: React.FunctionComponent = () => {
     manualSorting: true,
     state: {
       sorting,
+      columnVisibility: {
+        name: useUsername,
+        organization: useOrganization,
+      },
     },
     onSortingChange: setSorting,
   });
@@ -187,6 +185,14 @@ const UserList: React.FunctionComponent = () => {
   const onDeleteUser = (userId: string) => {
     setUsers((prevUsersState) => prevUsersState.filter(({ id }) => userId !== id));
   };
+
+  const onStatusChangeUser = (userId: string, status: UsersUserStatus) => {
+    setUsers((users) =>
+      users.map(user =>
+        user.id === userId ? { ...user, status } : user
+      )
+    )
+  }
 
   useEffect(() => {
     document.title = `${t('users.title')} | ${appName}`;
@@ -294,11 +300,13 @@ const UserList: React.FunctionComponent = () => {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <UserListItem
-                  key={row.original.id}
-                  user={row.original}
-                  execFunction={onDeleteUser}
-                />
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
               ))}
             </tbody>
           </Table>
