@@ -23,6 +23,7 @@ export default {
       suspend: '停止',
       unsuspend: '停止解除',
       suspend_confirm: '{{user}}の利用を停止します。よろしいですか？',
+      status_change_success: 'ユーザー {{user}} のステータスが正常に変更されました',
       unsuspend_confirm: '{{user}}の利用停止を解除します。よろしいですか？',
     },
   },
