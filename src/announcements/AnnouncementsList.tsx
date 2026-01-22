@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   ColumnDef,
   createColumnHelper,
@@ -23,6 +24,8 @@ const getStatusColor = (publishable: boolean): string => {
   return publishable ? '#316cf4' : '#fc6464';
 };
 
+const PAGE_LIMIT = 10;
+
 const AnnouncementsList = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loadingState, setLoading] = useState({
@@ -30,6 +33,9 @@ const AnnouncementsList = () => {
     get: false,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { getAnnouncements, deleteAnnouncement } = useAnnouncementAPI();
@@ -56,6 +62,8 @@ const AnnouncementsList = () => {
       });
       setSorting([{ id: columnId, desc: sortConfig.direction === 'desc' }]);
       setAnnouncements(result);
+      setHasMore(result.length === PAGE_LIMIT);
+      setPage(0);
     } catch (e) {}
   };
 
@@ -178,8 +186,15 @@ const AnnouncementsList = () => {
   async function getAnnouncementsList(currentTime?: string) {
     setLoading({ ...loadingState, get: true });
     try {
-      const announcements = await getAnnouncements({ currentTime });
-      setAnnouncements(announcements);
+      const announcements = await getAnnouncements({ currentTime, offset: PAGE_LIMIT * page });
+      setPage(page + 1);
+      setHasMore(announcements.length === PAGE_LIMIT);
+
+      setAnnouncements((prev) => {
+        const existingIds = new Set(prev.map((a) => a.id));
+        const unique = announcements.filter((a) => !existingIds.has(a.id));
+        return [...prev, ...unique];
+      });
     } catch (e) {
       console.error('Error fetching announcements:', e);
     } finally {
@@ -199,21 +214,28 @@ const AnnouncementsList = () => {
   }, []);
 
   return (
-    <div className="vertical-scrollable-container">
-      <div className="announcements-list-header">
-        <Link to={'/announcements/create'}>
-          <Button size="sm" style={{ width: '75px' }}>
-            {t('users.white_list.register.button.add')}
-          </Button>
-        </Link>
-        <label className="active-items-toggle">
-          <input type="checkbox" onChange={onActiveInputChange} />
-          <span>Show only active</span>
-        </label>
-      </div>
-      {announcements.length > 0 ? (
-        <Table bordered hover responsive style={{ marginTop: '10px' }}>
-          <thead className="table-light">
+    <div id={'scroll-target'} className="vertical-scrollable-container">
+      <InfiniteScroll
+        next={getAnnouncementsList}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        dataLength={announcements.length}
+        scrollableTarget={'scroll-target'}
+      >
+        <div className="announcements-list-header">
+          <Link to={'/announcements/create'}>
+            <Button size="sm" style={{ width: '75px' }}>
+              {t('users.white_list.register.button.add')}
+            </Button>
+          </Link>
+          <label className="active-items-toggle">
+            <input type="checkbox" onChange={onActiveInputChange} />
+            <span>Show only active</span>
+          </label>
+        </div>
+        {announcements.length > 0 ? (
+          <Table bordered hover responsive style={{ marginTop: '10px' }}>
+            <thead className="table-light">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="text-center">
                 {headerGroup.headers.map((header) => (
@@ -226,26 +248,32 @@ const AnnouncementsList = () => {
                     }}
                     style={{ verticalAlign: 'middle' }}
                   >
-                    <span>
-                      {flexRender(t(header.column.columnDef.header as string), header.getContext())}
-                    </span>
+                      <span>
+                        {flexRender(
+                          t(header.column.columnDef.header as string),
+                          header.getContext()
+                        )}
+                      </span>
                     {header.column.getCanSort() && (
                       <span className="px-2">
-                        {{
-                          asc: '↑',
-                          desc: '↓',
-                        }[header.column.getIsSorted() as string] ?? '↕'}
-                      </span>
+                          {{
+                            asc: '↑',
+                            desc: '↓',
+                          }[header.column.getIsSorted() as string] ?? '↕'}
+                        </span>
                     )}
                   </th>
                 ))}
               </tr>
             ))}
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             {announcements.map((announcement) => {
               return (
-                <tr key={announcement.id} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                <tr
+                  key={announcement.id}
+                  style={{ textAlign: 'center', verticalAlign: 'middle' }}
+                >
                   <td
                     style={{
                       maxWidth: '130px',
@@ -292,11 +320,12 @@ const AnnouncementsList = () => {
                 </tr>
               );
             })}
-          </tbody>
-        </Table>
-      ) : (
-        <p className="no_announcements">{t('announcements.no_announcements')}</p>
-      )}
+            </tbody>
+          </Table>
+        ) : (
+          <p className="no_announcements">{t('announcements.no_announcements')}</p>
+        )}
+      </InfiniteScroll>
     </div>
   );
 };
