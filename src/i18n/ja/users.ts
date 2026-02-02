@@ -16,7 +16,7 @@ export default {
     operations: '操作',
     search_button: '検索',
     operation: {
-      edit: 'ボタン',
+      edit: '編集',
       delete: '削除',
       delete_success: '{{user}}を削除しました',
       delete_confirm: '{{user}}を削除します。よろしいですか？',
