@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   ColumnDef,
   createColumnHelper,
@@ -23,6 +24,8 @@ const getStatusColor = (publishable: boolean): string => {
   return publishable ? '#316cf4' : '#fc6464';
 };
 
+const PAGE_LIMIT = 10;
+
 const AnnouncementsList = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loadingState, setLoading] = useState({
@@ -30,40 +33,21 @@ const AnnouncementsList = () => {
     get: false,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(false);
+
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { getAnnouncements, deleteAnnouncement } = useAnnouncementAPI();
 
-  const handleCustomSort = async (columnId: string) => {
-    const currentSort = sorting.find((s) => s.id === columnId);
-    let newDirection: 'asc' | 'desc';
-
-    if (!currentSort) {
-      newDirection = 'asc';
-    } else {
-      newDirection = currentSort.desc ? 'asc' : 'desc';
-    }
-
-    const sortConfig = {
-      columnId,
-      direction: newDirection,
-    };
-
-    try {
-      //TODO: Important! After implementing the backend (sorting for every field), we need to change the sorting logic here.
-      const result = await getAnnouncements({
-        order: sortConfig.direction.toUpperCase(),
-      });
-      setSorting([{ id: columnId, desc: sortConfig.direction === 'desc' }]);
-      setAnnouncements(result);
-    } catch (e) {}
-  };
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const columns = useMemo<Array<ColumnDef<Announcement, any>>>(
     () => [
       columnHelper.accessor('title', {
         header: 'announcements.title',
-        enableSorting: true,
+        enableSorting: false,
         cell: ({ getValue }) => (
           <div
             style={{
@@ -86,13 +70,13 @@ const AnnouncementsList = () => {
 
       columnHelper.accessor('end_time', {
         header: 'announcements.publish_end_date',
-        enableSorting: true,
+        enableSorting: false,
         cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
 
       columnHelper.accessor('publishable', {
         header: 'announcements.publish_setting',
-        enableSorting: true,
+        enableSorting: false,
         cell: ({ getValue }) => {
           const value: boolean = getValue();
 
@@ -137,7 +121,7 @@ const AnnouncementsList = () => {
 
       columnHelper.accessor('updated_at', {
         header: 'announcements.save_time',
-        enableSorting: true,
+        enableSorting: false,
         cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
     ],
@@ -175,128 +159,174 @@ const AnnouncementsList = () => {
     onSortingChange: setSorting,
   });
 
-  async function getAnnouncementsList(currentTime?: string) {
-    setLoading({ ...loadingState, get: true });
+  async function getAnnouncementsList(reset = false) {
+    if (loadingState.get) return;
+
+    setLoading((prev) => ({ ...prev, get: true }));
+
+    const currentPage = reset ? 0 : page;
+
     try {
-      const announcements = await getAnnouncements({ currentTime });
-      setAnnouncements(announcements);
+      const result = await getAnnouncements({
+        currentTime: activeFilter ? new Date().toISOString() : undefined,
+        offset: PAGE_LIMIT * currentPage,
+        order: sorting[0]?.desc ? 'desc' : 'asc',
+        // sortBy: sorting[0]?.id, // TODO: Implement sorting by different columns on BE first
+      });
+
+      setHasMore(result.length === PAGE_LIMIT);
+      setPage(currentPage + 1);
+
+      if (reset) {
+        setAnnouncements(result);
+      } else {
+        setAnnouncements((prev) => {
+          const existingIds = new Set(prev.map((a) => a.id));
+          const unique = result.filter((a) => !existingIds.has(a.id));
+          return [...prev, ...unique];
+        });
+      }
     } catch (e) {
       console.error('Error fetching announcements:', e);
     } finally {
-      setLoading({ ...loadingState, get: false });
+      setLoading((prev) => ({ ...prev, get: false }));
     }
   }
 
-  async function onActiveInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const checked = e.target.checked;
-    await getAnnouncementsList(checked ? new Date().toISOString() : undefined);
+  function onActiveInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setActiveFilter(e.target.checked);
   }
 
   useEffect(() => {
-    if (announcements.length > 0) return;
-
-    getAnnouncementsList();
+    getAnnouncementsList(true);
   }, []);
 
+  useEffect(() => {
+    if (sorting.length === 0) return;
+    getAnnouncementsList(true);
+  }, [sorting]);
+
+  useEffect(() => {
+    getAnnouncementsList(true);
+  }, [activeFilter]);
+
+  useEffect(() => {
+    if (!scrollContainerRef.current || !hasMore || loadingState.get) return;
+
+    if (scrollContainerRef.current.scrollHeight <= scrollContainerRef.current.clientHeight) {
+      getAnnouncementsList(false);
+    }
+  }, [announcements.length, hasMore, loadingState.get]);
+
   return (
-    <div className="vertical-scrollable-container">
-      <div className="announcements-list-header">
-        <Link to={'/announcements/create'}>
-          <Button size="sm" style={{ width: '75px' }}>
-            {t('users.white_list.register.button.add')}
-          </Button>
-        </Link>
-        <label className="active-items-toggle">
-          <input type="checkbox" onChange={onActiveInputChange} />
-          <span>Show only active</span>
-        </label>
-      </div>
-      {announcements.length > 0 ? (
-        <Table bordered hover responsive style={{ marginTop: '10px' }}>
-          <thead className="table-light">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="text-center">
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    onClick={() => {
-                      if (header.column.getCanSort()) {
-                        handleCustomSort(header.column.id);
-                      }
-                    }}
-                    style={{ verticalAlign: 'middle' }}
-                  >
-                    <span>
-                      {flexRender(t(header.column.columnDef.header as string), header.getContext())}
-                    </span>
-                    {header.column.getCanSort() && (
-                      <span className="px-2">
-                        {{
-                          asc: '↑',
-                          desc: '↓',
-                        }[header.column.getIsSorted() as string] ?? '↕'}
+    <div id={'scroll-target'} ref={scrollContainerRef} className="vertical-scrollable-container">
+      <InfiniteScroll
+        next={getAnnouncementsList}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        dataLength={announcements.length}
+        scrollableTarget={'scroll-target'}
+      >
+        <div className="announcements-list-header">
+          <Link to={'/announcements/create'}>
+            <Button size="sm" style={{ width: '75px' }}>
+              {t('users.white_list.register.button.add')}
+            </Button>
+          </Link>
+          <label className="active-items-toggle">
+            <input type="checkbox" onChange={onActiveInputChange} />
+            <span>Show only active</span>
+          </label>
+        </div>
+        {announcements.length > 0 ? (
+          <Table bordered hover responsive style={{ marginTop: '10px' }}>
+            <thead className="table-light">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id} className="text-center">
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                      style={{ verticalAlign: 'middle' }}
+                    >
+                      <span>
+                        {flexRender(
+                          t(header.column.columnDef.header as string),
+                          header.getContext()
+                        )}
                       </span>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {announcements.map((announcement) => {
-              return (
-                <tr key={announcement.id} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-                  <td
-                    style={{
-                      maxWidth: '130px',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {announcement.title}
-                  </td>
-                  <td>{DateTimeFormatter(t, i18n, announcement.start_time)}</td>
-                  <td>{DateTimeFormatter(t, i18n, announcement.end_time)}</td>
-                  <td
-                    style={{
-                      color: announcement.publishable ? '#316cf4' : '#fc6464',
-                    }}
-                  >
-                    {t(
-                      announcement.publishable
-                        ? 'announcements.publishable'
-                        : 'announcements.unpublishable'
-                    )}
-                  </td>
-                  <td className="action_cell">
-                    <Button
-                      disabled={loadingState.delete}
-                      onClick={() => {
-                        handleEditPost(announcement.id);
-                      }}
-                      className="action_button"
-                    >
-                      {t('announcements.actions.edit')}
-                    </Button>
-                    <Button
-                      disabled={loadingState.delete}
-                      variant="danger"
-                      onClick={() => handleDeletePost(announcement.id)}
-                      className="action_button"
-                    >
-                      {t('announcements.actions.delete')}
-                    </Button>
-                  </td>
-                  <td>{DateTimeFormatter(t, i18n, announcement.updated_at)}</td>
+                      {header.column.getCanSort() && (
+                        <span className="px-2">
+                          {{
+                            asc: '↑',
+                            desc: '↓',
+                          }[header.column.getIsSorted() as string] ?? '↕'}
+                        </span>
+                      )}
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      ) : (
-        <p className="no_announcements">{t('announcements.no_announcements')}</p>
-      )}
+              ))}
+            </thead>
+            <tbody>
+              {announcements.map((announcement) => {
+                return (
+                  <tr
+                    key={announcement.id}
+                    style={{ textAlign: 'center', verticalAlign: 'middle' }}
+                  >
+                    <td
+                      style={{
+                        maxWidth: '130px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {announcement.title}
+                    </td>
+                    <td>{DateTimeFormatter(t, i18n, announcement.start_time)}</td>
+                    <td>{DateTimeFormatter(t, i18n, announcement.end_time)}</td>
+                    <td
+                      style={{
+                        color: announcement.publishable ? '#316cf4' : '#fc6464',
+                      }}
+                    >
+                      {t(
+                        announcement.publishable
+                          ? 'announcements.publishable'
+                          : 'announcements.unpublishable'
+                      )}
+                    </td>
+                    <td className="action_cell">
+                      <Button
+                        disabled={loadingState.delete}
+                        onClick={() => {
+                          handleEditPost(announcement.id);
+                        }}
+                        className="action_button"
+                      >
+                        {t('announcements.actions.edit')}
+                      </Button>
+                      <Button
+                        disabled={loadingState.delete}
+                        variant="danger"
+                        onClick={() => handleDeletePost(announcement.id)}
+                        className="action_button"
+                      >
+                        {t('announcements.actions.delete')}
+                      </Button>
+                    </td>
+                    <td>{DateTimeFormatter(t, i18n, announcement.updated_at)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        ) : (
+          <p className="no_announcements">{t('announcements.no_announcements')}</p>
+        )}
+      </InfiniteScroll>
     </div>
   );
 };
