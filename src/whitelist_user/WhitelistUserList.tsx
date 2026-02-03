@@ -22,9 +22,11 @@ import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { UserSearchParams } from '../types/UserType';
 import { useAuth } from '../hooks/use-auth';
 import { useLoading, useSetLoading } from '../common/Loader';
-import WhitelistUserListItem from './WhitelistUserListItem';
 import { useInfiniteScroll } from '../hooks/use-infinite-scroll';
 import { WhitelistUser, WhitelistUserSearchParams } from '../types/WhitelistUserType';
+import { EmailCell } from '../user/tableCells/EmailCell';
+import { AvailableDevicesCell } from '../user/tableCells/AvailableDevicesCell';
+import { OperationsCell } from '../user/tableCells/OperationsCell';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
@@ -102,18 +104,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
       columnHelper.accessor('email', {
         header: 'users.mail',
         enableSorting: true,
-        cell: ({ getValue }) => (
-          <div
-            style={{
-              maxWidth: '130px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {getValue()}
-          </div>
-        ),
+        cell: ({ row }) => <EmailCell user={row.original} />,
       }),
 
       columnHelper.accessor('username', {
@@ -131,20 +122,26 @@ const WhitelistUserList: React.FunctionComponent = () => {
       columnHelper.accessor('available_devices', {
         header: 'users.available_devices',
         enableSorting: true,
-        cell: ({ getValue }) => getValue(),
+        cell: ({ row }) => <AvailableDevicesCell user={row.original} />,
       }),
 
       columnHelper.accessor('is_signup_completed', {
         header: 'users.white_list.signup',
         enableSorting: true,
-        cell: ({ getValue }) => getValue(),
+        cell: ({ getValue }) => String(getValue()),
       }),
 
       columnHelper.display({
         id: 'operations',
         header: 'users.white_list.operations',
         enableSorting: false,
-        cell: ({ row }) => row,
+        cell: ({ row }) => (
+          <OperationsCell
+            user={row.original}
+            execFunctions={{ delete: onDeleteUser }}
+            isEditable={false}
+          />
+        ),
       }),
     ],
     [loading]
@@ -157,6 +154,10 @@ const WhitelistUserList: React.FunctionComponent = () => {
     manualSorting: true,
     state: {
       sorting,
+      columnVisibility: {
+        username: useUsername,
+        organization: useOrganization,
+      },
     },
     onSortingChange: setSorting,
   });
@@ -302,11 +303,13 @@ const WhitelistUserList: React.FunctionComponent = () => {
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((row) => (
-                  <WhitelistUserListItem
-                    key={row.original.id}
-                    user={row.original}
-                    execFunction={onDeleteUser}
-                  />
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
                 ))}
               </tbody>
             </Table>

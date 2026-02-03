@@ -23,6 +23,7 @@ export default {
       suspend: 'Suspend',
       unsuspend: 'Unsuspend',
       suspend_confirm: 'Are you sure you want to suspend {{user}}?',
+      status_change_success: "User {{user}} status has been successfully changed",
       unsuspend_confirm: 'Are you sure you want to unsuspend {{user}}?',
     },
   },
