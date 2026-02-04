@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -17,11 +17,14 @@ import { Announcement, useAnnouncementAPI } from './AnnouncementApi';
 import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 import './announcementsList.css';
 import { DateTimeFormatter } from '../device/common/DateTimeFormatter';
+import { useInfiniteScroll } from '../hooks/use-infinite-scroll';
 
 const columnHelper = createColumnHelper<Announcement>();
 const getStatusColor = (publishable: boolean): string => {
   return publishable ? '#316cf4' : '#fc6464';
 };
+
+const PAGE_LIMIT = 10;
 
 const AnnouncementsList = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
@@ -30,40 +33,18 @@ const AnnouncementsList = () => {
     get: false,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [hasMore, setHasMore] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(false);
+
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { getAnnouncements, deleteAnnouncement } = useAnnouncementAPI();
-
-  const handleCustomSort = async (columnId: string) => {
-    const currentSort = sorting.find((s) => s.id === columnId);
-    let newDirection: 'asc' | 'desc';
-
-    if (!currentSort) {
-      newDirection = 'asc';
-    } else {
-      newDirection = currentSort.desc ? 'asc' : 'desc';
-    }
-
-    const sortConfig = {
-      columnId,
-      direction: newDirection,
-    };
-
-    try {
-      //TODO: Important! After implementing the backend (sorting for every field), we need to change the sorting logic here.
-      const result = await getAnnouncements({
-        order: sortConfig.direction.toUpperCase(),
-      });
-      setSorting([{ id: columnId, desc: sortConfig.direction === 'desc' }]);
-      setAnnouncements(result);
-    } catch (e) {}
-  };
 
   const columns = useMemo<Array<ColumnDef<Announcement, any>>>(
     () => [
       columnHelper.accessor('title', {
         header: 'announcements.title',
-        enableSorting: true,
+        enableSorting: false,
         cell: ({ getValue }) => (
           <div
             style={{
@@ -86,13 +67,13 @@ const AnnouncementsList = () => {
 
       columnHelper.accessor('end_time', {
         header: 'announcements.publish_end_date',
-        enableSorting: true,
+        enableSorting: false,
         cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
 
       columnHelper.accessor('publishable', {
         header: 'announcements.publish_setting',
-        enableSorting: true,
+        enableSorting: false,
         cell: ({ getValue }) => {
           const value: boolean = getValue();
 
@@ -137,7 +118,7 @@ const AnnouncementsList = () => {
 
       columnHelper.accessor('updated_at', {
         header: 'announcements.save_time',
-        enableSorting: true,
+        enableSorting: false,
         cell: ({ getValue }) => <div>{DateTimeFormatter(t, i18n, getValue())}</div>,
       }),
     ],
@@ -175,31 +156,51 @@ const AnnouncementsList = () => {
     onSortingChange: setSorting,
   });
 
-  async function getAnnouncementsList(currentTime?: string) {
-    setLoading({ ...loadingState, get: true });
+  async function getAnnouncementsList({
+    offset,
+    filterFields,
+  }: {
+    offset?: number;
+    filterFields?: { activeFilter: boolean };
+  } = {}) {
+    if (loadingState.get) return;
+
+    setLoading((prev) => ({ ...prev, get: true }));
+
     try {
-      const announcements = await getAnnouncements({ currentTime });
-      setAnnouncements(announcements);
+      const currentActiveFilter = filterFields?.activeFilter ?? activeFilter;
+      const result = await getAnnouncements({
+        currentTime: currentActiveFilter ? new Date().toISOString() : undefined,
+        offset,
+        order: sorting[0]?.desc ? 'desc' : 'asc',
+      });
+
+      if (offset !== undefined) {
+        setAnnouncements([...announcements, ...result]);
+      } else {
+        setAnnouncements(result);
+      }
+
+      setHasMore(result.length >= PAGE_LIMIT);
     } catch (e) {
       console.error('Error fetching announcements:', e);
     } finally {
-      setLoading({ ...loadingState, get: false });
+      setLoading((prev) => ({ ...prev, get: false }));
     }
   }
 
-  async function onActiveInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const checked = e.target.checked;
-    await getAnnouncementsList(checked ? new Date().toISOString() : undefined);
+  const { containerRef } = useInfiniteScroll(getAnnouncementsList, hasMore, {
+    limit: PAGE_LIMIT,
+    sort: sorting[0],
+    filterFields: { activeFilter },
+  });
+
+  function onActiveInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setActiveFilter(e.target.checked);
   }
 
-  useEffect(() => {
-    if (announcements.length > 0) return;
-
-    getAnnouncementsList();
-  }, []);
-
   return (
-    <div className="vertical-scrollable-container">
+    <div ref={containerRef} className="vertical-scrollable-container">
       <div className="announcements-list-header">
         <Link to={'/announcements/create'}>
           <Button size="sm" style={{ width: '75px' }}>
@@ -219,11 +220,7 @@ const AnnouncementsList = () => {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    onClick={() => {
-                      if (header.column.getCanSort()) {
-                        handleCustomSort(header.column.id);
-                      }
-                    }}
+                    onClick={header.column.getToggleSortingHandler()}
                     style={{ verticalAlign: 'middle' }}
                   >
                     <span>

@@ -198,10 +198,6 @@ const UserList: React.FunctionComponent = () => {
     document.title = `${t('users.title')} | ${appName}`;
   }, [auth.idToken]);
 
-  useEffect(() => {
-    getUsersList({ filterFields: urlParams, sort: sorting[0] });
-  }, [searchParams]);
-
   return (
     <Stack gap={3} className="vertical-scroll-intermediate-container">
       <Card>

@@ -199,9 +199,6 @@ const WhitelistUserList: React.FunctionComponent = () => {
     document.title = `${t('users.white_list.title')} | ${appName}`;
   }, [auth.idToken]);
 
-  useEffect(() => {
-    getUsersList({ filterFields: urlParams, sort: sorting[0] });
-  }, [searchParams]);
 
   return (
     <>
