@@ -159,7 +159,14 @@ const WhitelistUserList: React.FunctionComponent = () => {
         organization: useOrganization,
       },
     },
-    onSortingChange: setSorting,
+    onSortingChange: (updater) => {
+      const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
+      setSorting(newSorting);
+
+      if (containerRef.current) {
+        containerRef.current.scrollTop = 0;
+      }
+    },
   });
 
   const onSubmit = async (formValues: UserSearchParams): Promise<void> => {
@@ -175,22 +182,6 @@ const WhitelistUserList: React.FunctionComponent = () => {
     setSearchParams(filtered);
   };
 
-  const handleCustomSort = async (column: string) => {
-    const currentSort = sorting.find((s) => s.id === column);
-    const newDesc = currentSort ? !currentSort.desc : false;
-
-    const newSorting = [{ id: column, desc: newDesc }];
-
-    try {
-      await getUsersList({
-        sort: newSorting[0],
-        filterFields: urlParams,
-      });
-
-      setSorting(newSorting);
-    } catch (e) {}
-  };
-
   const onDeleteUser = (userId: string) => {
     setUsers((prevUsersState) => prevUsersState.filter(({ id }) => userId !== id));
   };
@@ -198,6 +189,13 @@ const WhitelistUserList: React.FunctionComponent = () => {
   useEffect(() => {
     document.title = `${t('users.white_list.title')} | ${appName}`;
   }, [auth.idToken]);
+
+  useEffect(() => {
+    getUsersList({
+      sort: sorting[0],
+      filterFields: urlParams as WhitelistUserSearchParams,
+    });
+  }, [sorting])
 
 
   return (
@@ -272,11 +270,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        onClick={() => {
-                          if (header.column.getCanSort()) {
-                            handleCustomSort(header.column.id);
-                          }
-                        }}
+                        onClick={header.column.getToggleSortingHandler()}
                         style={{ verticalAlign: 'middle' }}
                       >
                         <span>

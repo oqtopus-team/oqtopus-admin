@@ -240,55 +240,15 @@ const AnnouncementsList = () => {
             ))}
           </thead>
           <tbody>
-            {announcements.map((announcement) => {
-              return (
-                <tr key={announcement.id} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-                  <td
-                    style={{
-                      maxWidth: '130px',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {announcement.title}
-                  </td>
-                  <td>{DateTimeFormatter(t, i18n, announcement.start_time)}</td>
-                  <td>{DateTimeFormatter(t, i18n, announcement.end_time)}</td>
-                  <td
-                    style={{
-                      color: announcement.publishable ? '#316cf4' : '#fc6464',
-                    }}
-                  >
-                    {t(
-                      announcement.publishable
-                        ? 'announcements.publishable'
-                        : 'announcements.unpublishable'
-                    )}
-                  </td>
-                  <td className="action_cell">
-                    <Button
-                      disabled={loadingState.delete}
-                      onClick={() => {
-                        handleEditPost(announcement.id);
-                      }}
-                      className="action_button"
-                    >
-                      {t('announcements.actions.edit')}
-                    </Button>
-                    <Button
-                      disabled={loadingState.delete}
-                      variant="danger"
-                      onClick={() => handleDeletePost(announcement.id)}
-                      className="action_button"
-                    >
-                      {t('announcements.actions.delete')}
-                    </Button>
-                  </td>
-                  <td>{DateTimeFormatter(t, i18n, announcement.updated_at)}</td>
-                </tr>
-              );
-            })}
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
           </tbody>
         </Table>
       ) : (

@@ -150,7 +150,19 @@ const UserList: React.FunctionComponent = () => {
         organization: useOrganization,
       },
     },
-    onSortingChange: setSorting,
+    onSortingChange: (updater) => {
+      const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
+      setSorting(newSorting);
+
+      if (containerRef.current) {
+        containerRef.current.scrollTop = 0;
+      }
+
+      getUsersList({
+        sort: newSorting[0],
+        filterFields: urlParams as UserSearchParams,
+      });
+    },
   });
 
   const onSubmit = async (formValues: UserSearchParams): Promise<void> => {
@@ -164,22 +176,6 @@ const UserList: React.FunctionComponent = () => {
     );
 
     setSearchParams(filtered);
-  };
-
-  const handleCustomSort = async (column: string) => {
-    const currentSort = sorting.find((s) => s.id === column);
-    const newDesc = currentSort ? !currentSort.desc : false;
-
-    const newSorting = [{ id: column, desc: newDesc }];
-
-    try {
-      await getUsersList({
-        sort: newSorting[0],
-        filterFields: urlParams,
-      });
-
-      setSorting(newSorting);
-    } catch (e) {}
   };
 
   const onDeleteUser = (userId: string) => {
@@ -268,11 +264,7 @@ const UserList: React.FunctionComponent = () => {
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      onClick={() => {
-                        if (header.column.getCanSort()) {
-                          handleCustomSort(header.column.id);
-                        }
-                      }}
+                      onClick={header.column.getToggleSortingHandler()}
                       style={{ verticalAlign: 'middle' }}
                     >
                       <span>
