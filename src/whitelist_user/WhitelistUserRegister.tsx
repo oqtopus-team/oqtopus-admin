@@ -176,11 +176,18 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     }
 
     const formattedData = data.whitelist.map((userData) => {
+      const rawAvailableDevices = userData.available_devices as string[] | string;
+      const availableDevices: string[] | '*' = Array.isArray(rawAvailableDevices)
+        ? rawAvailableDevices.includes('*')
+          ? '*'
+          : rawAvailableDevices
+        : rawAvailableDevices === '*'
+        ? '*'
+        : [rawAvailableDevices];
+
       return {
         ...userData,
-        available_devices: userData.available_devices.includes('*')
-          ? '*'
-          : userData.available_devices,
+        available_devices: availableDevices,
       };
     });
 

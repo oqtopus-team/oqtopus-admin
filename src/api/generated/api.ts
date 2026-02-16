@@ -12,1100 +12,569 @@
  * Do not edit the class manually.
  */
 
+
 import type { Configuration } from './configuration';
 import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import {
-  DUMMY_BASE_URL,
-  assertParamExists,
-  setApiKeyToObject,
-  setBasicAuthToObject,
-  setBearerAuthToObject,
-  setOAuthToObject,
-  setSearchParams,
-  serializeDataIfNeeded,
-  toPathString,
-  createRequestFunction,
-} from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- *
- * @export
- * @interface AnnouncementsGetAnnouncementResponse
- */
 export interface AnnouncementsGetAnnouncementResponse {
-  /**
-   *
-   * @type {number}
-   * @memberof AnnouncementsGetAnnouncementResponse
-   */
-  id: number;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsGetAnnouncementResponse
-   */
-  title: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsGetAnnouncementResponse
-   */
-  content: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsGetAnnouncementResponse
-   */
-  start_time: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsGetAnnouncementResponse
-   */
-  end_time: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof AnnouncementsGetAnnouncementResponse
-   */
-  publishable: boolean;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsGetAnnouncementResponse
-   */
-  updated_at: string;
+    'id': number;
+    'title': string;
+    'content': string;
+    'start_time': string;
+    'end_time': string;
+    'publishable': boolean;
+    'updated_at': string;
 }
-/**
- *
- * @export
- * @interface AnnouncementsGetAnnouncementsListResponse
- */
 export interface AnnouncementsGetAnnouncementsListResponse {
-  /**
-   *
-   * @type {Array<AnnouncementsGetAnnouncementResponse>}
-   * @memberof AnnouncementsGetAnnouncementsListResponse
-   */
-  announcements?: Array<AnnouncementsGetAnnouncementResponse>;
+    'announcements'?: Array<AnnouncementsGetAnnouncementResponse>;
 }
 /**
  * register announcement to backend
- * @export
- * @interface AnnouncementsRegisterAnnouncementRequest
  */
 export interface AnnouncementsRegisterAnnouncementRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsRegisterAnnouncementRequest
-   */
-  title: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsRegisterAnnouncementRequest
-   */
-  content: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsRegisterAnnouncementRequest
-   */
-  start_time: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsRegisterAnnouncementRequest
-   */
-  end_time: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof AnnouncementsRegisterAnnouncementRequest
-   */
-  publishable: boolean;
+    'title': string;
+    'content': string;
+    'start_time': string;
+    'end_time': string;
+    'publishable': boolean;
 }
 /**
  * update announcement
- * @export
- * @interface AnnouncementsUpdateAnnouncementRequest
  */
 export interface AnnouncementsUpdateAnnouncementRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsUpdateAnnouncementRequest
-   */
-  title?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsUpdateAnnouncementRequest
-   */
-  content?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsUpdateAnnouncementRequest
-   */
-  start_time?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AnnouncementsUpdateAnnouncementRequest
-   */
-  end_time?: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof AnnouncementsUpdateAnnouncementRequest
-   */
-  publishable?: boolean;
+    'title'?: string;
+    'content'?: string;
+    'start_time'?: string;
+    'end_time'?: string;
+    'publishable'?: boolean;
 }
-/**
- *
- * @export
- * @interface DevicesDeviceBase
- */
 export interface DevicesDeviceBase {
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceBase
-   */
-  device_info?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceBase
-   */
-  device_type?: DevicesDeviceBaseDeviceTypeEnum;
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceBase
-   */
-  status?: DevicesDeviceBaseStatusEnum;
-  /**
-   *
-   * @type {number}
-   * @memberof DevicesDeviceBase
-   */
-  n_qubits?: number;
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceBase
-   */
-  available_at?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceBase
-   */
-  calibrated_at?: string;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof DevicesDeviceBase
-   */
-  basis_gates?: Array<string>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof DevicesDeviceBase
-   */
-  supported_instructions?: Array<string>;
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceBase
-   */
-  description?: string;
+    'device_info'?: string;
+    'device_type'?: DevicesDeviceBaseDeviceTypeEnum;
+    'status'?: DevicesDeviceBaseStatusEnum;
+    'n_qubits'?: number;
+    'available_at'?: string;
+    'calibrated_at'?: string;
+    'basis_gates'?: Array<string>;
+    'supported_instructions'?: Array<string>;
+    'description'?: string;
 }
 
 export const DevicesDeviceBaseDeviceTypeEnum = {
-  Qpu: 'QPU',
-  Simulator: 'simulator',
+    Qpu: 'QPU',
+    Simulator: 'simulator'
 } as const;
 
-export type DevicesDeviceBaseDeviceTypeEnum =
-  (typeof DevicesDeviceBaseDeviceTypeEnum)[keyof typeof DevicesDeviceBaseDeviceTypeEnum];
+export type DevicesDeviceBaseDeviceTypeEnum = typeof DevicesDeviceBaseDeviceTypeEnum[keyof typeof DevicesDeviceBaseDeviceTypeEnum];
 export const DevicesDeviceBaseStatusEnum = {
-  Available: 'available',
-  Unavailable: 'unavailable',
+    Available: 'available',
+    Unavailable: 'unavailable'
 } as const;
 
-export type DevicesDeviceBaseStatusEnum =
-  (typeof DevicesDeviceBaseStatusEnum)[keyof typeof DevicesDeviceBaseStatusEnum];
+export type DevicesDeviceBaseStatusEnum = typeof DevicesDeviceBaseStatusEnum[keyof typeof DevicesDeviceBaseStatusEnum];
 
-/**
- *
- * @export
- * @interface DevicesDeviceInfo
- */
 export interface DevicesDeviceInfo {
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceInfo
-   */
-  device_id: string;
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceInfo
-   */
-  device_type: DevicesDeviceInfoDeviceTypeEnum;
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceInfo
-   */
-  status: DevicesDeviceInfoStatusEnum;
-  /**
-   * Parameter mandatory and valid for \'unavailable\' devices
-   * @type {string}
-   * @memberof DevicesDeviceInfo
-   */
-  available_at?: string;
-  /**
-   *
-   * @type {number}
-   * @memberof DevicesDeviceInfo
-   */
-  n_pending_jobs: number;
-  /**
-   *
-   * @type {number}
-   * @memberof DevicesDeviceInfo
-   */
-  n_qubits?: number;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof DevicesDeviceInfo
-   */
-  basis_gates: Array<string>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof DevicesDeviceInfo
-   */
-  supported_instructions: Array<string>;
-  /**
-   * json format calibration_data and n_nodes etc
-   * @type {string}
-   * @memberof DevicesDeviceInfo
-   */
-  device_info?: string;
-  /**
-   * Parameter available only for `QPU` devices with available calibration data
-   * @type {string}
-   * @memberof DevicesDeviceInfo
-   */
-  calibrated_at?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof DevicesDeviceInfo
-   */
-  description: string;
+    'device_id': string;
+    'device_type': DevicesDeviceInfoDeviceTypeEnum;
+    'status': DevicesDeviceInfoStatusEnum;
+    /**
+     * Parameter mandatory and valid for \'unavailable\' devices
+     */
+    'available_at'?: string;
+    'n_pending_jobs': number;
+    'n_qubits'?: number;
+    'basis_gates': Array<string>;
+    'supported_instructions': Array<string>;
+    /**
+     * json format calibration_data and n_nodes etc
+     */
+    'device_info'?: string;
+    /**
+     * Parameter available only for `QPU` devices with available calibration data
+     */
+    'calibrated_at'?: string;
+    'description': string;
 }
 
 export const DevicesDeviceInfoDeviceTypeEnum = {
-  Qpu: 'QPU',
-  Simulator: 'simulator',
+    Qpu: 'QPU',
+    Simulator: 'simulator'
 } as const;
 
-export type DevicesDeviceInfoDeviceTypeEnum =
-  (typeof DevicesDeviceInfoDeviceTypeEnum)[keyof typeof DevicesDeviceInfoDeviceTypeEnum];
+export type DevicesDeviceInfoDeviceTypeEnum = typeof DevicesDeviceInfoDeviceTypeEnum[keyof typeof DevicesDeviceInfoDeviceTypeEnum];
 export const DevicesDeviceInfoStatusEnum = {
-  Available: 'available',
-  Unavailable: 'unavailable',
+    Available: 'available',
+    Unavailable: 'unavailable'
 } as const;
 
-export type DevicesDeviceInfoStatusEnum =
-  (typeof DevicesDeviceInfoStatusEnum)[keyof typeof DevicesDeviceInfoStatusEnum];
+export type DevicesDeviceInfoStatusEnum = typeof DevicesDeviceInfoStatusEnum[keyof typeof DevicesDeviceInfoStatusEnum];
 
-/**
- *
- * @export
- * @interface ErrorBadRequestError
- */
 export interface ErrorBadRequestError {
-  /**
-   *
-   * @type {string}
-   * @memberof ErrorBadRequestError
-   */
-  message: string;
+    'message': string;
 }
-/**
- *
- * @export
- * @interface ErrorInternalServerError
- */
 export interface ErrorInternalServerError {
-  /**
-   *
-   * @type {string}
-   * @memberof ErrorInternalServerError
-   */
-  message: string;
+    'message': string;
 }
-/**
- *
- * @export
- * @interface ErrorNotFoundError
- */
 export interface ErrorNotFoundError {
-  /**
-   *
-   * @type {string}
-   * @memberof ErrorNotFoundError
-   */
-  message: string;
+    'message': string;
 }
-/**
- *
- * @export
- * @interface SuccessSuccessResponse
- */
 export interface SuccessSuccessResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof SuccessSuccessResponse
-   */
-  message: string;
+    'message': string;
 }
 /**
  * detail of users response
- * @export
- * @interface UsersGetOneUserResponse
  */
 export interface UsersGetOneUserResponse {
-  /**
-   *
-   * @type {number}
-   * @memberof UsersGetOneUserResponse
-   */
-  id: number;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersGetOneUserResponse
-   */
-  email?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersGetOneUserResponse
-   */
-  name?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersGetOneUserResponse
-   */
-  organization?: string;
-  /**
-   *
-   * @type {UsersUserStatus}
-   * @memberof UsersGetOneUserResponse
-   */
-  status?: UsersUserStatus;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersGetOneUserResponse
-   */
-  group_id?: string;
-  /**
-   *
-   * @type {UsersGetOneUserResponseAvailableDevices}
-   * @memberof UsersGetOneUserResponse
-   */
-  available_devices?: UsersGetOneUserResponseAvailableDevices;
+    'id': string;
+    'email'?: string;
+    'display_name'?: string;
+    'organization'?: string;
+    'status'?: UsersUserStatus;
+    'group_id'?: string;
+    'available_devices'?: UsersGetOneUserResponseAvailableDevices;
 }
+
 
 /**
  * @type UsersGetOneUserResponseAvailableDevices
- * @export
  */
 export type UsersGetOneUserResponseAvailableDevices = Array<string> | string;
 
-/**
- *
- * @export
- * @interface UsersGetUsersResponse
- */
 export interface UsersGetUsersResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof UsersGetUsersResponse
-   */
-  offset?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersGetUsersResponse
-   */
-  limit?: string;
-  /**
-   *
-   * @type {Array<UsersGetOneUserResponse>}
-   * @memberof UsersGetUsersResponse
-   */
-  users?: Array<UsersGetOneUserResponse>;
+    'offset'?: string;
+    'limit'?: string;
+    'users'?: Array<UsersGetOneUserResponse>;
 }
-/**
- *
- * @export
- * @interface UsersUpdateUserRequest
- */
 export interface UsersUpdateUserRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof UsersUpdateUserRequest
-   */
-  email?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersUpdateUserRequest
-   */
-  name?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersUpdateUserRequest
-   */
-  organization?: string;
-  /**
-   *
-   * @type {UsersUserStatus}
-   * @memberof UsersUpdateUserRequest
-   */
-  status?: UsersUserStatus;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersUpdateUserRequest
-   */
-  group_id?: string;
-  /**
-   *
-   * @type {UsersGetOneUserResponseAvailableDevices}
-   * @memberof UsersUpdateUserRequest
-   */
-  available_devices?: UsersGetOneUserResponseAvailableDevices;
+    'email'?: string;
+    'display_name'?: string;
+    'organization'?: string;
+    'status'?: UsersUserStatus;
+    'group_id'?: string;
+    'available_devices'?: UsersGetOneUserResponseAvailableDevices;
 }
 
-/**
- *
- * @export
- * @enum {string}
- */
+
 
 export const UsersUserStatus = {
-  Approved: 'approved',
-  Unapproved: 'unapproved',
-  Suspended: 'suspended',
+    Approved: 'approved',
+    Unapproved: 'unapproved',
+    Suspended: 'suspended'
 } as const;
 
-export type UsersUserStatus = (typeof UsersUserStatus)[keyof typeof UsersUserStatus];
+export type UsersUserStatus = typeof UsersUserStatus[keyof typeof UsersUserStatus];
 
-/**
- *
- * @export
- * @interface WhitelistUsersListWhitelistUserResponse
- */
+
 export interface WhitelistUsersListWhitelistUserResponse {
-  /**
-   *
-   * @type {number}
-   * @memberof WhitelistUsersListWhitelistUserResponse
-   */
-  id: number;
-  /**
-   *
-   * @type {string}
-   * @memberof WhitelistUsersListWhitelistUserResponse
-   */
-  group_id: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WhitelistUsersListWhitelistUserResponse
-   */
-  email: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WhitelistUsersListWhitelistUserResponse
-   */
-  username?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WhitelistUsersListWhitelistUserResponse
-   */
-  organization?: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof WhitelistUsersListWhitelistUserResponse
-   */
-  is_signup_completed?: boolean;
-  /**
-   *
-   * @type {UsersGetOneUserResponseAvailableDevices}
-   * @memberof WhitelistUsersListWhitelistUserResponse
-   */
-  available_devices?: UsersGetOneUserResponseAvailableDevices;
+    'id': number;
+    'group_id': string;
+    'email': string;
+    'display_name'?: string;
+    'organization'?: string;
+    'is_signup_completed'?: boolean;
+    'available_devices'?: UsersGetOneUserResponseAvailableDevices;
 }
-/**
- *
- * @export
- * @interface WhitelistUsersListWhitelistUsersResponse
- */
 export interface WhitelistUsersListWhitelistUsersResponse {
-  /**
-   *
-   * @type {Array<WhitelistUsersListWhitelistUserResponse>}
-   * @memberof WhitelistUsersListWhitelistUsersResponse
-   */
-  users?: Array<WhitelistUsersListWhitelistUserResponse>;
+    'users'?: Array<WhitelistUsersListWhitelistUserResponse>;
 }
 /**
  * Whitelist user register request
- * @export
- * @interface WhitelistUsersRegisterWhitelistUserRequest
  */
 export interface WhitelistUsersRegisterWhitelistUserRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof WhitelistUsersRegisterWhitelistUserRequest
-   */
-  group_id?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WhitelistUsersRegisterWhitelistUserRequest
-   */
-  email?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WhitelistUsersRegisterWhitelistUserRequest
-   */
-  username?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WhitelistUsersRegisterWhitelistUserRequest
-   */
-  organization?: string;
-  /**
-   *
-   * @type {UsersGetOneUserResponseAvailableDevices}
-   * @memberof WhitelistUsersRegisterWhitelistUserRequest
-   */
-  available_devices?: UsersGetOneUserResponseAvailableDevices;
+    'group_id'?: string;
+    'email'?: string;
+    'display_name'?: string;
+    'organization'?: string;
+    'available_devices'?: UsersGetOneUserResponseAvailableDevices;
 }
-/**
- *
- * @export
- * @interface WhitelistUsersRegisterWhitelistUsersRequest
- */
 export interface WhitelistUsersRegisterWhitelistUsersRequest {
-  /**
-   *
-   * @type {Array<WhitelistUsersRegisterWhitelistUserRequest>}
-   * @memberof WhitelistUsersRegisterWhitelistUsersRequest
-   */
-  users?: Array<WhitelistUsersRegisterWhitelistUserRequest>;
+    'users'?: Array<WhitelistUsersRegisterWhitelistUserRequest>;
 }
-/**
- *
- * @export
- * @interface WhitelistUsersWhitelistUsersDeleteRequest
- */
 export interface WhitelistUsersWhitelistUsersDeleteRequest {
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof WhitelistUsersWhitelistUsersDeleteRequest
-   */
-  user_emails?: Array<string>;
+    'user_emails'?: Array<string>;
 }
 
 /**
  * AnnouncementsApi - axios parameter creator
- * @export
  */
 export const AnnouncementsApiAxiosParamCreator = function (configuration?: Configuration) {
-  return {
-    /**
-     * Register announcement to backend
-     * @summary Register announcement to backend
-     * @param {AnnouncementsRegisterAnnouncementRequest} [announcementsRegisterAnnouncementRequest]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    announcement: async (
-      announcementsRegisterAnnouncementRequest?: AnnouncementsRegisterAnnouncementRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/announcements`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+    return {
+        /**
+         * Register announcement to backend
+         * @summary Register announcement to backend
+         * @param {AnnouncementsRegisterAnnouncementRequest} [announcementsRegisterAnnouncementRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        announcement: async (announcementsRegisterAnnouncementRequest?: AnnouncementsRegisterAnnouncementRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/announcements`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        announcementsRegisterAnnouncementRequest,
-        localVarRequestOptions,
-        configuration
-      );
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(announcementsRegisterAnnouncementRequest, localVarRequestOptions, configuration)
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Delete announcement
-     * @summary Delete announcement
-     * @param {number} announcementId announcement ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    deleteAnnouncement: async (
-      announcementId: number,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'announcementId' is not null or undefined
-      assertParamExists('deleteAnnouncement', 'announcementId', announcementId);
-      const localVarPath = `/announcements/{announcement_id}`.replace(
-        `{${'announcement_id'}}`,
-        encodeURIComponent(String(announcementId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Delete announcement
+         * @summary Delete announcement
+         * @param {number} announcementId announcement ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAnnouncement: async (announcementId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'announcementId' is not null or undefined
+            assertParamExists('deleteAnnouncement', 'announcementId', announcementId)
+            const localVarPath = `/announcements/{announcement_id}`
+                .replace(`{${"announcement_id"}}`, encodeURIComponent(String(announcementId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Get selected announcement
-     * @summary Get selected announcement
-     * @param {number} announcementId announcement ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getAnnouncement: async (
-      announcementId: number,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'announcementId' is not null or undefined
-      assertParamExists('getAnnouncement', 'announcementId', announcementId);
-      const localVarPath = `/announcements/{announcement_id}`.replace(
-        `{${'announcement_id'}}`,
-        encodeURIComponent(String(announcementId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get selected announcement
+         * @summary Get selected announcement
+         * @param {number} announcementId announcement ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAnnouncement: async (announcementId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'announcementId' is not null or undefined
+            assertParamExists('getAnnouncement', 'announcementId', announcementId)
+            const localVarPath = `/announcements/{announcement_id}`
+                .replace(`{${"announcement_id"}}`, encodeURIComponent(String(announcementId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Get announcements list from backend
-     * @summary Get announcements list from backend
-     * @param {string} [offset] offset information
-     * @param {string} [limit] Limit information
-     * @param {GetAnnouncementsListOrderEnum} [order] Specify order according to start time
-     * @param {string} [currentTime] Allows to filter the list of announcements to fetch by provided time. If specified only announcements with start_time &lt;&#x3D; current_time and end_time &gt;&#x3D; current_time are returned.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getAnnouncementsList: async (
-      offset?: string,
-      limit?: string,
-      order?: GetAnnouncementsListOrderEnum,
-      currentTime?: string,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/announcements`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get announcements list from backend
+         * @summary Get announcements list from backend
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {GetAnnouncementsListOrderEnum} [order] Specify order according to start time
+         * @param {string} [currentTime] Allows to filter the list of announcements to fetch by provided time. If specified only announcements with start_time &lt;&#x3D; current_time and end_time &gt;&#x3D; current_time are returned.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAnnouncementsList: async (offset?: string, limit?: string, order?: GetAnnouncementsListOrderEnum, currentTime?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/announcements`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      if (offset !== undefined) {
-        localVarQueryParameter['offset'] = offset;
-      }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      if (limit !== undefined) {
-        localVarQueryParameter['limit'] = limit;
-      }
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      if (order !== undefined) {
-        localVarQueryParameter['order'] = order;
-      }
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
 
-      if (currentTime !== undefined) {
-        localVarQueryParameter['current_time'] =
-          (currentTime as any) instanceof Date ? (currentTime as any).toISOString() : currentTime;
-      }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            if (order !== undefined) {
+                localVarQueryParameter['order'] = order;
+            }
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Update the properties of selected announcement.
-     * @summary Update data of selected announcement
-     * @param {number} announcementId announcement ID
-     * @param {AnnouncementsUpdateAnnouncementRequest} [announcementsUpdateAnnouncementRequest] New announcement data
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    updateAnnouncement: async (
-      announcementId: number,
-      announcementsUpdateAnnouncementRequest?: AnnouncementsUpdateAnnouncementRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'announcementId' is not null or undefined
-      assertParamExists('updateAnnouncement', 'announcementId', announcementId);
-      const localVarPath = `/announcements/{announcement_id}`.replace(
-        `{${'announcement_id'}}`,
-        encodeURIComponent(String(announcementId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            if (currentTime !== undefined) {
+                localVarQueryParameter['current_time'] = (currentTime as any instanceof Date) ?
+                    (currentTime as any).toISOString() :
+                    currentTime;
+            }
 
-      const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update the properties of selected announcement.
+         * @summary Update data of selected announcement
+         * @param {number} announcementId announcement ID
+         * @param {AnnouncementsUpdateAnnouncementRequest} [announcementsUpdateAnnouncementRequest] New announcement data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAnnouncement: async (announcementId: number, announcementsUpdateAnnouncementRequest?: AnnouncementsUpdateAnnouncementRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'announcementId' is not null or undefined
+            assertParamExists('updateAnnouncement', 'announcementId', announcementId)
+            const localVarPath = `/announcements/{announcement_id}`
+                .replace(`{${"announcement_id"}}`, encodeURIComponent(String(announcementId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        announcementsUpdateAnnouncementRequest,
-        localVarRequestOptions,
-        configuration
-      );
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-  };
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(announcementsUpdateAnnouncementRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
 };
 
 /**
  * AnnouncementsApi - functional programming interface
- * @export
  */
-export const AnnouncementsApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = AnnouncementsApiAxiosParamCreator(configuration);
-  return {
-    /**
-     * Register announcement to backend
-     * @summary Register announcement to backend
-     * @param {AnnouncementsRegisterAnnouncementRequest} [announcementsRegisterAnnouncementRequest]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async announcement(
-      announcementsRegisterAnnouncementRequest?: AnnouncementsRegisterAnnouncementRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.announcement(
-        announcementsRegisterAnnouncementRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AnnouncementsApi.announcement']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Delete announcement
-     * @summary Delete announcement
-     * @param {number} announcementId announcement ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async deleteAnnouncement(
-      announcementId: number,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAnnouncement(
-        announcementId,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AnnouncementsApi.deleteAnnouncement']?.[localVarOperationServerIndex]
-          ?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Get selected announcement
-     * @summary Get selected announcement
-     * @param {number} announcementId announcement ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getAnnouncement(
-      announcementId: number,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<AnnouncementsGetAnnouncementResponse>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getAnnouncement(
-        announcementId,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AnnouncementsApi.getAnnouncement']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Get announcements list from backend
-     * @summary Get announcements list from backend
-     * @param {string} [offset] offset information
-     * @param {string} [limit] Limit information
-     * @param {GetAnnouncementsListOrderEnum} [order] Specify order according to start time
-     * @param {string} [currentTime] Allows to filter the list of announcements to fetch by provided time. If specified only announcements with start_time &lt;&#x3D; current_time and end_time &gt;&#x3D; current_time are returned.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getAnnouncementsList(
-      offset?: string,
-      limit?: string,
-      order?: GetAnnouncementsListOrderEnum,
-      currentTime?: string,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<AnnouncementsGetAnnouncementsListResponse>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getAnnouncementsList(
-        offset,
-        limit,
-        order,
-        currentTime,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AnnouncementsApi.getAnnouncementsList']?.[localVarOperationServerIndex]
-          ?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Update the properties of selected announcement.
-     * @summary Update data of selected announcement
-     * @param {number} announcementId announcement ID
-     * @param {AnnouncementsUpdateAnnouncementRequest} [announcementsUpdateAnnouncementRequest] New announcement data
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async updateAnnouncement(
-      announcementId: number,
-      announcementsUpdateAnnouncementRequest?: AnnouncementsUpdateAnnouncementRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.updateAnnouncement(
-        announcementId,
-        announcementsUpdateAnnouncementRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AnnouncementsApi.updateAnnouncement']?.[localVarOperationServerIndex]
-          ?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
+export const AnnouncementsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AnnouncementsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Register announcement to backend
+         * @summary Register announcement to backend
+         * @param {AnnouncementsRegisterAnnouncementRequest} [announcementsRegisterAnnouncementRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async announcement(announcementsRegisterAnnouncementRequest?: AnnouncementsRegisterAnnouncementRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.announcement(announcementsRegisterAnnouncementRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AnnouncementsApi.announcement']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Delete announcement
+         * @summary Delete announcement
+         * @param {number} announcementId announcement ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteAnnouncement(announcementId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAnnouncement(announcementId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AnnouncementsApi.deleteAnnouncement']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Get selected announcement
+         * @summary Get selected announcement
+         * @param {number} announcementId announcement ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAnnouncement(announcementId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AnnouncementsGetAnnouncementResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAnnouncement(announcementId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AnnouncementsApi.getAnnouncement']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Get announcements list from backend
+         * @summary Get announcements list from backend
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {GetAnnouncementsListOrderEnum} [order] Specify order according to start time
+         * @param {string} [currentTime] Allows to filter the list of announcements to fetch by provided time. If specified only announcements with start_time &lt;&#x3D; current_time and end_time &gt;&#x3D; current_time are returned.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAnnouncementsList(offset?: string, limit?: string, order?: GetAnnouncementsListOrderEnum, currentTime?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AnnouncementsGetAnnouncementsListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAnnouncementsList(offset, limit, order, currentTime, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AnnouncementsApi.getAnnouncementsList']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Update the properties of selected announcement.
+         * @summary Update data of selected announcement
+         * @param {number} announcementId announcement ID
+         * @param {AnnouncementsUpdateAnnouncementRequest} [announcementsUpdateAnnouncementRequest] New announcement data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateAnnouncement(announcementId: number, announcementsUpdateAnnouncementRequest?: AnnouncementsUpdateAnnouncementRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateAnnouncement(announcementId, announcementsUpdateAnnouncementRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AnnouncementsApi.updateAnnouncement']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
 };
 
 /**
  * AnnouncementsApi - factory interface
- * @export
  */
-export const AnnouncementsApiFactory = function (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance
-) {
-  const localVarFp = AnnouncementsApiFp(configuration);
-  return {
+export const AnnouncementsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AnnouncementsApiFp(configuration)
+    return {
+        /**
+         * Register announcement to backend
+         * @summary Register announcement to backend
+         * @param {AnnouncementsRegisterAnnouncementRequest} [announcementsRegisterAnnouncementRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        announcement(announcementsRegisterAnnouncementRequest?: AnnouncementsRegisterAnnouncementRequest, options?: RawAxiosRequestConfig): AxiosPromise<SuccessSuccessResponse> {
+            return localVarFp.announcement(announcementsRegisterAnnouncementRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete announcement
+         * @summary Delete announcement
+         * @param {number} announcementId announcement ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAnnouncement(announcementId: number, options?: RawAxiosRequestConfig): AxiosPromise<SuccessSuccessResponse> {
+            return localVarFp.deleteAnnouncement(announcementId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get selected announcement
+         * @summary Get selected announcement
+         * @param {number} announcementId announcement ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAnnouncement(announcementId: number, options?: RawAxiosRequestConfig): AxiosPromise<AnnouncementsGetAnnouncementResponse> {
+            return localVarFp.getAnnouncement(announcementId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get announcements list from backend
+         * @summary Get announcements list from backend
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {GetAnnouncementsListOrderEnum} [order] Specify order according to start time
+         * @param {string} [currentTime] Allows to filter the list of announcements to fetch by provided time. If specified only announcements with start_time &lt;&#x3D; current_time and end_time &gt;&#x3D; current_time are returned.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAnnouncementsList(offset?: string, limit?: string, order?: GetAnnouncementsListOrderEnum, currentTime?: string, options?: RawAxiosRequestConfig): AxiosPromise<AnnouncementsGetAnnouncementsListResponse> {
+            return localVarFp.getAnnouncementsList(offset, limit, order, currentTime, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update the properties of selected announcement.
+         * @summary Update data of selected announcement
+         * @param {number} announcementId announcement ID
+         * @param {AnnouncementsUpdateAnnouncementRequest} [announcementsUpdateAnnouncementRequest] New announcement data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAnnouncement(announcementId: number, announcementsUpdateAnnouncementRequest?: AnnouncementsUpdateAnnouncementRequest, options?: RawAxiosRequestConfig): AxiosPromise<SuccessSuccessResponse> {
+            return localVarFp.updateAnnouncement(announcementId, announcementsUpdateAnnouncementRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AnnouncementsApi - object-oriented interface
+ */
+export class AnnouncementsApi extends BaseAPI {
     /**
      * Register announcement to backend
      * @summary Register announcement to backend
-     * @param {AnnouncementsRegisterAnnouncementRequest} [announcementsRegisterAnnouncementRequest]
+     * @param {AnnouncementsRegisterAnnouncementRequest} [announcementsRegisterAnnouncementRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    announcement(
-      announcementsRegisterAnnouncementRequest?: AnnouncementsRegisterAnnouncementRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<SuccessSuccessResponse> {
-      return localVarFp
-        .announcement(announcementsRegisterAnnouncementRequest, options)
-        .then((request) => request(axios, basePath));
-    },
+    public announcement(announcementsRegisterAnnouncementRequest?: AnnouncementsRegisterAnnouncementRequest, options?: RawAxiosRequestConfig) {
+        return AnnouncementsApiFp(this.configuration).announcement(announcementsRegisterAnnouncementRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Delete announcement
      * @summary Delete announcement
@@ -1113,14 +582,10 @@ export const AnnouncementsApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteAnnouncement(
-      announcementId: number,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<SuccessSuccessResponse> {
-      return localVarFp
-        .deleteAnnouncement(announcementId, options)
-        .then((request) => request(axios, basePath));
-    },
+    public deleteAnnouncement(announcementId: number, options?: RawAxiosRequestConfig) {
+        return AnnouncementsApiFp(this.configuration).deleteAnnouncement(announcementId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Get selected announcement
      * @summary Get selected announcement
@@ -1128,14 +593,10 @@ export const AnnouncementsApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAnnouncement(
-      announcementId: number,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<AnnouncementsGetAnnouncementResponse> {
-      return localVarFp
-        .getAnnouncement(announcementId, options)
-        .then((request) => request(axios, basePath));
-    },
+    public getAnnouncement(announcementId: number, options?: RawAxiosRequestConfig) {
+        return AnnouncementsApiFp(this.configuration).getAnnouncement(announcementId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Get announcements list from backend
      * @summary Get announcements list from backend
@@ -1146,17 +607,10 @@ export const AnnouncementsApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAnnouncementsList(
-      offset?: string,
-      limit?: string,
-      order?: GetAnnouncementsListOrderEnum,
-      currentTime?: string,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<AnnouncementsGetAnnouncementsListResponse> {
-      return localVarFp
-        .getAnnouncementsList(offset, limit, order, currentTime, options)
-        .then((request) => request(axios, basePath));
-    },
+    public getAnnouncementsList(offset?: string, limit?: string, order?: GetAnnouncementsListOrderEnum, currentTime?: string, options?: RawAxiosRequestConfig) {
+        return AnnouncementsApiFp(this.configuration).getAnnouncementsList(offset, limit, order, currentTime, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Update the properties of selected announcement.
      * @summary Update data of selected announcement
@@ -1165,504 +619,351 @@ export const AnnouncementsApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateAnnouncement(
-      announcementId: number,
-      announcementsUpdateAnnouncementRequest?: AnnouncementsUpdateAnnouncementRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<SuccessSuccessResponse> {
-      return localVarFp
-        .updateAnnouncement(announcementId, announcementsUpdateAnnouncementRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-  };
-};
-
-/**
- * AnnouncementsApi - object-oriented interface
- * @export
- * @class AnnouncementsApi
- * @extends {BaseAPI}
- */
-export class AnnouncementsApi extends BaseAPI {
-  /**
-   * Register announcement to backend
-   * @summary Register announcement to backend
-   * @param {AnnouncementsRegisterAnnouncementRequest} [announcementsRegisterAnnouncementRequest]
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AnnouncementsApi
-   */
-  public announcement(
-    announcementsRegisterAnnouncementRequest?: AnnouncementsRegisterAnnouncementRequest,
-    options?: RawAxiosRequestConfig
-  ) {
-    return AnnouncementsApiFp(this.configuration)
-      .announcement(announcementsRegisterAnnouncementRequest, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * Delete announcement
-   * @summary Delete announcement
-   * @param {number} announcementId announcement ID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AnnouncementsApi
-   */
-  public deleteAnnouncement(announcementId: number, options?: RawAxiosRequestConfig) {
-    return AnnouncementsApiFp(this.configuration)
-      .deleteAnnouncement(announcementId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * Get selected announcement
-   * @summary Get selected announcement
-   * @param {number} announcementId announcement ID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AnnouncementsApi
-   */
-  public getAnnouncement(announcementId: number, options?: RawAxiosRequestConfig) {
-    return AnnouncementsApiFp(this.configuration)
-      .getAnnouncement(announcementId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * Get announcements list from backend
-   * @summary Get announcements list from backend
-   * @param {string} [offset] offset information
-   * @param {string} [limit] Limit information
-   * @param {GetAnnouncementsListOrderEnum} [order] Specify order according to start time
-   * @param {string} [currentTime] Allows to filter the list of announcements to fetch by provided time. If specified only announcements with start_time &lt;&#x3D; current_time and end_time &gt;&#x3D; current_time are returned.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AnnouncementsApi
-   */
-  public getAnnouncementsList(
-    offset?: string,
-    limit?: string,
-    order?: GetAnnouncementsListOrderEnum,
-    currentTime?: string,
-    options?: RawAxiosRequestConfig
-  ) {
-    return AnnouncementsApiFp(this.configuration)
-      .getAnnouncementsList(offset, limit, order, currentTime, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * Update the properties of selected announcement.
-   * @summary Update data of selected announcement
-   * @param {number} announcementId announcement ID
-   * @param {AnnouncementsUpdateAnnouncementRequest} [announcementsUpdateAnnouncementRequest] New announcement data
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AnnouncementsApi
-   */
-  public updateAnnouncement(
-    announcementId: number,
-    announcementsUpdateAnnouncementRequest?: AnnouncementsUpdateAnnouncementRequest,
-    options?: RawAxiosRequestConfig
-  ) {
-    return AnnouncementsApiFp(this.configuration)
-      .updateAnnouncement(announcementId, announcementsUpdateAnnouncementRequest, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    public updateAnnouncement(announcementId: number, announcementsUpdateAnnouncementRequest?: AnnouncementsUpdateAnnouncementRequest, options?: RawAxiosRequestConfig) {
+        return AnnouncementsApiFp(this.configuration).updateAnnouncement(announcementId, announcementsUpdateAnnouncementRequest, options).then((request) => request(this.axios, this.basePath));
+    }
 }
 
-/**
- * @export
- */
 export const GetAnnouncementsListOrderEnum = {
-  Desc: 'DESC',
-  Asc: 'ASC',
+    Desc: 'DESC',
+    Asc: 'ASC'
 } as const;
-export type GetAnnouncementsListOrderEnum =
-  (typeof GetAnnouncementsListOrderEnum)[keyof typeof GetAnnouncementsListOrderEnum];
+export type GetAnnouncementsListOrderEnum = typeof GetAnnouncementsListOrderEnum[keyof typeof GetAnnouncementsListOrderEnum];
+
 
 /**
  * DevicesApi - axios parameter creator
- * @export
  */
 export const DevicesApiAxiosParamCreator = function (configuration?: Configuration) {
-  return {
-    /**
-     * Delete a device from the system.
-     * @summary Delete a device
-     * @param {string} deviceId Device ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    deleteDevice: async (
-      deviceId: string,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'deviceId' is not null or undefined
-      assertParamExists('deleteDevice', 'deviceId', deviceId);
-      const localVarPath = `/devices/{device_id}`.replace(
-        `{${'device_id'}}`,
-        encodeURIComponent(String(deviceId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+    return {
+        /**
+         * Delete a device from the system.
+         * @summary Delete a device
+         * @param {string} deviceId Device ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteDevice: async (deviceId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deviceId' is not null or undefined
+            assertParamExists('deleteDevice', 'deviceId', deviceId)
+            const localVarPath = `/devices/{device_id}`
+                .replace(`{${"device_id"}}`, encodeURIComponent(String(deviceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * get device
-     * @summary Get specified device details
-     * @param {string} deviceId Device identifier
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getDevice: async (
-      deviceId: string,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'deviceId' is not null or undefined
-      assertParamExists('getDevice', 'deviceId', deviceId);
-      const localVarPath = `/devices/{device_id}`.replace(
-        `{${'device_id'}}`,
-        encodeURIComponent(String(deviceId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * get device
+         * @summary Get specified device details
+         * @param {string} deviceId Device identifier
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDevice: async (deviceId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deviceId' is not null or undefined
+            assertParamExists('getDevice', 'deviceId', deviceId)
+            const localVarPath = `/devices/{device_id}`
+                .replace(`{${"device_id"}}`, encodeURIComponent(String(deviceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * List available devices
-     * @summary List available devices
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    listDevices: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      const localVarPath = `/devices`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List available devices
+         * @summary List available devices
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listDevices: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/devices`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Register a new device to the system.
-     * @summary Register a new device
-     * @param {DevicesDeviceBase} [devicesDeviceBase] Device data
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    registerDevice: async (
-      devicesDeviceBase?: DevicesDeviceBase,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/devices`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Register a new device to the system.
+         * @summary Register a new device
+         * @param {DevicesDeviceBase} [devicesDeviceBase] Device data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        registerDevice: async (devicesDeviceBase?: DevicesDeviceBase, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/devices`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        devicesDeviceBase,
-        localVarRequestOptions,
-        configuration
-      );
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Update the properties of selected device.
-     * @summary Update data of selected device
-     * @param {string} deviceId Device ID
-     * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    updateDeviceData: async (
-      deviceId: string,
-      devicesDeviceBase?: DevicesDeviceBase,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'deviceId' is not null or undefined
-      assertParamExists('updateDeviceData', 'deviceId', deviceId);
-      const localVarPath = `/devices/{device_id}`.replace(
-        `{${'device_id'}}`,
-        encodeURIComponent(String(deviceId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(devicesDeviceBase, localVarRequestOptions, configuration)
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update the properties of selected device.
+         * @summary Update data of selected device
+         * @param {string} deviceId Device ID
+         * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateDeviceData: async (deviceId: string, devicesDeviceBase?: DevicesDeviceBase, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deviceId' is not null or undefined
+            assertParamExists('updateDeviceData', 'deviceId', deviceId)
+            const localVarPath = `/devices/{device_id}`
+                .replace(`{${"device_id"}}`, encodeURIComponent(String(deviceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        devicesDeviceBase,
-        localVarRequestOptions,
-        configuration
-      );
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-  };
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(devicesDeviceBase, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
 };
 
 /**
  * DevicesApi - functional programming interface
- * @export
  */
-export const DevicesApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = DevicesApiAxiosParamCreator(configuration);
-  return {
-    /**
-     * Delete a device from the system.
-     * @summary Delete a device
-     * @param {string} deviceId Device ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async deleteDevice(
-      deviceId: string,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteDevice(deviceId, options);
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['DevicesApi.deleteDevice']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * get device
-     * @summary Get specified device details
-     * @param {string} deviceId Device identifier
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getDevice(
-      deviceId: string,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DevicesDeviceInfo>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getDevice(deviceId, options);
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['DevicesApi.getDevice']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * List available devices
-     * @summary List available devices
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async listDevices(
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DevicesDeviceInfo>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.listDevices(options);
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['DevicesApi.listDevices']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Register a new device to the system.
-     * @summary Register a new device
-     * @param {DevicesDeviceBase} [devicesDeviceBase] Device data
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async registerDevice(
-      devicesDeviceBase?: DevicesDeviceBase,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.registerDevice(
-        devicesDeviceBase,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['DevicesApi.registerDevice']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Update the properties of selected device.
-     * @summary Update data of selected device
-     * @param {string} deviceId Device ID
-     * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async updateDeviceData(
-      deviceId: string,
-      devicesDeviceBase?: DevicesDeviceBase,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.updateDeviceData(
-        deviceId,
-        devicesDeviceBase,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['DevicesApi.updateDeviceData']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
+export const DevicesApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DevicesApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Delete a device from the system.
+         * @summary Delete a device
+         * @param {string} deviceId Device ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteDevice(deviceId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteDevice(deviceId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DevicesApi.deleteDevice']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * get device
+         * @summary Get specified device details
+         * @param {string} deviceId Device identifier
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDevice(deviceId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DevicesDeviceInfo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDevice(deviceId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DevicesApi.getDevice']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * List available devices
+         * @summary List available devices
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listDevices(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DevicesDeviceInfo>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listDevices(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DevicesApi.listDevices']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Register a new device to the system.
+         * @summary Register a new device
+         * @param {DevicesDeviceBase} [devicesDeviceBase] Device data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async registerDevice(devicesDeviceBase?: DevicesDeviceBase, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.registerDevice(devicesDeviceBase, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DevicesApi.registerDevice']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Update the properties of selected device.
+         * @summary Update data of selected device
+         * @param {string} deviceId Device ID
+         * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateDeviceData(deviceId: string, devicesDeviceBase?: DevicesDeviceBase, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateDeviceData(deviceId, devicesDeviceBase, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DevicesApi.updateDeviceData']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
 };
 
 /**
  * DevicesApi - factory interface
- * @export
  */
-export const DevicesApiFactory = function (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance
-) {
-  const localVarFp = DevicesApiFp(configuration);
-  return {
+export const DevicesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DevicesApiFp(configuration)
+    return {
+        /**
+         * Delete a device from the system.
+         * @summary Delete a device
+         * @param {string} deviceId Device ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteDevice(deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<SuccessSuccessResponse> {
+            return localVarFp.deleteDevice(deviceId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * get device
+         * @summary Get specified device details
+         * @param {string} deviceId Device identifier
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDevice(deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<DevicesDeviceInfo> {
+            return localVarFp.getDevice(deviceId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List available devices
+         * @summary List available devices
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listDevices(options?: RawAxiosRequestConfig): AxiosPromise<Array<DevicesDeviceInfo>> {
+            return localVarFp.listDevices(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Register a new device to the system.
+         * @summary Register a new device
+         * @param {DevicesDeviceBase} [devicesDeviceBase] Device data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        registerDevice(devicesDeviceBase?: DevicesDeviceBase, options?: RawAxiosRequestConfig): AxiosPromise<SuccessSuccessResponse> {
+            return localVarFp.registerDevice(devicesDeviceBase, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update the properties of selected device.
+         * @summary Update data of selected device
+         * @param {string} deviceId Device ID
+         * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateDeviceData(deviceId: string, devicesDeviceBase?: DevicesDeviceBase, options?: RawAxiosRequestConfig): AxiosPromise<SuccessSuccessResponse> {
+            return localVarFp.updateDeviceData(deviceId, devicesDeviceBase, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DevicesApi - object-oriented interface
+ */
+export class DevicesApi extends BaseAPI {
     /**
      * Delete a device from the system.
      * @summary Delete a device
@@ -1670,12 +971,10 @@ export const DevicesApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteDevice(
-      deviceId: string,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<SuccessSuccessResponse> {
-      return localVarFp.deleteDevice(deviceId, options).then((request) => request(axios, basePath));
-    },
+    public deleteDevice(deviceId: string, options?: RawAxiosRequestConfig) {
+        return DevicesApiFp(this.configuration).deleteDevice(deviceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * get device
      * @summary Get specified device details
@@ -1683,18 +982,20 @@ export const DevicesApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getDevice(deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<DevicesDeviceInfo> {
-      return localVarFp.getDevice(deviceId, options).then((request) => request(axios, basePath));
-    },
+    public getDevice(deviceId: string, options?: RawAxiosRequestConfig) {
+        return DevicesApiFp(this.configuration).getDevice(deviceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * List available devices
      * @summary List available devices
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listDevices(options?: RawAxiosRequestConfig): AxiosPromise<Array<DevicesDeviceInfo>> {
-      return localVarFp.listDevices(options).then((request) => request(axios, basePath));
-    },
+    public listDevices(options?: RawAxiosRequestConfig) {
+        return DevicesApiFp(this.configuration).listDevices(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Register a new device to the system.
      * @summary Register a new device
@@ -1702,14 +1003,10 @@ export const DevicesApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    registerDevice(
-      devicesDeviceBase?: DevicesDeviceBase,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<SuccessSuccessResponse> {
-      return localVarFp
-        .registerDevice(devicesDeviceBase, options)
-        .then((request) => request(axios, basePath));
-    },
+    public registerDevice(devicesDeviceBase?: DevicesDeviceBase, options?: RawAxiosRequestConfig) {
+        return DevicesApiFp(this.configuration).registerDevice(devicesDeviceBase, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Update the properties of selected device.
      * @summary Update data of selected device
@@ -1718,918 +1015,631 @@ export const DevicesApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateDeviceData(
-      deviceId: string,
-      devicesDeviceBase?: DevicesDeviceBase,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<SuccessSuccessResponse> {
-      return localVarFp
-        .updateDeviceData(deviceId, devicesDeviceBase, options)
-        .then((request) => request(axios, basePath));
-    },
-  };
-};
-
-/**
- * DevicesApi - object-oriented interface
- * @export
- * @class DevicesApi
- * @extends {BaseAPI}
- */
-export class DevicesApi extends BaseAPI {
-  /**
-   * Delete a device from the system.
-   * @summary Delete a device
-   * @param {string} deviceId Device ID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DevicesApi
-   */
-  public deleteDevice(deviceId: string, options?: RawAxiosRequestConfig) {
-    return DevicesApiFp(this.configuration)
-      .deleteDevice(deviceId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * get device
-   * @summary Get specified device details
-   * @param {string} deviceId Device identifier
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DevicesApi
-   */
-  public getDevice(deviceId: string, options?: RawAxiosRequestConfig) {
-    return DevicesApiFp(this.configuration)
-      .getDevice(deviceId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * List available devices
-   * @summary List available devices
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DevicesApi
-   */
-  public listDevices(options?: RawAxiosRequestConfig) {
-    return DevicesApiFp(this.configuration)
-      .listDevices(options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * Register a new device to the system.
-   * @summary Register a new device
-   * @param {DevicesDeviceBase} [devicesDeviceBase] Device data
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DevicesApi
-   */
-  public registerDevice(devicesDeviceBase?: DevicesDeviceBase, options?: RawAxiosRequestConfig) {
-    return DevicesApiFp(this.configuration)
-      .registerDevice(devicesDeviceBase, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * Update the properties of selected device.
-   * @summary Update data of selected device
-   * @param {string} deviceId Device ID
-   * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DevicesApi
-   */
-  public updateDeviceData(
-    deviceId: string,
-    devicesDeviceBase?: DevicesDeviceBase,
-    options?: RawAxiosRequestConfig
-  ) {
-    return DevicesApiFp(this.configuration)
-      .updateDeviceData(deviceId, devicesDeviceBase, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    public updateDeviceData(deviceId: string, devicesDeviceBase?: DevicesDeviceBase, options?: RawAxiosRequestConfig) {
+        return DevicesApiFp(this.configuration).updateDeviceData(deviceId, devicesDeviceBase, options).then((request) => request(this.axios, this.basePath));
+    }
 }
+
+
 
 /**
  * UserApi - axios parameter creator
- * @export
  */
 export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
-  return {
-    /**
-     * delete user with designated id
-     * @summary delete user
-     * @param {number} userId User ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    deleteUserById: async (
-      userId: number,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'userId' is not null or undefined
-      assertParamExists('deleteUserById', 'userId', userId);
-      const localVarPath = `/users/{user_id}`.replace(
-        `{${'user_id'}}`,
-        encodeURIComponent(String(userId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+    return {
+        /**
+         * delete user with designated id
+         * @summary delete user
+         * @param {string} userId User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUserById: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('deleteUserById', 'userId', userId)
+            const localVarPath = `/users/{user_id}`
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * get one user
-     * @summary get one user
-     * @param {number} userId User ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getOneUserById: async (
-      userId: number,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'userId' is not null or undefined
-      assertParamExists('getOneUserById', 'userId', userId);
-      const localVarPath = `/users/{user_id}`.replace(
-        `{${'user_id'}}`,
-        encodeURIComponent(String(userId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * get one user
+         * @summary get one user
+         * @param {string} userId User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getOneUserById: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('getOneUserById', 'userId', userId)
+            const localVarPath = `/users/{user_id}`
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * get users
-     * @summary get users
-     * @param {string} [offset] offset information
-     * @param {string} [limit] Limit information
-     * @param {string} [email] query email infomation
-     * @param {string} [name] query name information
-     * @param {string} [organization] query organization information
-     * @param {UsersUserStatus} [status] query user status
-     * @param {string} [groupId] query group ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getUsers: async (
-      offset?: string,
-      limit?: string,
-      email?: string,
-      name?: string,
-      organization?: string,
-      status?: UsersUserStatus,
-      groupId?: string,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/users`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * get users
+         * @summary get users
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {string} [userId] query user id
+         * @param {string} [email] query email information
+         * @param {string} [displayName] query display name information
+         * @param {string} [organization] query organization information
+         * @param {UsersUserStatus} [status] query user status
+         * @param {string} [groupId] query group ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsers: async (offset?: string, limit?: string, userId?: string, email?: string, displayName?: string, organization?: string, status?: UsersUserStatus, groupId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      if (offset !== undefined) {
-        localVarQueryParameter['offset'] = offset;
-      }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      if (limit !== undefined) {
-        localVarQueryParameter['limit'] = limit;
-      }
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      if (email !== undefined) {
-        localVarQueryParameter['email'] = email;
-      }
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
 
-      if (name !== undefined) {
-        localVarQueryParameter['name'] = name;
-      }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
 
-      if (organization !== undefined) {
-        localVarQueryParameter['organization'] = organization;
-      }
+            if (userId !== undefined) {
+                localVarQueryParameter['user_id'] = userId;
+            }
 
-      if (status !== undefined) {
-        localVarQueryParameter['status'] = status;
-      }
+            if (email !== undefined) {
+                localVarQueryParameter['email'] = email;
+            }
 
-      if (groupId !== undefined) {
-        localVarQueryParameter['group_id'] = groupId;
-      }
+            if (displayName !== undefined) {
+                localVarQueryParameter['display_name'] = displayName;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            if (organization !== undefined) {
+                localVarQueryParameter['organization'] = organization;
+            }
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * update user status
-     * @summary update user status
-     * @param {number} userId User ID
-     * @param {UsersUpdateUserRequest} usersUpdateUserRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    updatetUserStatusById: async (
-      userId: number,
-      usersUpdateUserRequest: UsersUpdateUserRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'userId' is not null or undefined
-      assertParamExists('updatetUserStatusById', 'userId', userId);
-      // verify required parameter 'usersUpdateUserRequest' is not null or undefined
-      assertParamExists('updatetUserStatusById', 'usersUpdateUserRequest', usersUpdateUserRequest);
-      const localVarPath = `/users/{user_id}`.replace(
-        `{${'user_id'}}`,
-        encodeURIComponent(String(userId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            if (status !== undefined) {
+                localVarQueryParameter['status'] = status;
+            }
 
-      const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            if (groupId !== undefined) {
+                localVarQueryParameter['group_id'] = groupId;
+            }
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        usersUpdateUserRequest,
-        localVarRequestOptions,
-        configuration
-      );
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * update user status
+         * @summary update user status
+         * @param {string} userId User ID
+         * @param {UsersUpdateUserRequest} usersUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updatetUserStatusById: async (userId: string, usersUpdateUserRequest: UsersUpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('updatetUserStatusById', 'userId', userId)
+            // verify required parameter 'usersUpdateUserRequest' is not null or undefined
+            assertParamExists('updatetUserStatusById', 'usersUpdateUserRequest', usersUpdateUserRequest)
+            const localVarPath = `/users/{user_id}`
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-  };
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(usersUpdateUserRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
 };
 
 /**
  * UserApi - functional programming interface
- * @export
  */
-export const UserApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration);
-  return {
-    /**
-     * delete user with designated id
-     * @summary delete user
-     * @param {number} userId User ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async deleteUserById(
-      userId: number,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(userId, options);
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['UserApi.deleteUserById']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * get one user
-     * @summary get one user
-     * @param {number} userId User ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getOneUserById(
-      userId: number,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UsersGetOneUserResponse>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getOneUserById(userId, options);
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['UserApi.getOneUserById']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * get users
-     * @summary get users
-     * @param {string} [offset] offset information
-     * @param {string} [limit] Limit information
-     * @param {string} [email] query email infomation
-     * @param {string} [name] query name information
-     * @param {string} [organization] query organization information
-     * @param {UsersUserStatus} [status] query user status
-     * @param {string} [groupId] query group ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getUsers(
-      offset?: string,
-      limit?: string,
-      email?: string,
-      name?: string,
-      organization?: string,
-      status?: UsersUserStatus,
-      groupId?: string,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UsersGetUsersResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getUsers(
-        offset,
-        limit,
-        email,
-        name,
-        organization,
-        status,
-        groupId,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['UserApi.getUsers']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * update user status
-     * @summary update user status
-     * @param {number} userId User ID
-     * @param {UsersUpdateUserRequest} usersUpdateUserRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async updatetUserStatusById(
-      userId: number,
-      usersUpdateUserRequest: UsersUpdateUserRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UsersGetOneUserResponse>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.updatetUserStatusById(
-        userId,
-        usersUpdateUserRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['UserApi.updatetUserStatusById']?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
+export const UserApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * delete user with designated id
+         * @summary delete user
+         * @param {string} userId User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteUserById(userId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(userId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.deleteUserById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * get one user
+         * @summary get one user
+         * @param {string} userId User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getOneUserById(userId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UsersGetOneUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getOneUserById(userId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.getOneUserById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * get users
+         * @summary get users
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {string} [userId] query user id
+         * @param {string} [email] query email information
+         * @param {string} [displayName] query display name information
+         * @param {string} [organization] query organization information
+         * @param {UsersUserStatus} [status] query user status
+         * @param {string} [groupId] query group ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUsers(offset?: string, limit?: string, userId?: string, email?: string, displayName?: string, organization?: string, status?: UsersUserStatus, groupId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UsersGetUsersResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsers(offset, limit, userId, email, displayName, organization, status, groupId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.getUsers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * update user status
+         * @summary update user status
+         * @param {string} userId User ID
+         * @param {UsersUpdateUserRequest} usersUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updatetUserStatusById(userId: string, usersUpdateUserRequest: UsersUpdateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UsersGetOneUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updatetUserStatusById(userId, usersUpdateUserRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.updatetUserStatusById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
 };
 
 /**
  * UserApi - factory interface
- * @export
  */
-export const UserApiFactory = function (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance
-) {
-  const localVarFp = UserApiFp(configuration);
-  return {
+export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UserApiFp(configuration)
+    return {
+        /**
+         * delete user with designated id
+         * @summary delete user
+         * @param {string} userId User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUserById(userId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteUserById(userId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * get one user
+         * @summary get one user
+         * @param {string} userId User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getOneUserById(userId: string, options?: RawAxiosRequestConfig): AxiosPromise<UsersGetOneUserResponse> {
+            return localVarFp.getOneUserById(userId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * get users
+         * @summary get users
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {string} [userId] query user id
+         * @param {string} [email] query email information
+         * @param {string} [displayName] query display name information
+         * @param {string} [organization] query organization information
+         * @param {UsersUserStatus} [status] query user status
+         * @param {string} [groupId] query group ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsers(offset?: string, limit?: string, userId?: string, email?: string, displayName?: string, organization?: string, status?: UsersUserStatus, groupId?: string, options?: RawAxiosRequestConfig): AxiosPromise<UsersGetUsersResponse> {
+            return localVarFp.getUsers(offset, limit, userId, email, displayName, organization, status, groupId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * update user status
+         * @summary update user status
+         * @param {string} userId User ID
+         * @param {UsersUpdateUserRequest} usersUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updatetUserStatusById(userId: string, usersUpdateUserRequest: UsersUpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<UsersGetOneUserResponse> {
+            return localVarFp.updatetUserStatusById(userId, usersUpdateUserRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * UserApi - object-oriented interface
+ */
+export class UserApi extends BaseAPI {
     /**
      * delete user with designated id
      * @summary delete user
-     * @param {number} userId User ID
+     * @param {string} userId User ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteUserById(userId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-      return localVarFp.deleteUserById(userId, options).then((request) => request(axios, basePath));
-    },
+    public deleteUserById(userId: string, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).deleteUserById(userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * get one user
      * @summary get one user
-     * @param {number} userId User ID
+     * @param {string} userId User ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getOneUserById(
-      userId: number,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<UsersGetOneUserResponse> {
-      return localVarFp.getOneUserById(userId, options).then((request) => request(axios, basePath));
-    },
+    public getOneUserById(userId: string, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getOneUserById(userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * get users
      * @summary get users
      * @param {string} [offset] offset information
      * @param {string} [limit] Limit information
-     * @param {string} [email] query email infomation
-     * @param {string} [name] query name information
+     * @param {string} [userId] query user id
+     * @param {string} [email] query email information
+     * @param {string} [displayName] query display name information
      * @param {string} [organization] query organization information
      * @param {UsersUserStatus} [status] query user status
      * @param {string} [groupId] query group ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUsers(
-      offset?: string,
-      limit?: string,
-      email?: string,
-      name?: string,
-      organization?: string,
-      status?: UsersUserStatus,
-      groupId?: string,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<UsersGetUsersResponse> {
-      return localVarFp
-        .getUsers(offset, limit, email, name, organization, status, groupId, options)
-        .then((request) => request(axios, basePath));
-    },
+    public getUsers(offset?: string, limit?: string, userId?: string, email?: string, displayName?: string, organization?: string, status?: UsersUserStatus, groupId?: string, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUsers(offset, limit, userId, email, displayName, organization, status, groupId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * update user status
      * @summary update user status
-     * @param {number} userId User ID
-     * @param {UsersUpdateUserRequest} usersUpdateUserRequest
+     * @param {string} userId User ID
+     * @param {UsersUpdateUserRequest} usersUpdateUserRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updatetUserStatusById(
-      userId: number,
-      usersUpdateUserRequest: UsersUpdateUserRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<UsersGetOneUserResponse> {
-      return localVarFp
-        .updatetUserStatusById(userId, usersUpdateUserRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-  };
-};
-
-/**
- * UserApi - object-oriented interface
- * @export
- * @class UserApi
- * @extends {BaseAPI}
- */
-export class UserApi extends BaseAPI {
-  /**
-   * delete user with designated id
-   * @summary delete user
-   * @param {number} userId User ID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserApi
-   */
-  public deleteUserById(userId: number, options?: RawAxiosRequestConfig) {
-    return UserApiFp(this.configuration)
-      .deleteUserById(userId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * get one user
-   * @summary get one user
-   * @param {number} userId User ID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserApi
-   */
-  public getOneUserById(userId: number, options?: RawAxiosRequestConfig) {
-    return UserApiFp(this.configuration)
-      .getOneUserById(userId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * get users
-   * @summary get users
-   * @param {string} [offset] offset information
-   * @param {string} [limit] Limit information
-   * @param {string} [email] query email infomation
-   * @param {string} [name] query name information
-   * @param {string} [organization] query organization information
-   * @param {UsersUserStatus} [status] query user status
-   * @param {string} [groupId] query group ID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserApi
-   */
-  public getUsers(
-    offset?: string,
-    limit?: string,
-    email?: string,
-    name?: string,
-    organization?: string,
-    status?: UsersUserStatus,
-    groupId?: string,
-    options?: RawAxiosRequestConfig
-  ) {
-    return UserApiFp(this.configuration)
-      .getUsers(offset, limit, email, name, organization, status, groupId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * update user status
-   * @summary update user status
-   * @param {number} userId User ID
-   * @param {UsersUpdateUserRequest} usersUpdateUserRequest
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserApi
-   */
-  public updatetUserStatusById(
-    userId: number,
-    usersUpdateUserRequest: UsersUpdateUserRequest,
-    options?: RawAxiosRequestConfig
-  ) {
-    return UserApiFp(this.configuration)
-      .updatetUserStatusById(userId, usersUpdateUserRequest, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    public updatetUserStatusById(userId: string, usersUpdateUserRequest: UsersUpdateUserRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).updatetUserStatusById(userId, usersUpdateUserRequest, options).then((request) => request(this.axios, this.basePath));
+    }
 }
+
+
 
 /**
  * WhitelistUsersApi - axios parameter creator
- * @export
  */
 export const WhitelistUsersApiAxiosParamCreator = function (configuration?: Configuration) {
-  return {
-    /**
-     * delete a user from the whitelist
-     * @summary delete a user from the whitelist
-     * @param {WhitelistUsersWhitelistUsersDeleteRequest} whitelistUsersWhitelistUsersDeleteRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    deleteWhitelistUser: async (
-      whitelistUsersWhitelistUsersDeleteRequest: WhitelistUsersWhitelistUsersDeleteRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'whitelistUsersWhitelistUsersDeleteRequest' is not null or undefined
-      assertParamExists(
-        'deleteWhitelistUser',
-        'whitelistUsersWhitelistUsersDeleteRequest',
-        whitelistUsersWhitelistUsersDeleteRequest
-      );
-      const localVarPath = `/whitelist_users`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+    return {
+        /**
+         * delete a user from the whitelist
+         * @summary delete a user from the whitelist
+         * @param {WhitelistUsersWhitelistUsersDeleteRequest} whitelistUsersWhitelistUsersDeleteRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteWhitelistUser: async (whitelistUsersWhitelistUsersDeleteRequest: WhitelistUsersWhitelistUsersDeleteRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'whitelistUsersWhitelistUsersDeleteRequest' is not null or undefined
+            assertParamExists('deleteWhitelistUser', 'whitelistUsersWhitelistUsersDeleteRequest', whitelistUsersWhitelistUsersDeleteRequest)
+            const localVarPath = `/whitelist_users`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        whitelistUsersWhitelistUsersDeleteRequest,
-        localVarRequestOptions,
-        configuration
-      );
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(whitelistUsersWhitelistUsersDeleteRequest, localVarRequestOptions, configuration)
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * List whitelist users
-     * @summary List whitelist users
-     * @param {string} [offset] offset information
-     * @param {string} [limit] Limit information
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    listWhitelistUsers: async (
-      offset?: string,
-      limit?: string,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/whitelist_users`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List whitelist users
+         * @summary List whitelist users
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listWhitelistUsers: async (offset?: string, limit?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/whitelist_users`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      if (offset !== undefined) {
-        localVarQueryParameter['offset'] = offset;
-      }
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
 
-      if (limit !== undefined) {
-        localVarQueryParameter['limit'] = limit;
-      }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * register a user to the whitelist
-     * @summary register a user to the whitelist
-     * @param {WhitelistUsersRegisterWhitelistUsersRequest} [whitelistUsersRegisterWhitelistUsersRequest]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    registerWhitelistUser: async (
-      whitelistUsersRegisterWhitelistUsersRequest?: WhitelistUsersRegisterWhitelistUsersRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/whitelist_users`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
-      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * register a user to the whitelist
+         * @summary register a user to the whitelist
+         * @param {WhitelistUsersRegisterWhitelistUsersRequest} [whitelistUsersRegisterWhitelistUsersRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        registerWhitelistUser: async (whitelistUsersRegisterWhitelistUsersRequest?: WhitelistUsersRegisterWhitelistUsersRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/whitelist_users`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      // authentication BearerAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        whitelistUsersRegisterWhitelistUsersRequest,
-        localVarRequestOptions,
-        configuration
-      );
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-  };
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(whitelistUsersRegisterWhitelistUsersRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
 };
 
 /**
  * WhitelistUsersApi - functional programming interface
- * @export
  */
-export const WhitelistUsersApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = WhitelistUsersApiAxiosParamCreator(configuration);
-  return {
-    /**
-     * delete a user from the whitelist
-     * @summary delete a user from the whitelist
-     * @param {WhitelistUsersWhitelistUsersDeleteRequest} whitelistUsersWhitelistUsersDeleteRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async deleteWhitelistUser(
-      whitelistUsersWhitelistUsersDeleteRequest: WhitelistUsersWhitelistUsersDeleteRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteWhitelistUser(
-        whitelistUsersWhitelistUsersDeleteRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['WhitelistUsersApi.deleteWhitelistUser']?.[localVarOperationServerIndex]
-          ?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * List whitelist users
-     * @summary List whitelist users
-     * @param {string} [offset] offset information
-     * @param {string} [limit] Limit information
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async listWhitelistUsers(
-      offset?: string,
-      limit?: string,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<WhitelistUsersListWhitelistUsersResponse>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.listWhitelistUsers(
-        offset,
-        limit,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['WhitelistUsersApi.listWhitelistUsers']?.[localVarOperationServerIndex]
-          ?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * register a user to the whitelist
-     * @summary register a user to the whitelist
-     * @param {WhitelistUsersRegisterWhitelistUsersRequest} [whitelistUsersRegisterWhitelistUsersRequest]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async registerWhitelistUser(
-      whitelistUsersRegisterWhitelistUsersRequest?: WhitelistUsersRegisterWhitelistUsersRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.registerWhitelistUser(
-        whitelistUsersRegisterWhitelistUsersRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['WhitelistUsersApi.registerWhitelistUser']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
+export const WhitelistUsersApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = WhitelistUsersApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * delete a user from the whitelist
+         * @summary delete a user from the whitelist
+         * @param {WhitelistUsersWhitelistUsersDeleteRequest} whitelistUsersWhitelistUsersDeleteRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteWhitelistUser(whitelistUsersWhitelistUsersDeleteRequest: WhitelistUsersWhitelistUsersDeleteRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteWhitelistUser(whitelistUsersWhitelistUsersDeleteRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhitelistUsersApi.deleteWhitelistUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * List whitelist users
+         * @summary List whitelist users
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listWhitelistUsers(offset?: string, limit?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<WhitelistUsersListWhitelistUsersResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listWhitelistUsers(offset, limit, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhitelistUsersApi.listWhitelistUsers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * register a user to the whitelist
+         * @summary register a user to the whitelist
+         * @param {WhitelistUsersRegisterWhitelistUsersRequest} [whitelistUsersRegisterWhitelistUsersRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async registerWhitelistUser(whitelistUsersRegisterWhitelistUsersRequest?: WhitelistUsersRegisterWhitelistUsersRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.registerWhitelistUser(whitelistUsersRegisterWhitelistUsersRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhitelistUsersApi.registerWhitelistUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
 };
 
 /**
  * WhitelistUsersApi - factory interface
- * @export
  */
-export const WhitelistUsersApiFactory = function (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance
-) {
-  const localVarFp = WhitelistUsersApiFp(configuration);
-  return {
+export const WhitelistUsersApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = WhitelistUsersApiFp(configuration)
+    return {
+        /**
+         * delete a user from the whitelist
+         * @summary delete a user from the whitelist
+         * @param {WhitelistUsersWhitelistUsersDeleteRequest} whitelistUsersWhitelistUsersDeleteRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteWhitelistUser(whitelistUsersWhitelistUsersDeleteRequest: WhitelistUsersWhitelistUsersDeleteRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteWhitelistUser(whitelistUsersWhitelistUsersDeleteRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List whitelist users
+         * @summary List whitelist users
+         * @param {string} [offset] offset information
+         * @param {string} [limit] Limit information
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listWhitelistUsers(offset?: string, limit?: string, options?: RawAxiosRequestConfig): AxiosPromise<WhitelistUsersListWhitelistUsersResponse> {
+            return localVarFp.listWhitelistUsers(offset, limit, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * register a user to the whitelist
+         * @summary register a user to the whitelist
+         * @param {WhitelistUsersRegisterWhitelistUsersRequest} [whitelistUsersRegisterWhitelistUsersRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        registerWhitelistUser(whitelistUsersRegisterWhitelistUsersRequest?: WhitelistUsersRegisterWhitelistUsersRequest, options?: RawAxiosRequestConfig): AxiosPromise<SuccessSuccessResponse> {
+            return localVarFp.registerWhitelistUser(whitelistUsersRegisterWhitelistUsersRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * WhitelistUsersApi - object-oriented interface
+ */
+export class WhitelistUsersApi extends BaseAPI {
     /**
      * delete a user from the whitelist
      * @summary delete a user from the whitelist
-     * @param {WhitelistUsersWhitelistUsersDeleteRequest} whitelistUsersWhitelistUsersDeleteRequest
+     * @param {WhitelistUsersWhitelistUsersDeleteRequest} whitelistUsersWhitelistUsersDeleteRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteWhitelistUser(
-      whitelistUsersWhitelistUsersDeleteRequest: WhitelistUsersWhitelistUsersDeleteRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<void> {
-      return localVarFp
-        .deleteWhitelistUser(whitelistUsersWhitelistUsersDeleteRequest, options)
-        .then((request) => request(axios, basePath));
-    },
+    public deleteWhitelistUser(whitelistUsersWhitelistUsersDeleteRequest: WhitelistUsersWhitelistUsersDeleteRequest, options?: RawAxiosRequestConfig) {
+        return WhitelistUsersApiFp(this.configuration).deleteWhitelistUser(whitelistUsersWhitelistUsersDeleteRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * List whitelist users
      * @summary List whitelist users
@@ -2638,86 +1648,21 @@ export const WhitelistUsersApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    listWhitelistUsers(
-      offset?: string,
-      limit?: string,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<WhitelistUsersListWhitelistUsersResponse> {
-      return localVarFp
-        .listWhitelistUsers(offset, limit, options)
-        .then((request) => request(axios, basePath));
-    },
+    public listWhitelistUsers(offset?: string, limit?: string, options?: RawAxiosRequestConfig) {
+        return WhitelistUsersApiFp(this.configuration).listWhitelistUsers(offset, limit, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * register a user to the whitelist
      * @summary register a user to the whitelist
-     * @param {WhitelistUsersRegisterWhitelistUsersRequest} [whitelistUsersRegisterWhitelistUsersRequest]
+     * @param {WhitelistUsersRegisterWhitelistUsersRequest} [whitelistUsersRegisterWhitelistUsersRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    registerWhitelistUser(
-      whitelistUsersRegisterWhitelistUsersRequest?: WhitelistUsersRegisterWhitelistUsersRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<SuccessSuccessResponse> {
-      return localVarFp
-        .registerWhitelistUser(whitelistUsersRegisterWhitelistUsersRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-  };
-};
-
-/**
- * WhitelistUsersApi - object-oriented interface
- * @export
- * @class WhitelistUsersApi
- * @extends {BaseAPI}
- */
-export class WhitelistUsersApi extends BaseAPI {
-  /**
-   * delete a user from the whitelist
-   * @summary delete a user from the whitelist
-   * @param {WhitelistUsersWhitelistUsersDeleteRequest} whitelistUsersWhitelistUsersDeleteRequest
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof WhitelistUsersApi
-   */
-  public deleteWhitelistUser(
-    whitelistUsersWhitelistUsersDeleteRequest: WhitelistUsersWhitelistUsersDeleteRequest,
-    options?: RawAxiosRequestConfig
-  ) {
-    return WhitelistUsersApiFp(this.configuration)
-      .deleteWhitelistUser(whitelistUsersWhitelistUsersDeleteRequest, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * List whitelist users
-   * @summary List whitelist users
-   * @param {string} [offset] offset information
-   * @param {string} [limit] Limit information
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof WhitelistUsersApi
-   */
-  public listWhitelistUsers(offset?: string, limit?: string, options?: RawAxiosRequestConfig) {
-    return WhitelistUsersApiFp(this.configuration)
-      .listWhitelistUsers(offset, limit, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * register a user to the whitelist
-   * @summary register a user to the whitelist
-   * @param {WhitelistUsersRegisterWhitelistUsersRequest} [whitelistUsersRegisterWhitelistUsersRequest]
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof WhitelistUsersApi
-   */
-  public registerWhitelistUser(
-    whitelistUsersRegisterWhitelistUsersRequest?: WhitelistUsersRegisterWhitelistUsersRequest,
-    options?: RawAxiosRequestConfig
-  ) {
-    return WhitelistUsersApiFp(this.configuration)
-      .registerWhitelistUser(whitelistUsersRegisterWhitelistUsersRequest, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    public registerWhitelistUser(whitelistUsersRegisterWhitelistUsersRequest?: WhitelistUsersRegisterWhitelistUsersRequest, options?: RawAxiosRequestConfig) {
+        return WhitelistUsersApiFp(this.configuration).registerWhitelistUser(whitelistUsersRegisterWhitelistUsersRequest, options).then((request) => request(this.axios, this.basePath));
+    }
 }
+
+
+
