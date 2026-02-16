@@ -26,6 +26,7 @@ export default {
       status_change_success: 'ユーザー {{user}} のステータスが正常に変更されました',
       unsuspend_confirm: '{{user}}の利用停止を解除します。よろしいですか？',
     },
+    no_users_found: 'ユーザーが見つかりません',
   },
   white_list: {
     title: 'ホワイトリスト',

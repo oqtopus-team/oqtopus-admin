@@ -2,17 +2,16 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
-import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import {
   ColumnDef,
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
+import SortableTable from '../components/SortableTable';
 import { Announcement, useAnnouncementAPI } from './AnnouncementApi';
 import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 import './announcementsList.css';
@@ -212,48 +211,16 @@ const AnnouncementsList = () => {
           <span>Show only active</span>
         </label>
       </div>
-      {announcements.length > 0 ? (
-        <Table bordered hover responsive style={{ marginTop: '10px' }}>
-          <thead className="table-light">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="text-center">
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    style={{ verticalAlign: 'middle' }}
-                  >
-                    <span>
-                      {flexRender(t(header.column.columnDef.header as string), header.getContext())}
-                    </span>
-                    {header.column.getCanSort() && (
-                      <span className="px-2">
-                        {{
-                          asc: '↑',
-                          desc: '↓',
-                        }[header.column.getIsSorted() as string] ?? '↕'}
-                      </span>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-          </tbody>
-        </Table>
-      ) : (
-        <p className="no_announcements">{t('announcements.no_announcements')}</p>
-      )}
+      <SortableTable
+        table={table}
+        data={announcements}
+        emptyMessage={t('announcements.no_announcements')}
+        containerClassName=""
+        tableProps={{ bordered: true, hover: true, responsive: true }}
+        rowStyle={{ textAlign: 'center', verticalAlign: 'middle' }}
+        emptyMessageClassName="no_announcements"
+        emptyMessageStyle={{}}
+      />
     </div>
   );
 };

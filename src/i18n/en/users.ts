@@ -26,6 +26,7 @@ export default {
       status_change_success: "User {{user}} status has been successfully changed",
       unsuspend_confirm: 'Are you sure you want to unsuspend {{user}}?',
     },
+    no_users_found: 'No users found',
   },
   white_list: {
     title: 'Whitelist',
