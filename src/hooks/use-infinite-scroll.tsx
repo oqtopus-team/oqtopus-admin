@@ -17,14 +17,15 @@ export function useInfiniteScroll<T>(
   } = {}
 ) {
   const [isFetching, setIsFetching] = useState(false);
-  const [offset, setOffset] = useState(limit);
+  const [offset, setOffset] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Fix for React closure stale state - ensures handleScroll always uses current offset value
   // instead of capturing old values from closure, preventing duplicate API calls
   const stateRef = useRef({
     isFetching: false,
-    offset: limit,
+    offset: 0,
     hasMore: true,
   });
 
@@ -52,20 +53,17 @@ export function useInfiniteScroll<T>(
       ) {
         setIsFetching(true);
 
-        const currentOffset = currentState.offset;
+        const nextOffset = currentState.offset + limit;
 
         callback({
-          offset: currentOffset,
+          offset: nextOffset,
           sort,
           filterFields,
         }).finally(() => {
           setIsFetching(false);
         });
 
-        setOffset((prevOffset) => {
-          const newOffset = prevOffset + limit;
-          return newOffset;
-        });
+        setOffset(nextOffset);
       }
     };
 
@@ -73,18 +71,54 @@ export function useInfiniteScroll<T>(
     return () => container.removeEventListener('scroll', handleScroll);
   }, [callback, threshold, limit, sort, filterFields]);
 
-  // Reset offset when sort or filterFields change
+  // Initial load and reset when sort or filterFields change
   useEffect(() => {
-    // Skip resetting if offset already initial
-    if (offset === limit) return;
+    const loadInitialData = async () => {
+      if (isFetching) return;
 
-    setOffset(limit);
-    // Immediately update ref to prevent stale state
-    stateRef.current = {
-      ...stateRef.current,
-      offset: 0,
+      setIsFetching(true);
+      setOffset(0);
+      setIsInitialized(false);
+
+      try {
+        await callback({
+          offset: undefined, // undefined offset means initial load
+          sort,
+          filterFields,
+        });
+        setIsInitialized(true);
+      } finally {
+        setIsFetching(false);
+      }
     };
+
+    loadInitialData();
   }, [stableSort, stableFilterFields]);
+
+  // Auto-load more data if content doesn't fill the screen
+  useEffect(() => {
+    if (!isInitialized || !containerRef.current || isFetching || !hasMore) return;
+
+    const container = containerRef.current;
+    const { scrollHeight, clientHeight } = container;
+
+    // If content doesn't fill the screen, load more data
+    if (scrollHeight <= clientHeight) {
+      setIsFetching(true);
+
+      const nextOffset = offset + limit;
+
+      callback({
+        offset: nextOffset,
+        sort,
+        filterFields,
+      }).finally(() => {
+        setIsFetching(false);
+      });
+
+      setOffset(nextOffset);
+    }
+  }, [isInitialized, hasMore, isFetching, offset, limit, sort, filterFields]);
 
   return { containerRef, isFetching, offset };
 }
