@@ -5,18 +5,17 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Table from 'react-bootstrap/Table';
 import Stack from 'react-bootstrap/Stack';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   ColumnDef,
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
+import SortableTable from '../components/SortableTable';
 import { ColumnSort } from '@tanstack/table-core/src/features/RowSorting';
 import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { UserSearchParams } from '../types/UserType';
@@ -159,7 +158,14 @@ const WhitelistUserList: React.FunctionComponent = () => {
         organization: useOrganization,
       },
     },
-    onSortingChange: setSorting,
+    onSortingChange: (updater) => {
+      const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
+      setSorting(newSorting);
+
+      if (containerRef.current) {
+        containerRef.current.scrollTop = 0;
+      }
+    },
   });
 
   const onSubmit = async (formValues: UserSearchParams): Promise<void> => {
@@ -175,22 +181,6 @@ const WhitelistUserList: React.FunctionComponent = () => {
     setSearchParams(filtered);
   };
 
-  const handleCustomSort = async (column: string) => {
-    const currentSort = sorting.find((s) => s.id === column);
-    const newDesc = currentSort ? !currentSort.desc : false;
-
-    const newSorting = [{ id: column, desc: newDesc }];
-
-    try {
-      await getUsersList({
-        sort: newSorting[0],
-        filterFields: urlParams,
-      });
-
-      setSorting(newSorting);
-    } catch (e) {}
-  };
-
   const onDeleteUser = (userId: string) => {
     setUsers((prevUsersState) => prevUsersState.filter(({ id }) => userId !== id));
   };
@@ -199,9 +189,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
     document.title = `${t('users.white_list.title')} | ${appName}`;
   }, [auth.idToken]);
 
-  useEffect(() => {
-    getUsersList({ filterFields: urlParams, sort: sorting[0] });
-  }, [searchParams]);
+
 
   return (
     <>
@@ -266,59 +254,12 @@ const WhitelistUserList: React.FunctionComponent = () => {
             {t('users.white_list.register_button')}
           </a>
         </div>
-        <div ref={containerRef} className="vertical-scroll-intermediate-container overflow-x-auto">
-          {users.length > 0 ? (
-            <Table bordered hover style={{ marginTop: '10px' }}>
-              <thead className="table-light">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id} className="text-center">
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        onClick={() => {
-                          if (header.column.getCanSort()) {
-                            handleCustomSort(header.column.id);
-                          }
-                        }}
-                        style={{ verticalAlign: 'middle' }}
-                      >
-                        <span>
-                          {flexRender(
-                            t(header.column.columnDef.header as string),
-                            header.getContext()
-                          )}
-                        </span>
-                        {header.column.getCanSort() && (
-                          <span className="px-2">
-                            {{
-                              asc: '↑',
-                              desc: '↓',
-                            }[header.column.getIsSorted() as string] ?? '↕'}
-                          </span>
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          ) : (
-            <p className="mb-0 p-3 text-center" style={{ fontSize: '20px' }}>
-              No results found
-            </p>
-          )}
-        </div>
+        <SortableTable
+          table={table}
+          data={users}
+          containerRef={containerRef}
+          emptyMessage="users.list.no_users_found"
+        />
       </Stack>
     </>
   );

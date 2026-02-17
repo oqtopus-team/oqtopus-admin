@@ -9,4 +9,5 @@ export default {
     nothing_found: 'Nothing found',
   },
   date_format: 'MM/dd/yyyy HH:mm:ss',
+  no_results_found: 'No results found',
 };
