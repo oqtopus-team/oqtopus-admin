@@ -171,6 +171,7 @@ const AnnouncementsList = () => {
       const result = await getAnnouncements({
         currentTime: currentActiveFilter ? new Date().toISOString() : undefined,
         offset,
+        limit: PAGE_LIMIT,
         order: sorting[0]?.desc ? 'desc' : 'asc',
       });
 
