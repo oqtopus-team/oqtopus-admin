@@ -27,9 +27,6 @@ const DeviceList: React.FC = () => {
     getDevices()
       .then((devices: Device[]) => {
         setDevices(devices);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch devices:', error);
       });
   };
 

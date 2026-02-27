@@ -1,5 +1,4 @@
 import { WhitelistUser, WhitelistUserRequest } from '../types/WhitelistUserType';
-import { TFunction } from 'i18next';
 import { ColumnSort } from '@tanstack/table-core/src/features/RowSorting';
 import { useContext } from 'react';
 import { UserSearchParams } from '../types/UserType';
@@ -19,8 +18,8 @@ const convertWhitelistUserResult = (
     user.available_devices === '*'
       ? '*'
       : Array.isArray(user.available_devices)
-      ? user.available_devices
-      : [],
+        ? user.available_devices
+        : [],
 });
 
 export const useWhitelistUserAPI = () => {
@@ -46,62 +45,16 @@ export const useWhitelistUserAPI = () => {
       }
     }
 
-    try {
-      const res = await api.WhitelistUsersApi.listWhitelistUsers(offsetStr, limitStr, { params });
-      return res.data.users?.map(convertWhitelistUserResult) ?? [];
-    } catch (e) {
-      console.error('Error fetching whitelist users:', e);
-      return [];
-    }
+    const res = await api.WhitelistUsersApi.listWhitelistUsers(offsetStr, limitStr, { params });
+    return res.data.users?.map(convertWhitelistUserResult) ?? [];
   };
 
-  const registerUsers = async (
-    whitelist: Partial<WhitelistUserRequest>[],
-    t: TFunction<'translation', any>
-  ) => {
-    try {
-      const res = await api.WhitelistUsersApi.registerWhitelistUser({ users: whitelist });
-      if (res.status !== 200) {
-        return {
-          success: false,
-          message: t('users.white_list.register.register_failure'),
-        };
-      }
-      return {
-        success: true,
-        message: t('users.white_list.register.register_success'),
-      };
-    } catch (e) {
-      console.error('Error registering whitelist users:', e);
-      return {
-        success: false,
-        message: t('users.white_list.register.register_failure'),
-      };
-    }
+  const registerUsers = async (whitelist: Partial<WhitelistUserRequest>[]): Promise<void> => {
+    await api.WhitelistUsersApi.registerWhitelistUser({ users: whitelist });
   };
 
-  const deleteUser = async (userEmails: string[], t: TFunction<'translation', any>) => {
-    try {
-      const res = await api.WhitelistUsersApi.deleteWhitelistUser({
-        user_emails: userEmails,
-      });
-      if (res.status !== 204) {
-        return {
-          success: false,
-          message: t('users.white_list.operation.delete_failure'),
-        };
-      }
-      return {
-        success: true,
-        message: t('users.white_list.operation.delete_success'),
-      };
-    } catch (e) {
-      console.error('Error deleting whitelist user:', e);
-      return {
-        success: false,
-        message: t('users.white_list.operation.delete_failure'),
-      };
-    }
+  const deleteUser = async (userEmails: string[]): Promise<void> => {
+    await api.WhitelistUsersApi.deleteWhitelistUser({ user_emails: userEmails });
   };
 
   return {

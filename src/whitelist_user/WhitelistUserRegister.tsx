@@ -116,9 +116,6 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     getDevices()
       .then((devices: Device[]) => {
         setDevices(devices);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch devices:', error);
       });
   };
 
@@ -184,16 +181,11 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
       };
     });
 
-    registerUsers(formattedData, t)
-      .then((res: ApiResponse) => {
-        if (res.success) {
-          toast(res.message, successToastConfig);
-          navigate('/whitelist');
-        } else {
-          toast(t('users.white_list.register.failure') + res.message, errorToastConfig);
-        }
+    registerUsers(formattedData)
+      .then(() => {
+        toast(t('users.white_list.register.register_success'), successToastConfig);
+        navigate('/whitelist');
       })
-      .catch((err) => console.log(err))
       .finally(() => {
         processing.current = false;
         setLoading(false);

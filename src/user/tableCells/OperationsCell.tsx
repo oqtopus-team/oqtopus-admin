@@ -46,7 +46,6 @@ export const OperationsCell = <T extends { id: string; email: string; status?: U
         );
         execFunctions.changeStatus?.(user.id, status);
       })
-      .catch((err) => console.log(err))
       .finally(() => {
         processing.current = false;
         setLoading(false);
@@ -63,10 +62,8 @@ export const OperationsCell = <T extends { id: string; email: string; status?: U
         toast(t('users.list.operation.delete_success', { user: user.email }), successToastConfig);
         execFunctions.delete(user.id);
       })
-      .catch((err) => console.log(err))
       .finally(() => {
         processing.current = false;
-        console.log('loading false');
         setLoading(false);
       });
   };

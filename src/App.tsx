@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'aframe';
 import 'aframe-extras';
 import { useAuth } from './hooks/use-auth';
@@ -24,9 +24,14 @@ import AnnouncementsList from './announcements/AnnouncementsList';
 import AnnouncementEditor from './announcements/AnnouncementEditor';
 import { UserEdit } from './user/UserEdit';
 import BaseLayout from './common/BaseLayout';
+import { setupInterceptors } from './common/utils/api-interceptor-error';
 
 const App: React.FC = () => {
   const auth = useAuth();
+
+  useEffect(() => {
+    setupInterceptors();
+  }, []);
 
   if (auth.isLoading) {
     return <div></div>;
