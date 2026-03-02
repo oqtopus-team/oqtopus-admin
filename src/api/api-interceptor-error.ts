@@ -1,7 +1,7 @@
 import globalAxios from 'axios';
 import i18next from 'i18next';
 import { toast } from 'react-toastify';
-import { errorToastConfig } from '../../config/toast-notification';
+import { errorToastConfig } from '../config/toast-notification';
 
 export const setupInterceptors = () => {
   globalAxios.interceptors.response.use(
@@ -12,7 +12,7 @@ export const setupInterceptors = () => {
           ...error.response.data.message_params,
         });
 
-        toast(errorMessage as string, errorToastConfig);
+        toast(errorMessage as string, errorToastConfig);g
       } else {
         toast(i18next.t('errors.api.unknown_error'), errorToastConfig);
       }

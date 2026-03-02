@@ -24,7 +24,7 @@ import AnnouncementsList from './announcements/AnnouncementsList';
 import AnnouncementEditor from './announcements/AnnouncementEditor';
 import { UserEdit } from './user/UserEdit';
 import BaseLayout from './common/BaseLayout';
-import { setupInterceptors } from './common/utils/api-interceptor-error';
+import { setupInterceptors } from './api/api-interceptor-error';
 
 const App: React.FC = () => {
   const auth = useAuth();
