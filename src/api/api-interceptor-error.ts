@@ -12,7 +12,7 @@ export const setupInterceptors = () => {
           ...error.response.data.message_params,
         });
 
-        toast(errorMessage as string, errorToastConfig);g
+        toast(errorMessage as string, errorToastConfig);
       } else {
         toast(i18next.t('errors.api.unknown_error'), errorToastConfig);
       }
