@@ -226,8 +226,9 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
         };
       }
 
+      // Searching '*' in available
       const hasStandaloneStarRegex = /(?:^|,)\s*\*\s*(?:,|$)/g;
-      let availableDevicesList: string[] = ['*'];
+      let availableDevicesList: string | string[] = '*';
       if (availableDevices !== '*' && availableDevices.match(hasStandaloneStarRegex)) {
         errorMessage = t('users.white_list.register.excel.error.asterixConflictError');
         return {
