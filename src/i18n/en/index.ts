@@ -5,7 +5,6 @@ import auth from './auth';
 import users from './users';
 import announcements from './announcements';
 import common from './common';
-import errors from './errors';
 
 export default {
   translation: {
@@ -16,6 +15,5 @@ export default {
     users,
     announcements,
     common,
-    errors
   },
 };
