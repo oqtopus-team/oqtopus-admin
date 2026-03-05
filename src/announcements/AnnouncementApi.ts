@@ -91,7 +91,7 @@ export const useAnnouncementAPI = () => {
   };
 
   const deleteAnnouncement = async (announcementId: string | number) => {
-    await api.announcements.deleteAnnouncement(announcementId);
+    await api.announcements.deleteAnnouncement(Number(announcementId));
     return true;
   };
 
