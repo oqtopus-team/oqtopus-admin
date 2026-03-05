@@ -10,9 +10,7 @@
     "preview": "vite preview",
     "lint": "prettier '**/*.+(js|json|yml|ts|tsx)'",
     "format": "npm run lint -- -w",
-    "generate": "vite-node scripts/generate-openapi.ts",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "generate": "vite-node scripts/generate-openapi.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
