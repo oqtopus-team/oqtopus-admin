@@ -22,14 +22,8 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
 
   const handleDelete = async (deviceId?: string): Promise<void> => {
     if (deviceId !== undefined) {
-      const res = await deleteDevice(deviceId);
-      if (res.success) {
-        navigate('/device', { replace: true });
-      } else {
-        console.error('Error deleting device:', res.message);
-      }
-    } else {
-      console.error('Device ID is undefined');
+      await deleteDevice(deviceId);
+      navigate('/device', { replace: true });
     }
   };
 

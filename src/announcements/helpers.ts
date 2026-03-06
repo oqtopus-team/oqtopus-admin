@@ -176,7 +176,7 @@ export function formatLink(t: TFunction, editor: LexicalEditor, payload: string 
       return false;
     }
 
-    const url = typeof payload === 'string' ? payload : payload?.url ?? '';
+    const url = typeof payload === 'string' ? payload : (payload?.url ?? '');
     if (!url.trim()) {
       toast(t('announcements.editor.errors.link_empty_url'), errorToastConfig);
       return false;

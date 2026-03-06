@@ -58,21 +58,16 @@ const WhitelistUserList: React.FunctionComponent = () => {
     filterFields?: WhitelistUserSearchParams;
   } = {}) {
     setLoading(true);
-    try {
-      const usersResponse = await getUsers(offset, limit, sort, filterFields);
-
-      if (offset !== undefined) {
-        setUsers([...users, ...usersResponse]);
-      } else {
-        setUsers(usersResponse);
-      }
-
-      setHasMore(usersResponse?.length >= limit);
-    } catch (e) {
-      console.error('Error fetching white list users:', e);
-    } finally {
-      setLoading(false);
-    }
+    await getUsers(offset, limit, sort, filterFields)
+      .then((usersResponse) => {
+        if (offset !== undefined) {
+          setUsers([...users, ...usersResponse]);
+        } else {
+          setUsers(usersResponse);
+        }
+        setHasMore(usersResponse?.length >= limit);
+      })
+      .finally(() => setLoading(false));
   }
 
   const { containerRef } = useInfiniteScroll(getUsersList, hasMore, {
@@ -188,8 +183,6 @@ const WhitelistUserList: React.FunctionComponent = () => {
   useEffect(() => {
     document.title = `${t('users.white_list.title')} | ${appName}`;
   }, [auth.idToken]);
-
-
 
   return (
     <>

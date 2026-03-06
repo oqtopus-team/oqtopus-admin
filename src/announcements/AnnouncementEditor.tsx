@@ -50,9 +50,7 @@ const AnnouncementEditor = () => {
     async function getAnnouncement() {
       if (params.postId === undefined) return;
 
-      try {
-        const announcement = await getSingleAnnouncement(params.postId);
-
+      await getSingleAnnouncement(params.postId).then((announcement) => {
         if (announcement) {
           setPublishable(announcement.publishable ? 1 : 0);
           setSelectedDate({
@@ -62,9 +60,7 @@ const AnnouncementEditor = () => {
           setPostTitle(announcement.title);
           setInitialContent(announcement.content);
         }
-      } catch (e) {
-        console.error('Error fetching announcement:', e);
-      }
+      });
     }
 
     getAnnouncement();
@@ -90,24 +86,17 @@ const AnnouncementEditor = () => {
       publishable: Boolean(publishable),
     };
 
-    try {
-      if (params.postId) {
-        await editAnnouncement(params.postId, postData);
-        toast(t('announcements.updated_success'), successToastConfig);
-      } else {
-        await createAnnouncement(postData);
-        toast(t('announcements.created_success'), successToastConfig);
-      }
+    const action = params.postId
+      ? editAnnouncement(params.postId, postData)
+      : createAnnouncement(postData);
 
-      navigate('/announcements');
-    } catch (e) {
+    await action.then(() => {
       toast(
-        t(params.postId ? 'announcements.updated_failed' : 'announcements.created_failed'),
-        errorToastConfig
+        t(params.postId ? 'announcements.updated_success' : 'announcements.created_success'),
+        successToastConfig
       );
-
-      console.error('Error creating announcement:', e);
-    }
+      navigate('/announcements');
+    });
   };
 
   const handleCancelEdit = () => {

@@ -59,21 +59,16 @@ const UserList: React.FunctionComponent = () => {
     filterFields?: UserSearchParams;
   } = {}) {
     setLoading(true);
-    try {
-      const usersResponse = await getUsers(offset, limit, sort, filterFields);
-
-      if (offset !== undefined) {
-        setUsers([...users, ...usersResponse]);
-      } else {
-        setUsers(usersResponse);
-      }
-
-      setHasMore(usersResponse?.length >= limit);
-    } catch (e) {
-      console.error('Error fetching users list:', e);
-    } finally {
-      setLoading(false);
-    }
+    await getUsers(offset, limit, sort, filterFields)
+      .then((usersResponse) => {
+        if (offset !== undefined) {
+          setUsers([...users, ...usersResponse]);
+        } else {
+          setUsers(usersResponse);
+        }
+        setHasMore(usersResponse?.length >= limit);
+      })
+      .finally(() => setLoading(false));
   }
 
   const { containerRef } = useInfiniteScroll(getUsersList, hasMore, {
@@ -130,7 +125,10 @@ const UserList: React.FunctionComponent = () => {
         header: 'users.list.operations',
         enableSorting: false,
         cell: ({ row }) => (
-          <OperationsCell user={row.original} execFunctions={{ delete: onDeleteUser, changeStatus: onStatusChangeUser }} />
+          <OperationsCell
+            user={row.original}
+            execFunctions={{ delete: onDeleteUser, changeStatus: onStatusChangeUser }}
+          />
         ),
       }),
     ],
@@ -177,12 +175,8 @@ const UserList: React.FunctionComponent = () => {
   };
 
   const onStatusChangeUser = (userId: string, status: UsersUserStatus) => {
-    setUsers((users) =>
-      users.map(user =>
-        user.id === userId ? { ...user, status } : user
-      )
-    )
-  }
+    setUsers((users) => users.map((user) => (user.id === userId ? { ...user, status } : user)));
+  };
 
   useEffect(() => {
     document.title = `${t('users.title')} | ${appName}`;
