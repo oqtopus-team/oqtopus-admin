@@ -23,7 +23,7 @@ export default {
       suspend: 'Suspend',
       unsuspend: 'Unsuspend',
       suspend_confirm: 'Are you sure you want to suspend {{user}}?',
-      status_change_success: "User {{user}} status has been successfully changed",
+      status_change_success: 'User {{user}} status has been successfully changed',
       unsuspend_confirm: 'Are you sure you want to unsuspend {{user}}?',
     },
     no_users_found: 'No users found',
@@ -102,7 +102,7 @@ export default {
           invalid_organization_length: 'Organization must be within 100 characters.',
           invalid_available_device_id: 'Devices with ID: {{missingIds}} are missing',
           duplicated_email: 'Duplicated email address.',
-          asterixConflictError: 'Use either (*) for all items OR specific IDs, not both'
+          asterixConflictError: 'Use either (*) for all items OR specific IDs, not both',
         },
       },
       devices_combobox_placeholder: 'Available devices',

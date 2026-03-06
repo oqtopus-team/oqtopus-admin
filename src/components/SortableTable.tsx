@@ -25,15 +25,15 @@ const SortableTable = <T,>({
   data,
   containerRef,
   emptyMessage,
-  containerClassName = "vertical-scroll-intermediate-container overflow-x-auto",
+  containerClassName = 'vertical-scroll-intermediate-container overflow-x-auto',
   tableProps = { bordered: true, hover: true },
   rowStyle,
   emptyMessageStyle = { fontSize: '20px' },
-  emptyMessageClassName = "mb-0 p-3 text-center"
+  emptyMessageClassName = 'mb-0 p-3 text-center',
 }: SortableTableProps<T>) => {
   const { t } = useTranslation();
 
-  const defaultEmptyMessage = emptyMessage || "common.no_results_found";
+  const defaultEmptyMessage = emptyMessage || 'common.no_results_found';
 
   return (
     <div ref={containerRef} className={containerClassName}>
@@ -49,10 +49,7 @@ const SortableTable = <T,>({
                     style={{ verticalAlign: 'middle' }}
                   >
                     <span>
-                      {flexRender(
-                        t(header.column.columnDef.header as string),
-                        header.getContext()
-                      )}
+                      {flexRender(t(header.column.columnDef.header as string), header.getContext())}
                     </span>
                     {header.column.getCanSort() && (
                       <span className="px-2">
@@ -71,9 +68,7 @@ const SortableTable = <T,>({
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id} style={rowStyle}>
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                 ))}
               </tr>
             ))}

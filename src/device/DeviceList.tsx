@@ -24,10 +24,9 @@ const DeviceList: React.FC = () => {
   }, [auth.idToken]);
 
   const fetchDevices = (): void => {
-    getDevices()
-      .then((devices: Device[]) => {
-        setDevices(devices);
-      });
+    getDevices().then((devices: Device[]) => {
+      setDevices(devices);
+    });
   };
 
   useEffect(() => {

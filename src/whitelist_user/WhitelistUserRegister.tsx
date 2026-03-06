@@ -24,7 +24,11 @@ import { Combobox } from '../common/combobox/Combobox';
 import { useDeviceAPI } from '../device/DeviceApi';
 import { Device } from '../types/DeviceType';
 import { toast } from 'react-toastify';
-import { errorToastConfig, infoToastConfig, successToastConfig } from '../config/toast-notification';
+import {
+  errorToastConfig,
+  infoToastConfig,
+  successToastConfig,
+} from '../config/toast-notification';
 
 interface WhitelistUserRegisterForm {
   whitelist: {
@@ -113,10 +117,9 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
   const { registerUsers } = useWhitelistUserAPI();
 
   const fetchDevices = (): void => {
-    getDevices()
-      .then((devices: Device[]) => {
-        setDevices(devices);
-      });
+    getDevices().then((devices: Device[]) => {
+      setDevices(devices);
+    });
   };
 
   useEffect(() => {
