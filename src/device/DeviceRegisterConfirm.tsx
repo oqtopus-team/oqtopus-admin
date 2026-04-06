@@ -36,16 +36,11 @@ export const DeviceRegisterConfirm: React.FC = () => {
   };
 
   const handleSubmit = async (): Promise<void> => {
-    if (formData != null) {
-      const res = await postDevice(formData);
-      if (res.success) {
-        navigate('/device');
-      } else {
-        setFailedSubmissionMessage(res.message);
-      }
-    } else {
-      setFailedSubmissionMessage('Form data is invalid.');
-    }
+    if (formData == null) return;
+
+    await postDevice(formData)
+      .then(() => navigate('/device'))
+      .catch(() => {});
   };
 
   return (

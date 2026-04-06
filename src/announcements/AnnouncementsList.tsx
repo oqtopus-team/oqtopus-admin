@@ -136,9 +136,6 @@ const AnnouncementsList = () => {
       setAnnouncements(announcements.filter((announcement) => announcement.id !== announcementId));
 
       toast(t('announcements.deleted_success'), successToastConfig);
-    } catch (e) {
-      toast(t('announcements.deleted_failed'), errorToastConfig);
-      console.error('Error deleting announcement:', e);
     } finally {
       setLoading({ ...loadingState, delete: false });
     }
@@ -182,8 +179,6 @@ const AnnouncementsList = () => {
       }
 
       setHasMore(result.length >= PAGE_LIMIT);
-    } catch (e) {
-      console.error('Error fetching announcements:', e);
     } finally {
       setLoading((prev) => ({ ...prev, get: false }));
     }

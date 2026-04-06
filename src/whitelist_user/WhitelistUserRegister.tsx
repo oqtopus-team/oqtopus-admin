@@ -24,7 +24,11 @@ import { Combobox } from '../common/combobox/Combobox';
 import { useDeviceAPI } from '../device/DeviceApi';
 import { Device } from '../types/DeviceType';
 import { toast } from 'react-toastify';
-import { errorToastConfig, infoToastConfig, successToastConfig } from '../config/toast-notification';
+import {
+  errorToastConfig,
+  infoToastConfig,
+  successToastConfig,
+} from '../config/toast-notification';
 
 interface WhitelistUserRegisterForm {
   whitelist: {
@@ -113,13 +117,9 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
   const { registerUsers } = useWhitelistUserAPI();
 
   const fetchDevices = (): void => {
-    getDevices()
-      .then((devices: Device[]) => {
-        setDevices(devices);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch devices:', error);
-      });
+    getDevices().then((devices: Device[]) => {
+      setDevices(devices);
+    });
   };
 
   useEffect(() => {
@@ -191,16 +191,11 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
       };
     });
 
-    registerUsers(formattedData, t)
-      .then((res: ApiResponse) => {
-        if (res.success) {
-          toast(res.message, successToastConfig);
-          navigate('/whitelist');
-        } else {
-          toast(t('users.white_list.register.failure') + res.message, errorToastConfig);
-        }
+    registerUsers(formattedData)
+      .then(() => {
+        toast(t('users.white_list.register.register_success'), successToastConfig);
+        navigate('/whitelist');
       })
-      .catch((err) => console.log(err))
       .finally(() => {
         processing.current = false;
         setLoading(false);

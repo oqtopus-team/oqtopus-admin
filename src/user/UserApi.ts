@@ -14,8 +14,8 @@ const convertToUser = (user: UsersGetOneUserResponse): User => ({
     user.available_devices === '*'
       ? '*'
       : Array.isArray(user.available_devices)
-      ? user.available_devices
-      : [],
+        ? user.available_devices
+        : [],
   status: user.status ?? UsersUserStatus.Suspended, // 要検討
 });
 

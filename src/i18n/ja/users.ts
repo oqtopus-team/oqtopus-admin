@@ -65,7 +65,8 @@ export default {
         email_duplicated: 'メールアドレスが重複しています。',
         username_length: '100文字以下で入力してください。',
         organization_length: '100文字以下で入力してください。',
-        invalid_available_device_length: '利用可能なデバイスには、少なくとも1台のデバイスが含まれている必要があります。',
+        invalid_available_device_length:
+          '利用可能なデバイスには、少なくとも1台のデバイスが含まれている必要があります。',
         no_data: '登録するデータがありません。',
       },
       failure: '登録処理が失敗しました。\n',
@@ -102,7 +103,8 @@ export default {
           invalid_organization_length: '所属組織は100文字以下で入力してください。',
           invalid_available_device_id: 'ID {{missingIds}} のデバイスが見つかりません',
           duplicated_email: 'メールアドレスが重複しています。',
-          asterixConflictError: 'すべてのアイテムには（*）か、特定のIDのどちらかを使用してください。両方は使用できません'
+          asterixConflictError:
+            'すべてのアイテムには（*）か、特定のIDのどちらかを使用してください。両方は使用できません',
         },
       },
       devices_combobox_placeholder: '利用可能なデバイス',

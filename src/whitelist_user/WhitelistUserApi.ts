@@ -19,8 +19,8 @@ const convertWhitelistUserResult = (
     user.available_devices === '*'
       ? '*'
       : Array.isArray(user.available_devices)
-      ? user.available_devices
-      : [],
+        ? user.available_devices
+        : [],
 });
 
 export const useWhitelistUserAPI = () => {
@@ -56,13 +56,8 @@ export const useWhitelistUserAPI = () => {
       }
     }
 
-    try {
-      const res = await api.WhitelistUsersApi.listWhitelistUsers(offsetStr, limitStr, { params });
-      return res.data.users?.map(convertWhitelistUserResult) ?? [];
-    } catch (e) {
-      console.error('Error fetching whitelist users:', e);
-      return [];
-    }
+    const res = await api.WhitelistUsersApi.listWhitelistUsers(offsetStr, limitStr, { params });
+    return res.data.users?.map(convertWhitelistUserResult) ?? [];
   };
 
   const registerUsers = async (

@@ -40,9 +40,7 @@ const validationRules = (t: TFunction<'translation', any>) => {
       .required(t('users.edit.errors.email')),
     organization: yup.string().required(t('users.edit.errors.organization')),
     available_devices: yup.array(yup.string().required()).min(1).required(),
-    status: yup
-      .mixed<UsersUserStatus>()
-      .required(t('users.edit.errors.status_required')),
+    status: yup.mixed<UsersUserStatus>().required(t('users.edit.errors.status_required')),
   });
   return validationRules;
 };
@@ -95,13 +93,9 @@ export const UserEdit = () => {
   };
 
   const fetchDevices = (): void => {
-    getDevices()
-      .then((devices: Device[]) => {
-        setDevices(devices);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch devices:', error);
-      });
+    getDevices().then((devices: Device[]) => {
+      setDevices(devices);
+    });
   };
 
   const onSubmit = async (userData: UserEditForm) => {
@@ -119,15 +113,10 @@ export const UserEdit = () => {
       return acc;
     }, {} as Partial<UserEditRequest>);
 
-    try {
-      await updateUser(params.userId, changedFields);
-
+    await updateUser(params.userId, changedFields).then(() => {
       toast(t('users.edit.notifications.update_success'), successToastConfig);
       navigate('/users');
-    } catch (e) {
-      toast(t('users.edit.notifications.update_failed'), errorToastConfig);
-      console.log('error', e);
-    }
+    });
   };
 
   const onAvailableDevicesChange = (value: string | number | (string | number)[] | null) => {

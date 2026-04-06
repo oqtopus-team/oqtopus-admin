@@ -80,16 +80,9 @@ export const DeviceUpdateConfirm: React.FC = () => {
   };
 
   const handleSubmit = async (): Promise<void> => {
-    if (deviceId != null && formData != null && dbData != null) {
-      const res = await patchDevice(deviceId, generatePatchDevice(formData, dbData));
-      if (res.success) {
-        navigate('/device');
-      } else {
-        setFailedSubmissionMessage(res.message);
-      }
-    } else {
-      setFailedSubmissionMessage('Form data is invalid.');
-    }
+    if (deviceId == null || formData == null || dbData == null) return;
+
+    patchDevice(deviceId, generatePatchDevice(formData, dbData)).then(() => navigate('/device'));
   };
 
   return (

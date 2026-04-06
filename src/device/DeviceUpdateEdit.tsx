@@ -38,16 +38,8 @@ export const DeviceUpdateEdit: React.FC = () => {
   useEffect(() => {
     if (deviceId !== undefined) {
       getDevice(deviceId)
-        .then((device: Device | null) => {
-          if (device != null) {
-            setDevice(device);
-          } else {
-            console.error('Device not found');
-          }
-        })
-        .catch((error) => {
-          console.error('Failed to fetch device:', error);
-        });
+        .then((device) => setDevice(device))
+        .catch(() => {});
     }
   }, [deviceId, auth.idToken]);
 

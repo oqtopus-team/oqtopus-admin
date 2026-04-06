@@ -18,7 +18,7 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
@@ -69,13 +69,13 @@ export interface DevicesDeviceBase {
 
 export const DevicesDeviceBaseDeviceTypeEnum = {
     Qpu: 'QPU',
-    Simulator: 'simulator'
+    Simulator: 'simulator',
 } as const;
 
 export type DevicesDeviceBaseDeviceTypeEnum = typeof DevicesDeviceBaseDeviceTypeEnum[keyof typeof DevicesDeviceBaseDeviceTypeEnum];
 export const DevicesDeviceBaseStatusEnum = {
     Available: 'available',
-    Unavailable: 'unavailable'
+    Unavailable: 'unavailable',
 } as const;
 
 export type DevicesDeviceBaseStatusEnum = typeof DevicesDeviceBaseStatusEnum[keyof typeof DevicesDeviceBaseStatusEnum];
@@ -105,13 +105,13 @@ export interface DevicesDeviceInfo {
 
 export const DevicesDeviceInfoDeviceTypeEnum = {
     Qpu: 'QPU',
-    Simulator: 'simulator'
+    Simulator: 'simulator',
 } as const;
 
 export type DevicesDeviceInfoDeviceTypeEnum = typeof DevicesDeviceInfoDeviceTypeEnum[keyof typeof DevicesDeviceInfoDeviceTypeEnum];
 export const DevicesDeviceInfoStatusEnum = {
     Available: 'available',
-    Unavailable: 'unavailable'
+    Unavailable: 'unavailable',
 } as const;
 
 export type DevicesDeviceInfoStatusEnum = typeof DevicesDeviceInfoStatusEnum[keyof typeof DevicesDeviceInfoStatusEnum];
@@ -166,7 +166,7 @@ export interface UsersUpdateUserRequest {
 export const UsersUserStatus = {
     Approved: 'approved',
     Unapproved: 'unapproved',
-    Suspended: 'suspended'
+    Suspended: 'suspended',
 } as const;
 
 export type UsersUserStatus = typeof UsersUserStatus[keyof typeof UsersUserStatus];
@@ -626,7 +626,7 @@ export class AnnouncementsApi extends BaseAPI {
 
 export const GetAnnouncementsListOrderEnum = {
     Desc: 'DESC',
-    Asc: 'ASC'
+    Asc: 'ASC',
 } as const;
 export type GetAnnouncementsListOrderEnum = typeof GetAnnouncementsListOrderEnum[keyof typeof GetAnnouncementsListOrderEnum];
 
