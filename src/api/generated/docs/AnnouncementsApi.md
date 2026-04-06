@@ -1,0 +1,303 @@
+# AnnouncementsApi
+
+All URIs are relative to *http://localhost:8080*
+
+|Method | HTTP request | Description|
+|------------- | ------------- | -------------|
+|[**announcement**](#announcement) | **POST** /announcements | Register announcement to backend|
+|[**deleteAnnouncement**](#deleteannouncement) | **DELETE** /announcements/{announcement_id} | Delete announcement|
+|[**getAnnouncement**](#getannouncement) | **GET** /announcements/{announcement_id} | Get selected announcement|
+|[**getAnnouncementsList**](#getannouncementslist) | **GET** /announcements | Get announcements list from backend|
+|[**updateAnnouncement**](#updateannouncement) | **PATCH** /announcements/{announcement_id} | Update data of selected announcement|
+
+# **announcement**
+> SuccessSuccessResponse announcement()
+
+Register announcement to backend
+
+### Example
+
+```typescript
+import {
+    AnnouncementsApi,
+    Configuration,
+    AnnouncementsRegisterAnnouncementRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AnnouncementsApi(configuration);
+
+let announcementsRegisterAnnouncementRequest: AnnouncementsRegisterAnnouncementRequest; // (optional)
+
+const { status, data } = await apiInstance.announcement(
+    announcementsRegisterAnnouncementRequest
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **announcementsRegisterAnnouncementRequest** | **AnnouncementsRegisterAnnouncementRequest**|  | |
+
+
+### Return type
+
+**SuccessSuccessResponse**
+
+### Authorization
+
+[BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success register announcement |  -  |
+|**400** | Bad Request |  -  |
+|**401** | Unauthorized |  -  |
+|**403** | Not authorized : user is not admin |  -  |
+|**500** | Internal Server Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteAnnouncement**
+> SuccessSuccessResponse deleteAnnouncement()
+
+Delete announcement
+
+### Example
+
+```typescript
+import {
+    AnnouncementsApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AnnouncementsApi(configuration);
+
+let announcementId: number; //announcement ID (default to undefined)
+
+const { status, data } = await apiInstance.deleteAnnouncement(
+    announcementId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **announcementId** | [**number**] | announcement ID | defaults to undefined|
+
+
+### Return type
+
+**SuccessSuccessResponse**
+
+### Authorization
+
+[BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**204** | Announcement deleted |  -  |
+|**400** | Bad Request |  -  |
+|**401** | Unauthorized |  -  |
+|**403** | Not authorized |  -  |
+|**404** | Not Found |  -  |
+|**500** | Internal Server Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getAnnouncement**
+> AnnouncementsGetAnnouncementResponse getAnnouncement()
+
+Get selected announcement
+
+### Example
+
+```typescript
+import {
+    AnnouncementsApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AnnouncementsApi(configuration);
+
+let announcementId: number; //announcement ID (default to undefined)
+
+const { status, data } = await apiInstance.getAnnouncement(
+    announcementId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **announcementId** | [**number**] | announcement ID | defaults to undefined|
+
+
+### Return type
+
+**AnnouncementsGetAnnouncementResponse**
+
+### Authorization
+
+[BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Return selected announcement |  -  |
+|**400** | Bad Request |  -  |
+|**401** | Unauthorized |  -  |
+|**403** | Not authorized |  -  |
+|**404** | Not Found |  -  |
+|**500** | Internal Server Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getAnnouncementsList**
+> AnnouncementsGetAnnouncementsListResponse getAnnouncementsList()
+
+Get announcements list from backend
+
+### Example
+
+```typescript
+import {
+    AnnouncementsApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AnnouncementsApi(configuration);
+
+let offset: string; //offset information (optional) (default to undefined)
+let limit: string; //Limit information (optional) (default to undefined)
+let order: 'DESC' | 'ASC'; //Specify order according to start time (optional) (default to 'ASC')
+let currentTime: string; //Allows to filter the list of announcements to fetch by provided time. If specified only announcements with start_time <= current_time and end_time >= current_time are returned. (optional) (default to undefined)
+
+const { status, data } = await apiInstance.getAnnouncementsList(
+    offset,
+    limit,
+    order,
+    currentTime
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **offset** | [**string**] | offset information | (optional) defaults to undefined|
+| **limit** | [**string**] | Limit information | (optional) defaults to undefined|
+| **order** | [**&#39;DESC&#39; | &#39;ASC&#39;**]**Array<&#39;DESC&#39; &#124; &#39;ASC&#39;>** | Specify order according to start time | (optional) defaults to 'ASC'|
+| **currentTime** | [**string**] | Allows to filter the list of announcements to fetch by provided time. If specified only announcements with start_time &lt;&#x3D; current_time and end_time &gt;&#x3D; current_time are returned. | (optional) defaults to undefined|
+
+
+### Return type
+
+**AnnouncementsGetAnnouncementsListResponse**
+
+### Authorization
+
+[BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Return announcements |  -  |
+|**401** | Unauthorized |  -  |
+|**403** | Not authorized : user is not admin |  -  |
+|**500** | Internal Server Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateAnnouncement**
+> SuccessSuccessResponse updateAnnouncement()
+
+Update the properties of selected announcement.
+
+### Example
+
+```typescript
+import {
+    AnnouncementsApi,
+    Configuration,
+    AnnouncementsUpdateAnnouncementRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AnnouncementsApi(configuration);
+
+let announcementId: number; //announcement ID (default to undefined)
+let announcementsUpdateAnnouncementRequest: AnnouncementsUpdateAnnouncementRequest; //New announcement data (optional)
+
+const { status, data } = await apiInstance.updateAnnouncement(
+    announcementId,
+    announcementsUpdateAnnouncementRequest
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **announcementsUpdateAnnouncementRequest** | **AnnouncementsUpdateAnnouncementRequest**| New announcement data | |
+| **announcementId** | [**number**] | announcement ID | defaults to undefined|
+
+
+### Return type
+
+**SuccessSuccessResponse**
+
+### Authorization
+
+[BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Announcement data updated |  -  |
+|**400** | Bad Request |  -  |
+|**401** | Unauthorized |  -  |
+|**403** | Not authorized |  -  |
+|**404** | Not Found |  -  |
+|**500** | Internal Server Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+

@@ -5,8 +5,8 @@ import { useContext } from 'react';
 import { userApiContext } from '../backend/Provider';
 
 const convertToUser = (user: UsersGetOneUserResponse): User => ({
-  id: user.id.toString(),
-  name: user.name ?? '',
+  id: user.id,
+  name: user.display_name ?? '',
   group_id: user.group_id ?? '',
   email: user.email ?? '',
   organization: user.organization ?? '',
@@ -33,6 +33,11 @@ const convertToUsersUserStatus = (statusStr?: string): UsersUserStatus | undefin
 export const useUserAPI = () => {
   const api = useContext(userApiContext);
 
+  const toApiSortField = (field: string): string => {
+    if (field === 'name') return 'display_name';
+    return field;
+  };
+
   const getUsers = async (
     offset?: number,
     limit?: number,
@@ -43,38 +48,73 @@ export const useUserAPI = () => {
     const limitStr = limit != null ? limit.toString() : undefined;
 
     const params: Record<string, string> = {};
-    if (sort) params['sort'] = `${sort.id},${sort.desc ? 'desc' : 'asc'}`;
+    if (sort) params['sort'] = `${toApiSortField(sort.id)},${sort.desc ? 'desc' : 'asc'}`;
 
-    const res = await api.UserApi.getUsers(
-      offsetStr,
-      limitStr,
-      filterFields?.email,
-      filterFields?.name,
-      filterFields?.organization,
-      convertToUsersUserStatus(filterFields?.status),
-      filterFields?.group_id,
-      { params }
-    );
-    return res.data.users?.map(convertToUser) ?? [];
+    try {
+      const res = await api.UserApi.getUsers(
+        offsetStr,
+        limitStr,
+        undefined,
+        filterFields?.email,
+        filterFields?.name,
+        filterFields?.organization,
+        convertToUsersUserStatus(filterFields?.status),
+        filterFields?.group_id,
+        { params }
+      );
+      return res.data.users?.map(convertToUser) ?? [];
+    } catch (e) {
+      console.error('Error fetching users:', e);
+      return [];
+    }
   };
 
   const getUser = async (userId: string): Promise<User | null> => {
-    const res = await api.UserApi.getOneUserById(Number(userId));
-    return res.data ? convertToUser(res.data) : null;
+    try {
+      const res = await api.UserApi.getOneUserById(userId);
+      return res.data ? convertToUser(res.data) : null;
+    } catch (e) {
+      console.error('Error fetching user:', e);
+      return null;
+    }
   };
 
   const statusChangeUser = async (userId: string, status: UsersUserStatus): Promise<User> => {
-    const res = await api.UserApi.updatetUserStatusById(Number(userId), { status });
-    return convertToUser(res.data);
+    try {
+      const res = await api.UserApi.updatetUserStatusById(userId, { status });
+      if (res.data) return convertToUser(res.data);
+      return Promise.reject('User not found');
+    } catch (e) {
+      console.error('Error changing user status:', e);
+      return Promise.reject(e);
+    }
   };
 
-  const deleteUser = async (userId: string): Promise<void> => {
-    await api.UserApi.deleteUserById(Number(userId));
+  const deleteUser = async (userId: string): Promise<boolean> => {
+    try {
+      await api.UserApi.deleteUserById(userId);
+      return true;
+    } catch (e) {
+      console.error('Error deleting user:', e);
+      return false;
+    }
   };
 
   const updateUser = async (userId: string, userData: Partial<User>): Promise<User> => {
-    const res = await api.UserApi.updatetUserStatusById(Number(userId), userData);
-    return convertToUser(res.data);
+    try {
+      const res = await api.UserApi.updatetUserStatusById(userId, {
+        email: userData.email,
+        display_name: userData.name,
+        organization: userData.organization,
+        status: userData.status,
+        group_id: userData.group_id,
+        available_devices: userData.available_devices,
+      });
+      if (res.data) return convertToUser(res.data);
+      return Promise.reject('User not found');
+    } catch (e) {
+      return Promise.reject(e);
+    }
   };
 
   return {
