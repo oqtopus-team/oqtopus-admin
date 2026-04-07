@@ -191,7 +191,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
       };
     });
 
-    registerUsers(formattedData)
+    registerUsers(formattedData, t)
       .then(() => {
         toast(t('users.white_list.register.register_success'), successToastConfig);
         navigate('/whitelist');

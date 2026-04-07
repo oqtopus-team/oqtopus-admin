@@ -1,9 +1,10 @@
+import React from "react"
 import { useEffect } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
 
 interface ComponentProps {
-  children: JSX.Element;
+  children: React.JSX.Element;
   setEditorState: (editorState: any) => void;
   initialContent?: string;
 }

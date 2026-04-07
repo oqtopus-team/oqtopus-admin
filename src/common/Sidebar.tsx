@@ -1,11 +1,12 @@
 import Nav from 'react-bootstrap/Nav';
 import { FaUser, FaFile, FaServer, FaCommentAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import React from "react";
 
 interface MenuItem {
   name: string;
   path: string;
-  icon: JSX.Element;
+  icon: React.JSX.Element;
 }
 
 const Sidebar: React.FunctionComponent = () => {
