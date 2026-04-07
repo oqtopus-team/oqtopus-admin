@@ -112,7 +112,7 @@ const WhitelistUserRegisterModal: React.FunctionComponent<ModalProps> = (props) 
     }
 
     try {
-      await registerUsers(validationResult.whitelist).then(() => {
+      await registerUsers(validationResult.whitelist, t).then(() => {
         toast(t('users.white_list.register.register_success'), successToastConfig);
         navigate('/whitelist');
       });

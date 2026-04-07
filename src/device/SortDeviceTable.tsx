@@ -19,7 +19,7 @@ interface TableProps {
   devices: Device[];
 }
 
-export const SortDeviceTable: React.FC<TableProps> = ({ devices }): JSX.Element => {
+export const SortDeviceTable: React.FC<TableProps> = ({ devices }): React.JSX.Element => {
   const columnHelper = createColumnHelper<Device>();
   const { t, i18n } = useTranslation();
   const columns: Array<ColumnDef<Device, any>> = [
