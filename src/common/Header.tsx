@@ -1,15 +1,14 @@
-import clsx from 'clsx';
-import { languages } from '../i18n/config';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/use-auth';
-import { Select } from './Select';
-import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from './_components/LanguageSelector';
 import { ja, enUS } from 'date-fns/locale';
 import { registerLocale } from 'react-datepicker';
+import { errorToastConfig } from '../config/toast-notification';
+import { toast } from 'react-toastify';
 
 registerLocale('ja', ja);
 registerLocale('en', enUS);
@@ -37,11 +36,11 @@ const Header: React.FunctionComponent = () => {
                 .signOut(t)
                 .then((res) => {
                   if (res.success) {
-                    navigate({ pathname: '/login' });
+                    navigate({ pathname: '/signin' });
                   }
                 })
                 .catch(() => {
-                  alert(t('header.logout.failure'));
+                  toast(t('header.logout.failure'), errorToastConfig);
                 });
             }}
           >
@@ -51,30 +50,6 @@ const Header: React.FunctionComponent = () => {
       </Container>
       <LanguageSelector />
     </Navbar>
-  );
-};
-
-const LanguageSelector = (): React.ReactElement => {
-  const { t } = useTranslation();
-  return (
-    <Select
-      className={clsx('!w-[100px]', 'border-primary', 'text-primary', 'outline-primary')}
-      onChange={async (e: React.ChangeEvent<HTMLSelectElement>) => {
-        if (languages.includes(e.target.value)) {
-          i18next.changeLanguage(e.target.value);
-        }
-      }}
-      defaultValue={i18next.language}
-      value={''}
-    >
-      {languages.map((lang: string) => {
-        return (
-          <option value={lang} key={lang}>
-            {t(`header.lang.${lang}`)}
-          </option>
-        );
-      })}
-    </Select>
   );
 };
 

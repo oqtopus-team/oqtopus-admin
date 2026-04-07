@@ -69,28 +69,18 @@ export const useAnnouncementAPI = () => {
   };
 
   const getAnnouncements = async (params: OptionalRequestParams): Promise<Announcement[]> => {
-    try {
-      const res = await api.announcements.getAnnouncementsList(
-        params.offset?.toString(),
-        params.limit?.toString(),
-        convertToGetAnnouncementsListOrderEnum(params.order),
-        params.currentTime
-      );
-      return (res.data.announcements ?? []).map(convertToAnnouncement);
-    } catch (error) {
-      console.error('Failed to fetch announcements:', error);
-      throw error;
-    }
+    const res = await api.announcements.getAnnouncementsList(
+      params.offset?.toString(),
+      params.limit?.toString(),
+      convertToGetAnnouncementsListOrderEnum(params.order),
+      params.currentTime
+    );
+    return (res.data.announcements ?? []).map(convertToAnnouncement);
   };
 
   const getSingleAnnouncement = async (id: string | number): Promise<Announcement | null> => {
-    try {
-      const res = await api.announcements.getAnnouncement(correctIdType(id));
-      return res.data ? convertToAnnouncement(res.data) : null;
-    } catch (error) {
-      console.error('Failed to fetch announcements:', error);
-      throw error;
-    }
+    const res = await api.announcements.getAnnouncement(correctIdType(id));
+    return res.data ? convertToAnnouncement(res.data) : null;
   };
 
   const editAnnouncement = async (
@@ -101,13 +91,8 @@ export const useAnnouncementAPI = () => {
   };
 
   const deleteAnnouncement = async (announcementId: string | number) => {
-    try {
-      await api.announcements.deleteAnnouncement(correctIdType(announcementId));
-      return true;
-    } catch (error) {
-      console.error('Failed to delete announcement:', error);
-      throw error;
-    }
+    await api.announcements.deleteAnnouncement(Number(announcementId));
+    return true;
   };
 
   return {

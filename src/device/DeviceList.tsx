@@ -24,13 +24,9 @@ const DeviceList: React.FC = () => {
   }, [auth.idToken]);
 
   const fetchDevices = (): void => {
-    getDevices()
-      .then((devices: Device[]) => {
-        setDevices(devices);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch devices:', error);
-      });
+    getDevices().then((devices: Device[]) => {
+      setDevices(devices);
+    });
   };
 
   useEffect(() => {
@@ -44,8 +40,7 @@ const DeviceList: React.FC = () => {
   return (
     <>
       <Button className="mb-3" variant="primary" onClick={handleRegisterDevice}>
-        {' '}
-        {t('device.register.button')}{' '}
+        {t('device.register.button')}
       </Button>
       <SortDeviceTable devices={devices} />
     </>

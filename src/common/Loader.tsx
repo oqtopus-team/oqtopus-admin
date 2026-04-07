@@ -7,8 +7,7 @@ interface Props {
 
 // for controlling loading spinner
 const loadingContext = createContext<boolean>(false);
-const setLoadingContext = createContext<React.Dispatch<React.SetStateAction<boolean>>>(() => {
-});
+const setLoadingContext = createContext<React.Dispatch<React.SetStateAction<boolean>>>(() => {});
 export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [loading, setLoading] = useState(false);
   return (
@@ -26,9 +25,9 @@ const Loader: React.FC<Props> = ({ loading }) => {
     <div className="loader">
       <FadeLoader />
     </div>
-) : (
-  <></>
-);
+  ) : (
+    <></>
+  );
 };
 
 export default Loader;

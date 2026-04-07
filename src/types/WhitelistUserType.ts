@@ -33,4 +33,5 @@ export interface WhitelistUserRequest {
   email: string;
   username: string;
   organization: string;
+  available_devices?: string[] | ALL_ITEMS;
 }

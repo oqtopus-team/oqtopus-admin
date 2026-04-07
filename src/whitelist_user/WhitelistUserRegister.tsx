@@ -23,6 +23,12 @@ import { useTranslation } from 'react-i18next';
 import { Combobox } from '../common/combobox/Combobox';
 import { useDeviceAPI } from '../device/DeviceApi';
 import { Device } from '../types/DeviceType';
+import { toast } from 'react-toastify';
+import {
+  errorToastConfig,
+  infoToastConfig,
+  successToastConfig,
+} from '../config/toast-notification';
 
 interface WhitelistUserRegisterForm {
   whitelist: {
@@ -111,13 +117,9 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
   const { registerUsers } = useWhitelistUserAPI();
 
   const fetchDevices = (): void => {
-    getDevices()
-      .then((devices: Device[]) => {
-        setDevices(devices);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch devices:', error);
-      });
+    getDevices().then((devices: Device[]) => {
+      setDevices(devices);
+    });
   };
 
   useEffect(() => {
@@ -167,32 +169,33 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
     setLoading(true);
 
     if (data.whitelist.length === 0) {
-      alert(t('users.white_list.register.warn.no_data'));
+      toast(t('users.white_list.register.warn.no_data'), infoToastConfig);
       processing.current = false;
       setLoading(false);
       return;
     }
-    debugger;
 
     const formattedData = data.whitelist.map((userData) => {
+      const rawAvailableDevices = userData.available_devices as string[] | string;
+      const availableDevices: string[] | '*' = Array.isArray(rawAvailableDevices)
+        ? rawAvailableDevices.includes('*')
+          ? '*'
+          : rawAvailableDevices
+        : rawAvailableDevices === '*'
+        ? '*'
+        : [rawAvailableDevices];
+
       return {
         ...userData,
-        available_devices: userData.available_devices.includes('*')
-          ? '*'
-          : userData.available_devices,
+        available_devices: availableDevices,
       };
     });
 
-    registerUsers(formattedData, t)
-      .then((res: ApiResponse) => {
-        if (res.success) {
-          alert(res.message);
-          navigate('/whitelist');
-        } else {
-          alert(t('users.white_list.register.failure') + res.message);
-        }
+    registerUsers(formattedData)
+      .then(() => {
+        toast(t('users.white_list.register.register_success'), successToastConfig);
+        navigate('/whitelist');
       })
-      .catch((err) => console.log(err))
       .finally(() => {
         processing.current = false;
         setLoading(false);
@@ -200,7 +203,7 @@ const WhitelistUserRegister: React.FunctionComponent = () => {
   };
 
   const confirmDataClear = (): void => {
-    alert(t('users.white_list.register.clear_confirm'));
+    toast(t('users.white_list.register.clear_confirm'), successToastConfig);
     reset();
   };
 

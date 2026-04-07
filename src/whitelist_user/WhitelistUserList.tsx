@@ -5,26 +5,27 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Table from 'react-bootstrap/Table';
 import Stack from 'react-bootstrap/Stack';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   ColumnDef,
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
+import SortableTable from '../components/SortableTable';
 import { ColumnSort } from '@tanstack/table-core/src/features/RowSorting';
 import { useWhitelistUserAPI } from './WhitelistUserApi';
 import { UserSearchParams } from '../types/UserType';
 import { useAuth } from '../hooks/use-auth';
 import { useLoading, useSetLoading } from '../common/Loader';
-import WhitelistUserListItem from './WhitelistUserListItem';
 import { useInfiniteScroll } from '../hooks/use-infinite-scroll';
 import { WhitelistUser, WhitelistUserSearchParams } from '../types/WhitelistUserType';
+import { EmailCell } from '../user/tableCells/EmailCell';
+import { AvailableDevicesCell } from '../user/tableCells/AvailableDevicesCell';
+import { OperationsCell } from '../user/tableCells/OperationsCell';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
@@ -57,21 +58,16 @@ const WhitelistUserList: React.FunctionComponent = () => {
     filterFields?: WhitelistUserSearchParams;
   } = {}) {
     setLoading(true);
-    try {
-      const usersResponse = await getUsers(offset, limit, sort, filterFields);
-
-      if (offset !== undefined) {
-        setUsers([...users, ...usersResponse]);
-      } else {
-        setUsers(usersResponse);
-      }
-
-      setHasMore(usersResponse?.length >= limit);
-    } catch (e) {
-      console.error('Error fetching white list users:', e);
-    } finally {
-      setLoading(false);
-    }
+    await getUsers(offset, limit, sort, filterFields)
+      .then((usersResponse) => {
+        if (offset !== undefined) {
+          setUsers([...users, ...usersResponse]);
+        } else {
+          setUsers(usersResponse);
+        }
+        setHasMore(usersResponse?.length >= limit);
+      })
+      .finally(() => setLoading(false));
   }
 
   const { containerRef } = useInfiniteScroll(getUsersList, hasMore, {
@@ -102,18 +98,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
       columnHelper.accessor('email', {
         header: 'users.mail',
         enableSorting: true,
-        cell: ({ getValue }) => (
-          <div
-            style={{
-              maxWidth: '130px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {getValue()}
-          </div>
-        ),
+        cell: ({ row }) => <EmailCell user={row.original} />,
       }),
 
       columnHelper.accessor('username', {
@@ -131,20 +116,26 @@ const WhitelistUserList: React.FunctionComponent = () => {
       columnHelper.accessor('available_devices', {
         header: 'users.available_devices',
         enableSorting: true,
-        cell: ({ getValue }) => getValue(),
+        cell: ({ row }) => <AvailableDevicesCell user={row.original} />,
       }),
 
       columnHelper.accessor('is_signup_completed', {
         header: 'users.white_list.signup',
         enableSorting: true,
-        cell: ({ getValue }) => getValue(),
+        cell: ({ getValue }) => String(getValue()),
       }),
 
       columnHelper.display({
         id: 'operations',
         header: 'users.white_list.operations',
         enableSorting: false,
-        cell: ({ row }) => row,
+        cell: ({ row }) => (
+          <OperationsCell
+            user={row.original}
+            execFunctions={{ delete: onDeleteUser }}
+            isEditable={false}
+          />
+        ),
       }),
     ],
     [loading]
@@ -157,8 +148,19 @@ const WhitelistUserList: React.FunctionComponent = () => {
     manualSorting: true,
     state: {
       sorting,
+      columnVisibility: {
+        username: useUsername,
+        organization: useOrganization,
+      },
     },
-    onSortingChange: setSorting,
+    onSortingChange: (updater) => {
+      const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
+      setSorting(newSorting);
+
+      if (containerRef.current) {
+        containerRef.current.scrollTop = 0;
+      }
+    },
   });
 
   const onSubmit = async (formValues: UserSearchParams): Promise<void> => {
@@ -174,22 +176,6 @@ const WhitelistUserList: React.FunctionComponent = () => {
     setSearchParams(filtered);
   };
 
-  const handleCustomSort = async (column: string) => {
-    const currentSort = sorting.find((s) => s.id === column);
-    const newDesc = currentSort ? !currentSort.desc : false;
-
-    const newSorting = [{ id: column, desc: newDesc }];
-
-    try {
-      await getUsersList({
-        sort: newSorting[0],
-        filterFields: urlParams,
-      });
-
-      setSorting(newSorting);
-    } catch (e) {}
-  };
-
   const onDeleteUser = (userId: string) => {
     setUsers((prevUsersState) => prevUsersState.filter(({ id }) => userId !== id));
   };
@@ -197,10 +183,6 @@ const WhitelistUserList: React.FunctionComponent = () => {
   useEffect(() => {
     document.title = `${t('users.white_list.title')} | ${appName}`;
   }, [auth.idToken]);
-
-  useEffect(() => {
-    getUsersList({ filterFields: urlParams, sort: sorting[0] });
-  }, [searchParams]);
 
   return (
     <>
@@ -265,57 +247,12 @@ const WhitelistUserList: React.FunctionComponent = () => {
             {t('users.white_list.register_button')}
           </a>
         </div>
-        <div ref={containerRef} className="vertical-scroll-intermediate-container overflow-x-auto">
-          {users.length > 0 ? (
-            <Table bordered hover style={{ marginTop: '10px' }}>
-              <thead className="table-light">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id} className="text-center">
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        onClick={() => {
-                          if (header.column.getCanSort()) {
-                            handleCustomSort(header.column.id);
-                          }
-                        }}
-                        style={{ verticalAlign: 'middle' }}
-                      >
-                        <span>
-                          {flexRender(
-                            t(header.column.columnDef.header as string),
-                            header.getContext()
-                          )}
-                        </span>
-                        {header.column.getCanSort() && (
-                          <span className="px-2">
-                            {{
-                              asc: '↑',
-                              desc: '↓',
-                            }[header.column.getIsSorted() as string] ?? '↕'}
-                          </span>
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <WhitelistUserListItem
-                    key={row.original.id}
-                    user={row.original}
-                    execFunction={onDeleteUser}
-                  />
-                ))}
-              </tbody>
-            </Table>
-          ) : (
-            <p className="mb-0 p-3 text-center" style={{ fontSize: '20px' }}>
-              No results found
-            </p>
-          )}
-        </div>
+        <SortableTable
+          table={table}
+          data={users}
+          containerRef={containerRef}
+          emptyMessage="users.list.no_users_found"
+        />
       </Stack>
     </>
   );

@@ -52,66 +52,25 @@ export const useDeviceAPI = () => {
   const api = useContext(userApiContext);
 
   const getDevices = async (): Promise<Device[]> => {
-    try {
-      const res = await api.device.listDevices();
-      return res.data.map(convertDeviceResult);
-    } catch (e) {
-      console.error('Error fetching devices:', e);
-      return [];
-    }
+    const res = await api.device.listDevices();
+    return res.data.map(convertDeviceResult);
   };
 
-  const getDevice = async (id: string): Promise<Device | null> => {
-    try {
-      const res = await api.device.getDevice(id);
-      if (res.status === 200) {
-        return convertDeviceResult(res.data);
-      }
-      return null;
-    } catch (e) {
-      console.error('Error fetching device:', e);
-      return null;
-    }
+  const getDevice = async (id: string) => {
+    const res = await api.device.getDevice(id);
+    return convertDeviceResult(res.data);
   };
 
-  const postDevice = async (device: DeviceForm): Promise<ApiResponse> => {
-    try {
-      const res = await api.device.registerDevice(convertDeviceForm(device));
-      return {
-        success: res.status === 200,
-        message:
-          res.status === 200 ? 'Device registered successfully' : 'Failed to register device',
-      };
-    } catch (e) {
-      console.error('Error registering device:', e);
-      return { success: false, message: 'Failed to register device' };
-    }
+  const postDevice = async (device: DeviceForm) => {
+    await api.device.registerDevice(convertDeviceForm(device));
   };
 
-  const patchDevice = async (deviceId: string, device: DeviceForm): Promise<ApiResponse> => {
-    try {
-      const res = await api.device.updateDeviceData(deviceId, convertDeviceForm(device));
-      return {
-        success: res.status === 200,
-        message: res.status === 200 ? 'Device updated successfully' : 'Failed to update device',
-      };
-    } catch (e) {
-      console.error('Error updating device:', e);
-      return { success: false, message: 'Failed to update device' };
-    }
+  const patchDevice = async (deviceId: string, device: DeviceForm) => {
+    await api.device.updateDeviceData(deviceId, convertDeviceForm(device));
   };
 
-  const deleteDevice = async (deviceId: string): Promise<ApiResponse> => {
-    try {
-      const res = await api.device.deleteDevice(deviceId);
-      return {
-        success: res.status === 204,
-        message: res.status === 204 ? 'Device deleted successfully' : 'Failed to delete device',
-      };
-    } catch (e) {
-      console.error('Error deleting device:', e);
-      return { success: false, message: 'Failed to delete device' };
-    }
+  const deleteDevice = async (deviceId: string) => {
+    await api.device.deleteDevice(deviceId);
   };
 
   return { getDevices, getDevice, postDevice, patchDevice, deleteDevice };

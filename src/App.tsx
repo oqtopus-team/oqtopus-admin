@@ -1,15 +1,15 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'aframe';
 import 'aframe-extras';
 import { useAuth } from './hooks/use-auth';
 import { LoadingProvider } from './common/Loader';
-import LogIn from './login/LogIn';
+import SignIn from './signin/SignIn';
 import UserList from './user/UserList';
-import PasswordChange from './login/PasswordChange';
-import FirstPasswordChange from './login/FirstPasswordChange';
+import PasswordChange from './signin/PasswordChange';
+import FirstPasswordChange from './signin/FirstPasswordChange';
 import WhitelistUserList from './whitelist_user/WhitelistUserList';
 import WhitelistUserRegister from './whitelist_user/WhitelistUserRegister';
 import DeviceList from './device/DeviceList';
@@ -18,13 +18,20 @@ import { DeviceRegisterConfirm } from './device/DeviceRegisterConfirm';
 import { DeviceDetail } from './device/DeviceDetail';
 import { DeviceUpdateEdit } from './device/DeviceUpdateEdit';
 import { DeviceUpdateConfirm } from './device/DeviceUpdateConfirm';
+import ConfirmMFA from './mfa/ConfirmMFA';
+import SetupMFA from './mfa/SetupMFA';
 import AnnouncementsList from './announcements/AnnouncementsList';
 import AnnouncementEditor from './announcements/AnnouncementEditor';
 import { UserEdit } from './user/UserEdit';
 import BaseLayout from './common/BaseLayout';
+import { setupInterceptors } from './api/api-interceptor-error';
 
 const App: React.FC = () => {
   const auth = useAuth();
+
+  useEffect(() => {
+    setupInterceptors();
+  }, []);
 
   if (auth.isLoading) {
     return <div></div>;
@@ -34,9 +41,11 @@ const App: React.FC = () => {
     <BrowserRouter>
       <LoadingProvider>
         <Routes>
-          <Route index element={<LogIn />} />
-          <Route path="login" element={<LogIn />} />
+          <Route index element={<SignIn />} />
+          <Route path="signin" element={<SignIn />} />
           <Route path="first-password-change" element={<FirstPasswordChange />} />
+          <Route path="confirm-mfa" element={<ConfirmMFA />} />
+          <Route path="setup-mfa" element={<SetupMFA />} />
           <Route element={<BaseLayout />}>
             <Route path="users" element={<UserList />} />
             <Route path="users/edit/:userId" element={<UserEdit />} />

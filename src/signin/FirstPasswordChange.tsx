@@ -4,13 +4,16 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
-import LogInRoute from './LogInRoute';
+import SignInRoute from './SignInRoute';
 import { useAuth } from '../hooks/use-auth';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { errorToastConfig, successToastConfig } from '../config/toast-notification';
+import AuthHeader from '../common/AuthHeader';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 
@@ -35,7 +38,7 @@ const validationRules = (t: TFunction<'translation', any>) => {
 };
 
 // type definition of form inputs
-interface LoginInputs {
+interface SignInInputs {
   username: string;
   currentPassword: string;
   newPassword: string;
@@ -53,13 +56,13 @@ const FirstPasswordChange: React.FunctionComponent = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginInputs>({
+  } = useForm<SignInInputs>({
     resolver: yupResolver(validationRules(t)),
   });
   useEffect(() => {
     document.title = `${t('auth.password_change.first_change')} | ${appName}`;
   });
-  const onSubmit: SubmitHandler<LoginInputs> = () => {
+  const onSubmit: SubmitHandler<SignInInputs> = () => {
     // Prevent double-click
     if (processing.current) return;
     processing.current = true;
@@ -67,10 +70,10 @@ const FirstPasswordChange: React.FunctionComponent = () => {
       .firstChangePassword(username, currentPassword, newPassword, t)
       .then((result) => {
         if (result.success) {
-          alert(t('auth.password_change.success'));
-          navigate({ pathname: '/users' });
+          toast(t('auth.password_change.success'), successToastConfig);
+          navigate({ pathname: '/setup-mfa' });
         } else {
-          alert(result.message);
+          toast(result.message, errorToastConfig);
         }
       })
       .catch((error) => {
@@ -82,10 +85,11 @@ const FirstPasswordChange: React.FunctionComponent = () => {
   };
 
   return (
-    <LogInRoute>
-      <Container className="login-container">
+    <SignInRoute>
+      <AuthHeader />
+      <Container className="signin-container">
         <Card>
-          <Card.Header as="h4">{appName}</Card.Header>
+          <Card.Header as="h4">{t('auth.password_change.title')}</Card.Header>
           <Card.Body>
             <Form noValidate onSubmit={handleSubmit(onSubmit)}>
               <Form.Group className="mb-3" controlId="email">
@@ -148,7 +152,7 @@ const FirstPasswordChange: React.FunctionComponent = () => {
           </Card.Body>
         </Card>
       </Container>
-    </LogInRoute>
+    </SignInRoute>
   );
 };
 
