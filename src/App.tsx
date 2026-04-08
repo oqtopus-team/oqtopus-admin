@@ -2,8 +2,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect } from 'react';
-import 'aframe';
-import 'aframe-extras';
 import { useAuth } from './hooks/use-auth';
 import { LoadingProvider } from './common/Loader';
 import SignIn from './signin/SignIn';
