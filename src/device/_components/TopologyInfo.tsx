@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ForceGraph2D } from 'react-force-graph';
+import ForceGraph2D from 'react-force-graph-2d';
 import useWindowSize from '../hook/UseWindowSize';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
