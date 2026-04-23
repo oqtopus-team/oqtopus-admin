@@ -1,3 +1,4 @@
+import { NotNull } from "yup";
 import { WhitelistUsersListWhitelistUserResponse } from "../api/generated";
 
 type ALL_ITEMS = '*';
@@ -6,9 +7,9 @@ export interface WhitelistUser {
   id: WhitelistUsersListWhitelistUserResponse["id"];
   group_id: WhitelistUsersListWhitelistUserResponse["group_id"];
   email: WhitelistUsersListWhitelistUserResponse["email"];
-  display_name: WhitelistUsersListWhitelistUserResponse["display_name"];
-  organization: WhitelistUsersListWhitelistUserResponse["organization"];
-  is_signup_completed: WhitelistUsersListWhitelistUserResponse["is_signup_completed"];
+  display_name: Required<WhitelistUsersListWhitelistUserResponse>["display_name"];
+  organization: Required<WhitelistUsersListWhitelistUserResponse>["organization"];
+  is_signup_completed: Required<WhitelistUsersListWhitelistUserResponse>["is_signup_completed"];
   available_devices: string[] | ALL_ITEMS;
 }
 
