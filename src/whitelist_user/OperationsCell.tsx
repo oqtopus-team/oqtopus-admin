@@ -3,16 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import DefaultModal from '../common/Modal';
-import { UsersUserStatus, WhitelistUsersListWhitelistUserResponse, WhitelistUsersListWhitelistUsersResponse } from '../api/generated';
 import { errorToastConfig, successToastConfig } from '../config/toast-notification';
 import { useSetLoading } from '../common/Loader';
-import { useNavigate } from 'react-router';
 import { useWhitelistUserAPI } from './WhitelistUserApi';
+import { WhitelistUser } from '../types/WhitelistUserType';
 
-type WhitelistUserId = WhitelistUsersListWhitelistUserResponse["id"];
+type WhitelistUserId = WhitelistUser["id"];
 
 interface OperationsCellProps {
-  whitelistUser: WhitelistUsersListWhitelistUserResponse;
+  whitelistUser: WhitelistUser;
   onDeleteSucceeded: (id: WhitelistUserId) => void;
 }
 
@@ -21,10 +20,8 @@ export const OperationsCell: React.FC<OperationsCellProps> = ({
   onDeleteSucceeded,
 }) => {
   const { t } = useTranslation();
-  const [stopModalShow, setStopModalShow] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const processing = useRef(false);
-  const navigate = useNavigate();
 
   const whitelistUsersApi = useWhitelistUserAPI();
   const setLoading = useSetLoading();
