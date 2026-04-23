@@ -25,7 +25,7 @@ import { useInfiniteScroll } from '../hooks/use-infinite-scroll';
 import { WhitelistUser, WhitelistUserSearchParams } from '../types/WhitelistUserType';
 import { EmailCell } from '../user/tableCells/EmailCell';
 import { AvailableDevicesCell } from '../user/tableCells/AvailableDevicesCell';
-import { OperationsCell } from '../user/tableCells/OperationsCell';
+import { OperationsCell } from './OperationsCell';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 const useUsername: boolean = import.meta.env.VITE_USE_USERNAME === 'enable';
@@ -101,7 +101,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
         cell: ({ row }) => <EmailCell user={row.original} />,
       }),
 
-      columnHelper.accessor('username', {
+      columnHelper.accessor('display_name', {
         header: 'users.name',
         enableSorting: true,
         cell: ({ getValue }) => getValue(),
@@ -131,9 +131,8 @@ const WhitelistUserList: React.FunctionComponent = () => {
         enableSorting: false,
         cell: ({ row }) => (
           <OperationsCell
-            user={row.original}
-            execFunctions={{ delete: onDeleteUser }}
-            isEditable={false}
+            whitelistUser={row.original}
+            onDeleteSucceeded={onDeleteUser}
           />
         ),
       }),
@@ -176,7 +175,7 @@ const WhitelistUserList: React.FunctionComponent = () => {
     setSearchParams(filtered);
   };
 
-  const onDeleteUser = (userId: string) => {
+  const onDeleteUser = (userId: WhitelistUser["id"]) => {
     setUsers((prevUsersState) => prevUsersState.filter(({ id }) => userId !== id));
   };
 
