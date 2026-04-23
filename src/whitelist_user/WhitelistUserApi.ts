@@ -9,10 +9,10 @@ import { WhitelistUsersListWhitelistUserResponse } from '../api/generated';
 const convertWhitelistUserResult = (
   user: WhitelistUsersListWhitelistUserResponse
 ): WhitelistUser => ({
-  id: user.id.toString(),
+  id: user.id,
   group_id: user.group_id ?? '',
   email: user.email ?? '',
-  username: user.display_name ?? '',
+  display_name: user.display_name ?? '',
   organization: user.organization ?? '',
   is_signup_completed: user.is_signup_completed ?? false,
   available_devices:
