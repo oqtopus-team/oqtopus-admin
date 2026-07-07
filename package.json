@@ -28,6 +28,7 @@
     "email-validator": "^2.0.4",
     "i18next": "^25.4.0",
     "i18next-browser-languagedetector": "^8.2.0",
+    "jszip": "^3.10.1",
     "lexical": "^0.34.0",
     "qrcode.react": "^4.1.0",
     "react": "19.1.1",
