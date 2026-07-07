@@ -136,20 +136,19 @@ export const useDeviceAPI = () => {
     if (deviceId !== undefined && device.deviceInfo !== undefined) {
       const res = await api.device.getDeviceInfoUploadUrl(deviceId);
       await uploadDeviceInfo(res.data.presigned_url, device.deviceInfo);
-      await api.device.updateDeviceData(deviceId, {
-        device_info: null,
-      } as unknown as SendDbDevice);
     }
   };
 
   const patchDevice = async (deviceId: string, device: DeviceForm) => {
-    const patchData = convertDeviceForm(device);
-    if (device.deviceInfo !== undefined) {
+    const { deviceInfo, ...deviceWithoutInfo } = device;
+    const patchData = convertDeviceForm(deviceWithoutInfo);
+    if (deviceInfo !== undefined) {
       const res = await api.device.getDeviceInfoUploadUrl(deviceId);
-      await uploadDeviceInfo(res.data.presigned_url, device.deviceInfo);
-      patchData.device_info = null as unknown as string;
+      await uploadDeviceInfo(res.data.presigned_url, deviceInfo);
     }
-    await api.device.updateDeviceData(deviceId, patchData);
+    if (Object.keys(patchData).length > 0) {
+      await api.device.updateDeviceData(deviceId, patchData);
+    }
   };
 
   const deleteDevice = async (deviceId: string) => {
