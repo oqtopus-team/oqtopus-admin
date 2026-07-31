@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router';
 import { useDeviceAPI } from '../device/DeviceApi';
 import { SortDeviceTable } from './SortDeviceTable';
 import { Device } from '../types/DeviceType';
 import { useAuth } from '../hooks/use-auth';
 import { useTranslation } from 'react-i18next';
+import { DeviceInfoHistorySearch } from './_components/DeviceInfoHistorySearch';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 
@@ -43,6 +45,12 @@ const DeviceList: React.FC = () => {
         {t('device.register.button')}
       </Button>
       <SortDeviceTable devices={devices} />
+      <Card className="mt-4">
+        <Card.Header>{t('device.history.title')}</Card.Header>
+        <Card.Body>
+          <DeviceInfoHistorySearch devices={devices} />
+        </Card.Body>
+      </Card>
     </>
   );
 };

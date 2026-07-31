@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useDeviceAPI } from '../device/DeviceApi';
 import { useAuth } from '../hooks/use-auth';
-import { Device } from '../types/DeviceType';
+import { Device, DeviceInfoHistoryDetail } from '../types/DeviceType';
 import { useNavigate } from 'react-router';
 import { DeviceDetailBasicInfo } from './_components/DeviceDetailBasicInfo';
 import { TopologyInfo } from './_components/TopologyInfo';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import { DeleteConfirmation } from './_components/DeviceDeleteModal';
 import { useTranslation } from 'react-i18next';
+import { DateTimeFormatter } from './common/DateTimeFormatter';
 
 const appName: string = import.meta.env.VITE_APP_NAME;
 
 export const DeviceDetail: React.FC = () => {
   const { deviceId } = useParams();
   const [device, setDevice] = useState<Device>();
+  const [historyDetail, setHistoryDetail] = useState<DeviceInfoHistoryDetail>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const auth = useAuth();
-  const { t } = useTranslation();
-  const { getDevice } = useDeviceAPI();
+  const { t, i18n } = useTranslation();
+  const { getDevice, getDeviceHistory } = useDeviceAPI();
+  const requestedDeviceHistoryUid = searchParams.get('deviceHistoryUid') ?? '';
 
   const [showModal, setShowModal] = useState(false);
 
@@ -28,11 +33,18 @@ export const DeviceDetail: React.FC = () => {
 
   useEffect(() => {
     if (deviceId !== undefined) {
+      setHistoryDetail(undefined);
       getDevice(deviceId)
-        .then((device) => setDevice(device))
+        .then(async (device) => {
+          setDevice(device);
+          if (requestedDeviceHistoryUid) {
+            const history = await getDeviceHistory(requestedDeviceHistoryUid);
+            setHistoryDetail(history);
+          }
+        })
         .catch(() => {});
     }
-  }, [deviceId, auth.idToken]);
+  }, [deviceId, requestedDeviceHistoryUid, auth.idToken]);
 
   const handleEdit = (): void => {
     if (deviceId === undefined) {
@@ -63,7 +75,19 @@ export const DeviceDetail: React.FC = () => {
         hideModal={() => setShowModal(false)}
         deviceId={deviceId}
       />
-      {device?.deviceType === 'QPU' && <TopologyInfo deviceInfo={device?.deviceInfo} />}
+      {historyDetail !== undefined && (
+        <Card className="mt-3">
+          <Card.Body>
+            {t('device.history.showing_history', {
+              calibrated_at: DateTimeFormatter(t, i18n, historyDetail.calibratedAt),
+              interpolation: { escapeValue: false },
+            })}
+          </Card.Body>
+        </Card>
+      )}
+      {device?.deviceType === 'QPU' && (
+        <TopologyInfo deviceInfo={historyDetail?.deviceInfo ?? device?.deviceInfo} />
+      )}
     </div>
   );
 };

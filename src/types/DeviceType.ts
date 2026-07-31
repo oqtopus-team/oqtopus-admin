@@ -31,6 +31,23 @@ export interface Device {
   description: string;
 }
 
+export interface DeviceInfoHistoryEntry {
+  historyUid: string;
+  deviceId: string;
+  calibratedAt: string;
+  nQubits: number;
+  nCouplings: number;
+}
+
+export interface DeviceInfoHistoryListResult {
+  items: DeviceInfoHistoryEntry[];
+  total: number;
+}
+
+export interface DeviceInfoHistoryDetail extends DeviceInfoHistoryEntry {
+  deviceInfo: string;
+}
+
 export interface DeviceForm {
   deviceInfo?: string;
   deviceType?: DeviceType;

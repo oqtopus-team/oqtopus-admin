@@ -1,7 +1,16 @@
-import { Device, DeviceForm, SendDbDevice } from '../types/DeviceType';
+import {
+  Device,
+  DeviceForm,
+  DeviceInfoHistoryDetail,
+  DeviceInfoHistoryEntry,
+  DeviceInfoHistoryListResult,
+  SendDbDevice,
+} from '../types/DeviceType';
 import { useContext } from 'react';
 import {
   DevicesDeviceInfo as ApiDevicesDeviceInfo,
+  DevicesDeviceInfoHistoryDetail as ApiDevicesDeviceInfoHistoryDetail,
+  DevicesDeviceInfoHistoryEntry as ApiDevicesDeviceInfoHistoryEntry,
   DevicesDeviceInfoUploadPresignedURL,
 } from '../api/generated';
 import { userApiContext } from '../backend/Provider';
@@ -87,6 +96,23 @@ const convertDeviceResult = async (device: ApiDevicesDeviceInfo): Promise<Device
   description: device.description,
 });
 
+const convertDeviceInfoHistoryEntry = (
+  history: ApiDevicesDeviceInfoHistoryEntry
+): DeviceInfoHistoryEntry => ({
+  historyUid: history.history_uid,
+  deviceId: history.device_id,
+  calibratedAt: history.calibrated_at,
+  nQubits: history.n_qubits,
+  nCouplings: history.n_couplings,
+});
+
+const convertDeviceInfoHistoryDetail = async (
+  history: ApiDevicesDeviceInfoHistoryDetail
+): Promise<DeviceInfoHistoryDetail> => ({
+  ...convertDeviceInfoHistoryEntry(history),
+  deviceInfo: await retrieveDeviceInfo(history.device_info),
+});
+
 const mappings: { [key: string]: keyof SendDbDevice } = {
   availableAt: 'available_at',
   calibratedAt: 'calibrated_at',
@@ -155,5 +181,37 @@ export const useDeviceAPI = () => {
     await api.device.deleteDevice(deviceId);
   };
 
-  return { getDevices, getDevice, postDevice, patchDevice, deleteDevice };
+  const getDeviceInfoHistory = async (
+    deviceId?: string,
+    from?: string,
+    to?: string,
+    limit = 100,
+    offset = 0
+  ): Promise<DeviceInfoHistoryListResult> => {
+    const res = await api.device.listDeviceHistories(deviceId, from, to, limit, offset);
+    return {
+      items: res.data.items.map(convertDeviceInfoHistoryEntry),
+      total: res.data.total,
+    };
+  };
+
+  const getDeviceHistory = async (historyUid: string): Promise<DeviceInfoHistoryDetail> => {
+    const res = await api.device.getDeviceHistory(historyUid);
+    return await convertDeviceInfoHistoryDetail(res.data);
+  };
+
+  const deleteDeviceHistory = async (historyUid: string) => {
+    await api.device.deleteDeviceHistory(historyUid);
+  };
+
+  return {
+    getDevices,
+    getDevice,
+    postDevice,
+    patchDevice,
+    deleteDevice,
+    getDeviceInfoHistory,
+    getDeviceHistory,
+    deleteDeviceHistory,
+  };
 };
