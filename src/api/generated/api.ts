@@ -133,9 +133,9 @@ export type DevicesDeviceInfoStatusEnum =
 
 export interface DevicesDeviceInfoHistoryDetail {
   /**
-   * UUID assigned when the device history is issued.
+   * Unique string identifying the device history.
    */
-  history_uid: string;
+  history_id: string;
   device_id: string;
   calibrated_at: string;
   n_qubits: number;
@@ -147,9 +147,9 @@ export interface DevicesDeviceInfoHistoryDetail {
 }
 export interface DevicesDeviceInfoHistoryEntry {
   /**
-   * UUID assigned when the device history is issued.
+   * Unique string identifying the device history.
    */
-  history_uid: string;
+  history_id: string;
   device_id: string;
   calibrated_at: string;
   n_qubits: number;
@@ -955,21 +955,21 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       };
     },
     /**
-     * Deletes the device history metadata and archived device_info object identified by history_uid.
+     * Deletes the device history metadata and archived device_info object identified by history_id.
      * @summary Delete device history
-     * @param {string} historyUid Device history UUID.
+     * @param {string} historyId Unique string identifying the device history.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteDeviceHistory: async (
-      historyUid: string,
+      historyId: string,
       options: RawAxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'historyUid' is not null or undefined
-      assertParamExists('deleteDeviceHistory', 'historyUid', historyUid);
-      const localVarPath = `/device_histories/{history_uid}`.replace(
-        '{history_uid}',
-        encodeURIComponent(String(historyUid))
+      // verify required parameter 'historyId' is not null or undefined
+      assertParamExists('deleteDeviceHistory', 'historyId', historyId);
+      const localVarPath = `/device_histories/{history_id}`.replace(
+        '{history_id}',
+        encodeURIComponent(String(historyId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1049,21 +1049,21 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       };
     },
     /**
-     * Returns the device history identified by history_uid.
+     * Returns the device history identified by history_id.
      * @summary Get device history
-     * @param {string} historyUid Device history UUID.
+     * @param {string} historyId Unique string identifying the device history.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getDeviceHistory: async (
-      historyUid: string,
+      historyId: string,
       options: RawAxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'historyUid' is not null or undefined
-      assertParamExists('getDeviceHistory', 'historyUid', historyUid);
-      const localVarPath = `/device_histories/{history_uid}`.replace(
-        '{history_uid}',
-        encodeURIComponent(String(historyUid))
+      // verify required parameter 'historyId' is not null or undefined
+      assertParamExists('getDeviceHistory', 'historyId', historyId);
+      const localVarPath = `/device_histories/{history_id}`.replace(
+        '{history_id}',
+        encodeURIComponent(String(historyId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1387,18 +1387,18 @@ export const DevicesApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
-     * Deletes the device history metadata and archived device_info object identified by history_uid.
+     * Deletes the device history metadata and archived device_info object identified by history_id.
      * @summary Delete device history
-     * @param {string} historyUid Device history UUID.
+     * @param {string} historyId Unique string identifying the device history.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async deleteDeviceHistory(
-      historyUid: string,
+      historyId: string,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteDeviceHistory(
-        historyUid,
+        historyId,
         options
       );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -1436,20 +1436,20 @@ export const DevicesApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
-     * Returns the device history identified by history_uid.
+     * Returns the device history identified by history_id.
      * @summary Get device history
-     * @param {string} historyUid Device history UUID.
+     * @param {string} historyId Unique string identifying the device history.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getDeviceHistory(
-      historyUid: string,
+      historyId: string,
       options?: RawAxiosRequestConfig
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<DevicesDeviceInfoHistoryDetail>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getDeviceHistory(
-        historyUid,
+        historyId,
         options
       );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -1640,15 +1640,15 @@ export const DevicesApiFactory = function (
       return localVarFp.deleteDevice(deviceId, options).then((request) => request(axios, basePath));
     },
     /**
-     * Deletes the device history metadata and archived device_info object identified by history_uid.
+     * Deletes the device history metadata and archived device_info object identified by history_id.
      * @summary Delete device history
-     * @param {string} historyUid Device history UUID.
+     * @param {string} historyId Unique string identifying the device history.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteDeviceHistory(historyUid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+    deleteDeviceHistory(historyId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
       return localVarFp
-        .deleteDeviceHistory(historyUid, options)
+        .deleteDeviceHistory(historyId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1662,18 +1662,18 @@ export const DevicesApiFactory = function (
       return localVarFp.getDevice(deviceId, options).then((request) => request(axios, basePath));
     },
     /**
-     * Returns the device history identified by history_uid.
+     * Returns the device history identified by history_id.
      * @summary Get device history
-     * @param {string} historyUid Device history UUID.
+     * @param {string} historyId Unique string identifying the device history.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getDeviceHistory(
-      historyUid: string,
+      historyId: string,
       options?: RawAxiosRequestConfig
     ): AxiosPromise<DevicesDeviceInfoHistoryDetail> {
       return localVarFp
-        .getDeviceHistory(historyUid, options)
+        .getDeviceHistory(historyId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1776,15 +1776,15 @@ export class DevicesApi extends BaseAPI {
   }
 
   /**
-   * Deletes the device history metadata and archived device_info object identified by history_uid.
+   * Deletes the device history metadata and archived device_info object identified by history_id.
    * @summary Delete device history
-   * @param {string} historyUid Device history UUID.
+   * @param {string} historyId Unique string identifying the device history.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    */
-  public deleteDeviceHistory(historyUid: string, options?: RawAxiosRequestConfig) {
+  public deleteDeviceHistory(historyId: string, options?: RawAxiosRequestConfig) {
     return DevicesApiFp(this.configuration)
-      .deleteDeviceHistory(historyUid, options)
+      .deleteDeviceHistory(historyId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -1802,15 +1802,15 @@ export class DevicesApi extends BaseAPI {
   }
 
   /**
-   * Returns the device history identified by history_uid.
+   * Returns the device history identified by history_id.
    * @summary Get device history
-   * @param {string} historyUid Device history UUID.
+   * @param {string} historyId Unique string identifying the device history.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    */
-  public getDeviceHistory(historyUid: string, options?: RawAxiosRequestConfig) {
+  public getDeviceHistory(historyId: string, options?: RawAxiosRequestConfig) {
     return DevicesApiFp(this.configuration)
-      .getDeviceHistory(historyUid, options)
+      .getDeviceHistory(historyId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

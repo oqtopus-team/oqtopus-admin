@@ -129,9 +129,9 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
     if (deleteTarget === undefined || isDeleting) return;
     setIsDeleting(true);
     try {
-      await deleteDeviceHistory(deleteTarget.historyUid);
+      await deleteDeviceHistory(deleteTarget.historyId);
       setHistories((current) =>
-        current.filter((history) => history.historyUid !== deleteTarget.historyUid)
+        current.filter((history) => history.historyId !== deleteTarget.historyId)
       );
       setTotalCount((current) => Math.max(0, current - 1));
       toast(t('device.history.delete.success'), successToastConfig);
@@ -250,7 +250,7 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
             </tr>
           ) : (
             histories.map((history) => (
-              <tr key={history.historyUid} className="text-center">
+              <tr key={history.historyId} className="text-center">
                 <td>
                   <Link to={`/device/${history.deviceId}`} className="text-link">
                     {history.deviceId}
@@ -258,7 +258,7 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
                 </td>
                 <td>
                   <Link
-                    to={`/device/${history.deviceId}?deviceHistoryUid=${encodeURIComponent(history.historyUid)}`}
+                    to={`/device/${history.deviceId}?deviceHistoryId=${encodeURIComponent(history.historyId)}`}
                     className="text-link"
                   >
                     {DateTimeFormatter(t, i18n, history.calibratedAt)}

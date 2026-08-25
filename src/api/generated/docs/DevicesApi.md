@@ -5,9 +5,9 @@ All URIs are relative to _http://localhost:8080_
 | Method                                                | HTTP request                                    | Description                                    |
 | ----------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------- |
 | [**deleteDevice**](#deletedevice)                     | **DELETE** /devices/{device_id}                 | Delete a device                                |
-| [**deleteDeviceHistory**](#deletedevicehistory)       | **DELETE** /device_histories/{history_uid}      | Delete device history                          |
+| [**deleteDeviceHistory**](#deletedevicehistory)       | **DELETE** /device_histories/{history_id}       | Delete device history                          |
 | [**getDevice**](#getdevice)                           | **GET** /devices/{device_id}                    | Get specified device details                   |
-| [**getDeviceHistory**](#getdevicehistory)             | **GET** /device_histories/{history_uid}         | Get device history                             |
+| [**getDeviceHistory**](#getdevicehistory)             | **GET** /device_histories/{history_id}          | Get device history                             |
 | [**getDeviceInfoUploadUrl**](#getdeviceinfouploadurl) | **GET** /devices/{device_id}/device_info/upload | Generate a presigned URL to upload device_info |
 | [**listDeviceHistories**](#listdevicehistories)       | **GET** /device_histories                       | List device histories                          |
 | [**listDevices**](#listdevices)                       | **GET** /devices                                | List available devices                         |
@@ -69,7 +69,7 @@ const { status, data } = await apiInstance.deleteDevice(deviceId);
 
 > deleteDeviceHistory()
 
-Deletes the device history metadata and archived device_info object identified by history_uid.
+Deletes the device history metadata and archived device_info object identified by history_id.
 
 ### Example
 
@@ -79,16 +79,16 @@ import { DevicesApi, Configuration } from './api';
 const configuration = new Configuration();
 const apiInstance = new DevicesApi(configuration);
 
-let historyUid: string; //Device history UUID. (default to undefined)
+let historyId: string; //Unique string identifying the device history. (default to undefined)
 
-const { status, data } = await apiInstance.deleteDeviceHistory(historyUid);
+const { status, data } = await apiInstance.deleteDeviceHistory(historyId);
 ```
 
 ### Parameters
 
-| Name           | Type         | Description          | Notes                 |
-| -------------- | ------------ | -------------------- | --------------------- |
-| **historyUid** | [**string**] | Device history UUID. | defaults to undefined |
+| Name          | Type         | Description                                   | Notes                 |
+| ------------- | ------------ | --------------------------------------------- | --------------------- |
+| **historyId** | [**string**] | Unique string identifying the device history. | defaults to undefined |
 
 ### Return type
 
@@ -165,7 +165,7 @@ const { status, data } = await apiInstance.getDevice(deviceId);
 
 > DevicesDeviceInfoHistoryDetail getDeviceHistory()
 
-Returns the device history identified by history_uid.
+Returns the device history identified by history_id.
 
 ### Example
 
@@ -175,16 +175,16 @@ import { DevicesApi, Configuration } from './api';
 const configuration = new Configuration();
 const apiInstance = new DevicesApi(configuration);
 
-let historyUid: string; //Device history UUID. (default to undefined)
+let historyId: string; //Unique string identifying the device history. (default to undefined)
 
-const { status, data } = await apiInstance.getDeviceHistory(historyUid);
+const { status, data } = await apiInstance.getDeviceHistory(historyId);
 ```
 
 ### Parameters
 
-| Name           | Type         | Description          | Notes                 |
-| -------------- | ------------ | -------------------- | --------------------- |
-| **historyUid** | [**string**] | Device history UUID. | defaults to undefined |
+| Name          | Type         | Description                                   | Notes                 |
+| ------------- | ------------ | --------------------------------------------- | --------------------- |
+| **historyId** | [**string**] | Unique string identifying the device history. | defaults to undefined |
 
 ### Return type
 

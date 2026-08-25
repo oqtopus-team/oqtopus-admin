@@ -23,7 +23,7 @@ export const DeviceDetail: React.FC = () => {
   const auth = useAuth();
   const { t, i18n } = useTranslation();
   const { getDevice, getDeviceHistory } = useDeviceAPI();
-  const requestedDeviceHistoryUid = searchParams.get('deviceHistoryUid') ?? '';
+  const requestedDeviceHistoryId = searchParams.get('deviceHistoryId') ?? '';
 
   const [showModal, setShowModal] = useState(false);
 
@@ -37,14 +37,14 @@ export const DeviceDetail: React.FC = () => {
       getDevice(deviceId)
         .then(async (device) => {
           setDevice(device);
-          if (requestedDeviceHistoryUid) {
-            const history = await getDeviceHistory(requestedDeviceHistoryUid);
+          if (requestedDeviceHistoryId) {
+            const history = await getDeviceHistory(requestedDeviceHistoryId);
             setHistoryDetail(history);
           }
         })
         .catch(() => {});
     }
-  }, [deviceId, requestedDeviceHistoryUid, auth.idToken]);
+  }, [deviceId, requestedDeviceHistoryId, auth.idToken]);
 
   const handleEdit = (): void => {
     if (deviceId === undefined) {

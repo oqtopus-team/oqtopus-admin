@@ -99,7 +99,7 @@ const convertDeviceResult = async (device: ApiDevicesDeviceInfo): Promise<Device
 const convertDeviceInfoHistoryEntry = (
   history: ApiDevicesDeviceInfoHistoryEntry
 ): DeviceInfoHistoryEntry => ({
-  historyUid: history.history_uid,
+  historyId: history.history_id,
   deviceId: history.device_id,
   calibratedAt: history.calibrated_at,
   nQubits: history.n_qubits,
@@ -195,13 +195,13 @@ export const useDeviceAPI = () => {
     };
   };
 
-  const getDeviceHistory = async (historyUid: string): Promise<DeviceInfoHistoryDetail> => {
-    const res = await api.device.getDeviceHistory(historyUid);
+  const getDeviceHistory = async (historyId: string): Promise<DeviceInfoHistoryDetail> => {
+    const res = await api.device.getDeviceHistory(historyId);
     return await convertDeviceInfoHistoryDetail(res.data);
   };
 
-  const deleteDeviceHistory = async (historyUid: string) => {
-    await api.device.deleteDeviceHistory(historyUid);
+  const deleteDeviceHistory = async (historyId: string) => {
+    await api.device.deleteDeviceHistory(historyId);
   };
 
   return {
