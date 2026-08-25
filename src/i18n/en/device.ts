@@ -20,6 +20,7 @@ export default {
     operations: 'Operations',
     empty: 'No device history',
     loading: 'Loading...',
+    load_more: 'Click to load more...',
     all_devices: 'All devices',
     from: 'From',
     to: 'To',
@@ -29,7 +30,6 @@ export default {
     clear_filter: 'Clear',
     search: 'Search',
     invalid_range: 'From must be earlier than or equal to To',
-    filtered_count: '{{count}} results',
     showing_history: 'Showing device information saved at {{calibrated_at}}',
     delete: {
       button: 'Delete',

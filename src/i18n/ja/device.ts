@@ -20,6 +20,7 @@ export default {
     operations: '操作',
     empty: 'デバイス履歴はありません',
     loading: '読み込み中...',
+    load_more: 'Click to load more...',
     all_devices: 'すべてのデバイス',
     from: '開始日時',
     to: '終了日時',
@@ -29,7 +30,6 @@ export default {
     clear_filter: 'クリア',
     search: '検索',
     invalid_range: '開始日時は終了日時以前にしてください',
-    filtered_count: '{{count}}件',
     showing_history: '{{calibrated_at}}に保存されたデバイス情報を表示しています',
     delete: {
       button: '削除',

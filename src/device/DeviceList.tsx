@@ -40,7 +40,7 @@ const DeviceList: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <div id="device-list-scroll-container" className="vertical-scrollable-container">
       <Button className="mb-3" variant="primary" onClick={handleRegisterDevice}>
         {t('device.register.button')}
       </Button>
@@ -51,7 +51,7 @@ const DeviceList: React.FC = () => {
           <DeviceInfoHistorySearch devices={devices} />
         </Card.Body>
       </Card>
-    </>
+    </div>
   );
 };
 

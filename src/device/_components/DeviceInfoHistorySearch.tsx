@@ -12,6 +12,7 @@ import { Device, DeviceInfoHistoryEntry } from '../../types/DeviceType';
 import { useDeviceAPI } from '../DeviceApi';
 import { DateTimeFormatter } from '../common/DateTimeFormatter';
 import { useTranslation } from 'react-i18next';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 type SearchParams = {
   deviceId?: string;
@@ -20,6 +21,8 @@ type SearchParams = {
 };
 
 type PresetOption = 'today' | 'last7Days' | 'last30Days';
+
+const PAGE_SIZE = 10;
 
 interface DeviceInfoHistorySearchProps {
   devices: Device[];
@@ -32,6 +35,7 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
   const [totalCount, setTotalCount] = useState(0);
   const [hasDateRangeError, setHasDateRangeError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<DeviceInfoHistoryEntry>();
   const [isDeleting, setIsDeleting] = useState(false);
   const { getDeviceInfoHistory, deleteDeviceHistory } = useDeviceAPI();
@@ -60,19 +64,45 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
 
   const fetchHistories = async (searchParams: SearchParams): Promise<void> => {
     setIsLoading(true);
+    setHasMore(false);
     try {
       const result = await getDeviceInfoHistory(
         searchParams.deviceId,
         searchParams.from,
         searchParams.to,
-        100,
+        PAGE_SIZE,
         0
       );
       setHistories(result.items);
       setTotalCount(result.total);
+      setHasMore(result.items.length < result.total);
     } catch {
       setHistories([]);
       setTotalCount(0);
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadMoreHistories = async (): Promise<void> => {
+    if (isLoading || !hasMore) return;
+
+    const offset = histories.length;
+    setIsLoading(true);
+    try {
+      const result = await getDeviceInfoHistory(
+        appliedParams.deviceId,
+        appliedParams.from,
+        appliedParams.to,
+        PAGE_SIZE,
+        offset
+      );
+      setHistories((current) => [...current, ...result.items]);
+      setTotalCount(result.total);
+      setHasMore(offset + result.items.length < result.total);
+    } catch {
+      setHasMore(offset < totalCount);
     } finally {
       setIsLoading(false);
     }
@@ -221,66 +251,80 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
             <Button type="submit">{t('device.history.search')}</Button>
           </div>
         </div>
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <span className="badge text-bg-light">
-            {t('device.history.filtered_count', { count: totalCount })}
-          </span>
-          {hasDateRangeError && (
-            <span className="text-danger small">{t('device.history.invalid_range')}</span>
-          )}
-        </div>
+        {hasDateRangeError && (
+          <div className="mb-3 text-danger small">{t('device.history.invalid_range')}</div>
+        )}
       </Form>
 
-      <Table bordered hover responsive>
-        <thead className="table-light">
-          <tr className="text-center">
-            <th>{t('device.id')}</th>
-            <th>{t('device.history.calibrated_at')}</th>
-            <th>{t('device.qubits')}</th>
-            <th>{t('device.history.couplings')}</th>
-            <th>{t('device.history.operations')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {histories.length === 0 ? (
-            <tr>
-              <td colSpan={5} className="text-center">
-                {isLoading ? t('device.history.loading') : t('device.history.empty')}
-              </td>
+      <InfiniteScroll
+        next={() => void loadMoreHistories()}
+        hasMore={hasMore}
+        loader={null}
+        dataLength={histories.length}
+        scrollableTarget="device-list-scroll-container"
+      >
+        <Table bordered hover responsive>
+          <thead className="table-light">
+            <tr className="text-center">
+              <th>{t('device.id')}</th>
+              <th>{t('device.history.calibrated_at')}</th>
+              <th>{t('device.qubits')}</th>
+              <th>{t('device.history.couplings')}</th>
+              <th>{t('device.history.operations')}</th>
             </tr>
-          ) : (
-            histories.map((history) => (
-              <tr key={history.historyId} className="text-center">
-                <td>
-                  <Link to={`/device/${history.deviceId}`} className="text-link">
-                    {history.deviceId}
-                  </Link>
-                </td>
-                <td>
-                  <Link
-                    to={`/device/${history.deviceId}?deviceHistoryId=${encodeURIComponent(history.historyId)}`}
-                    className="text-link"
-                  >
-                    {DateTimeFormatter(t, i18n, history.calibratedAt)}
-                  </Link>
-                </td>
-                <td>{history.nQubits}</td>
-                <td>{history.nCouplings}</td>
-                <td>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    disabled={isDeleting}
-                    onClick={() => setDeleteTarget(history)}
-                  >
-                    {t('device.history.delete.button')}
-                  </Button>
+          </thead>
+          <tbody>
+            {histories.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="text-center">
+                  {isLoading ? t('device.history.loading') : t('device.history.empty')}
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </Table>
+            ) : (
+              histories.map((history) => (
+                <tr key={history.historyId} className="text-center">
+                  <td>
+                    <Link to={`/device/${history.deviceId}`} className="text-link">
+                      {history.deviceId}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/device/${history.deviceId}?deviceHistoryId=${encodeURIComponent(history.historyId)}`}
+                      className="text-link"
+                    >
+                      {DateTimeFormatter(t, i18n, history.calibratedAt)}
+                    </Link>
+                  </td>
+                  <td>{history.nQubits}</td>
+                  <td>{history.nCouplings}</td>
+                  <td>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      disabled={isDeleting}
+                      onClick={() => setDeleteTarget(history)}
+                    >
+                      {t('device.history.delete.button')}
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </Table>
+      </InfiniteScroll>
+      {hasMore && (
+        <Button
+          type="button"
+          variant="link"
+          className="w-100 py-3 text-center"
+          disabled={isLoading}
+          onClick={() => void loadMoreHistories()}
+        >
+          {isLoading ? t('device.history.loading') : t('device.history.load_more')}
+        </Button>
+      )}
 
       <DefaultModal
         show={deleteTarget !== undefined}
