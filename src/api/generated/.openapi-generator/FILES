@@ -12,6 +12,8 @@ docs/AnnouncementsUpdateAnnouncementRequest.md
 docs/DevicesApi.md
 docs/DevicesDeviceBase.md
 docs/DevicesDeviceInfo.md
+docs/DevicesDeviceInfoUploadPresignedURL.md
+docs/DevicesDeviceInfoUploadResponse.md
 docs/ErrorBadRequestError.md
 docs/ErrorInternalServerError.md
 docs/ErrorNotFoundError.md
