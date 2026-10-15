@@ -28,6 +28,7 @@ import {
   serializeDataIfNeeded,
   toPathString,
   createRequestFunction,
+  replaceWithSerializableTypeIfNeeded,
 } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
@@ -130,6 +131,36 @@ export const DevicesDeviceInfoStatusEnum = {
 export type DevicesDeviceInfoStatusEnum =
   (typeof DevicesDeviceInfoStatusEnum)[keyof typeof DevicesDeviceInfoStatusEnum];
 
+export interface DevicesDeviceInfoHistoryDetail {
+  /**
+   * Unique string identifying the device history.
+   */
+  history_id: string;
+  device_id: string;
+  calibrated_at: string;
+  n_qubits: number;
+  n_couplings: number;
+  /**
+   * Presigned URL for downloading the historical device_info.zip.
+   */
+  device_info: string;
+}
+export interface DevicesDeviceInfoHistoryEntry {
+  /**
+   * Unique string identifying the device history.
+   */
+  history_id: string;
+  device_id: string;
+  calibrated_at: string;
+  n_qubits: number;
+  n_couplings: number;
+}
+export interface DevicesDeviceInfoHistoryListResponse {
+  items: Array<DevicesDeviceInfoHistoryEntry>;
+  total: number;
+  limit: number;
+  offset: number;
+}
 /**
  * Presigned URL for uploading device_info.zip to OQTOPUS cloud.
  */
@@ -140,7 +171,36 @@ export interface DevicesDeviceInfoUploadPresignedURL {
 export interface DevicesDeviceInfoUploadResponse {
   presigned_url: DevicesDeviceInfoUploadPresignedURL;
 }
+export interface DevicesDevicePatch {
+  device_type?: DevicesDevicePatchDeviceTypeEnum;
+  status?: DevicesDevicePatchStatusEnum;
+  n_qubits?: number;
+  available_at?: string;
+  calibrated_at?: string;
+  basis_gates?: Array<string>;
+  supported_instructions?: Array<string>;
+  description?: string;
+}
+
+export const DevicesDevicePatchDeviceTypeEnum = {
+  Qpu: 'QPU',
+  Simulator: 'simulator',
+} as const;
+
+export type DevicesDevicePatchDeviceTypeEnum =
+  (typeof DevicesDevicePatchDeviceTypeEnum)[keyof typeof DevicesDevicePatchDeviceTypeEnum];
+export const DevicesDevicePatchStatusEnum = {
+  Available: 'available',
+  Unavailable: 'unavailable',
+} as const;
+
+export type DevicesDevicePatchStatusEnum =
+  (typeof DevicesDevicePatchStatusEnum)[keyof typeof DevicesDevicePatchStatusEnum];
+
 export interface ErrorBadRequestError {
+  message: string;
+}
+export interface ErrorConflictError {
   message: string;
 }
 export interface ErrorInternalServerError {
@@ -288,7 +348,7 @@ export const AnnouncementsApiAxiosParamCreator = function (configuration?: Confi
       // verify required parameter 'announcementId' is not null or undefined
       assertParamExists('deleteAnnouncement', 'announcementId', announcementId);
       const localVarPath = `/announcements/{announcement_id}`.replace(
-        `{${'announcement_id'}}`,
+        '{announcement_id}',
         encodeURIComponent(String(announcementId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -335,7 +395,7 @@ export const AnnouncementsApiAxiosParamCreator = function (configuration?: Confi
       // verify required parameter 'announcementId' is not null or undefined
       assertParamExists('getAnnouncement', 'announcementId', announcementId);
       const localVarPath = `/announcements/{announcement_id}`.replace(
-        `{${'announcement_id'}}`,
+        '{announcement_id}',
         encodeURIComponent(String(announcementId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -449,7 +509,7 @@ export const AnnouncementsApiAxiosParamCreator = function (configuration?: Confi
       // verify required parameter 'announcementId' is not null or undefined
       assertParamExists('updateAnnouncement', 'announcementId', announcementId);
       const localVarPath = `/announcements/{announcement_id}`.replace(
-        `{${'announcement_id'}}`,
+        '{announcement_id}',
         encodeURIComponent(String(announcementId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -864,8 +924,55 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       // verify required parameter 'deviceId' is not null or undefined
       assertParamExists('deleteDevice', 'deviceId', deviceId);
       const localVarPath = `/devices/{device_id}`.replace(
-        `{${'device_id'}}`,
+        '{device_id}',
         encodeURIComponent(String(deviceId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Accept'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Delete device history
+     * @param {string} historyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteDeviceHistory: async (
+      historyId: string,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'historyId' is not null or undefined
+      assertParamExists('deleteDeviceHistory', 'historyId', historyId);
+      const localVarPath = `/device_histories/{history_id}`.replace(
+        '{history_id}',
+        encodeURIComponent(String(historyId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -911,8 +1018,55 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       // verify required parameter 'deviceId' is not null or undefined
       assertParamExists('getDevice', 'deviceId', deviceId);
       const localVarPath = `/devices/{device_id}`.replace(
-        `{${'device_id'}}`,
+        '{device_id}',
         encodeURIComponent(String(deviceId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Accept'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Get device history
+     * @param {string} historyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDeviceHistory: async (
+      historyId: string,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'historyId' is not null or undefined
+      assertParamExists('getDeviceHistory', 'historyId', historyId);
+      const localVarPath = `/device_histories/{history_id}`.replace(
+        '{history_id}',
+        encodeURIComponent(String(historyId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -958,7 +1112,7 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       // verify required parameter 'deviceId' is not null or undefined
       assertParamExists('getDeviceInfoUploadUrl', 'deviceId', deviceId);
       const localVarPath = `/devices/{device_id}/device_info/upload`.replace(
-        `{${'device_id'}}`,
+        '{device_id}',
         encodeURIComponent(String(deviceId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -975,6 +1129,77 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       // authentication BearerAuth required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Accept'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
+     * @summary List device histories
+     * @param {string} [deviceId]
+     * @param {string} [from]
+     * @param {string} [to]
+     * @param {number} [limit]
+     * @param {number} [offset]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listDeviceHistories: async (
+      deviceId?: string,
+      from?: string,
+      to?: string,
+      limit?: number,
+      offset?: number,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/device_histories`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (deviceId !== undefined) {
+        localVarQueryParameter['device_id'] = deviceId;
+      }
+
+      if (from !== undefined) {
+        localVarQueryParameter['from'] =
+          (from as any) instanceof Date ? (from as any).toISOString() : from;
+      }
+
+      if (to !== undefined) {
+        localVarQueryParameter['to'] = (to as any) instanceof Date ? (to as any).toISOString() : to;
+      }
+
+      if (limit !== undefined) {
+        localVarQueryParameter['limit'] = limit;
+      }
+
+      if (offset !== undefined) {
+        localVarQueryParameter['offset'] = offset;
+      }
 
       localVarHeaderParameter['Accept'] = 'application/json';
 
@@ -1081,19 +1306,19 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
      * Update the properties of selected device.
      * @summary Update data of selected device
      * @param {string} deviceId Device ID
-     * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
+     * @param {DevicesDevicePatch} [devicesDevicePatch] Updated device metadata
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateDeviceData: async (
       deviceId: string,
-      devicesDeviceBase?: DevicesDeviceBase,
+      devicesDevicePatch?: DevicesDevicePatch,
       options: RawAxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'deviceId' is not null or undefined
       assertParamExists('updateDeviceData', 'deviceId', deviceId);
       const localVarPath = `/devices/{device_id}`.replace(
-        `{${'device_id'}}`,
+        '{device_id}',
         encodeURIComponent(String(deviceId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1122,7 +1347,7 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        devicesDeviceBase,
+        devicesDevicePatch,
         localVarRequestOptions,
         configuration
       );
@@ -1165,6 +1390,32 @@ export const DevicesApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     *
+     * @summary Delete device history
+     * @param {string} historyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async deleteDeviceHistory(
+      historyId: string,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteDeviceHistory(
+        historyId,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['DevicesApi.deleteDeviceHistory']?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * get device
      * @summary Get specified device details
      * @param {string} deviceId Device identifier
@@ -1179,6 +1430,34 @@ export const DevicesApiFp = function (configuration?: Configuration) {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap['DevicesApi.getDevice']?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @summary Get device history
+     * @param {string} historyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getDeviceHistory(
+      historyId: string,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<DevicesDeviceInfoHistoryDetail>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getDeviceHistory(
+        historyId,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['DevicesApi.getDeviceHistory']?.[localVarOperationServerIndex]?.url;
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -1208,6 +1487,49 @@ export const DevicesApiFp = function (configuration?: Configuration) {
       const localVarOperationServerBasePath =
         operationServerMap['DevicesApi.getDeviceInfoUploadUrl']?.[localVarOperationServerIndex]
           ?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
+     * @summary List device histories
+     * @param {string} [deviceId]
+     * @param {string} [from]
+     * @param {string} [to]
+     * @param {number} [limit]
+     * @param {number} [offset]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async listDeviceHistories(
+      deviceId?: string,
+      from?: string,
+      to?: string,
+      limit?: number,
+      offset?: number,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<DevicesDeviceInfoHistoryListResponse>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.listDeviceHistories(
+        deviceId,
+        from,
+        to,
+        limit,
+        offset,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['DevicesApi.listDeviceHistories']?.[localVarOperationServerIndex]?.url;
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -1269,18 +1591,18 @@ export const DevicesApiFp = function (configuration?: Configuration) {
      * Update the properties of selected device.
      * @summary Update data of selected device
      * @param {string} deviceId Device ID
-     * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
+     * @param {DevicesDevicePatch} [devicesDevicePatch] Updated device metadata
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async updateDeviceData(
       deviceId: string,
-      devicesDeviceBase?: DevicesDeviceBase,
+      devicesDevicePatch?: DevicesDevicePatch,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessSuccessResponse>> {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateDeviceData(
         deviceId,
-        devicesDeviceBase,
+        devicesDevicePatch,
         options
       );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -1321,6 +1643,18 @@ export const DevicesApiFactory = function (
       return localVarFp.deleteDevice(deviceId, options).then((request) => request(axios, basePath));
     },
     /**
+     *
+     * @summary Delete device history
+     * @param {string} historyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteDeviceHistory(historyId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+      return localVarFp
+        .deleteDeviceHistory(historyId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * get device
      * @summary Get specified device details
      * @param {string} deviceId Device identifier
@@ -1329,6 +1663,21 @@ export const DevicesApiFactory = function (
      */
     getDevice(deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<DevicesDeviceInfo> {
       return localVarFp.getDevice(deviceId, options).then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Get device history
+     * @param {string} historyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDeviceHistory(
+      historyId: string,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<DevicesDeviceInfoHistoryDetail> {
+      return localVarFp
+        .getDeviceHistory(historyId, options)
+        .then((request) => request(axios, basePath));
     },
     /**
      * Generate a presigned URL to upload device_info for the selected device.
@@ -1343,6 +1692,29 @@ export const DevicesApiFactory = function (
     ): AxiosPromise<DevicesDeviceInfoUploadResponse> {
       return localVarFp
         .getDeviceInfoUploadUrl(deviceId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
+     * @summary List device histories
+     * @param {string} [deviceId]
+     * @param {string} [from]
+     * @param {string} [to]
+     * @param {number} [limit]
+     * @param {number} [offset]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listDeviceHistories(
+      deviceId?: string,
+      from?: string,
+      to?: string,
+      limit?: number,
+      offset?: number,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<DevicesDeviceInfoHistoryListResponse> {
+      return localVarFp
+        .listDeviceHistories(deviceId, from, to, limit, offset, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1373,17 +1745,17 @@ export const DevicesApiFactory = function (
      * Update the properties of selected device.
      * @summary Update data of selected device
      * @param {string} deviceId Device ID
-     * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
+     * @param {DevicesDevicePatch} [devicesDevicePatch] Updated device metadata
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateDeviceData(
       deviceId: string,
-      devicesDeviceBase?: DevicesDeviceBase,
+      devicesDevicePatch?: DevicesDevicePatch,
       options?: RawAxiosRequestConfig
     ): AxiosPromise<SuccessSuccessResponse> {
       return localVarFp
-        .updateDeviceData(deviceId, devicesDeviceBase, options)
+        .updateDeviceData(deviceId, devicesDevicePatch, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -1407,6 +1779,19 @@ export class DevicesApi extends BaseAPI {
   }
 
   /**
+   *
+   * @summary Delete device history
+   * @param {string} historyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+  public deleteDeviceHistory(historyId: string, options?: RawAxiosRequestConfig) {
+    return DevicesApiFp(this.configuration)
+      .deleteDeviceHistory(historyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
    * get device
    * @summary Get specified device details
    * @param {string} deviceId Device identifier
@@ -1420,6 +1805,19 @@ export class DevicesApi extends BaseAPI {
   }
 
   /**
+   *
+   * @summary Get device history
+   * @param {string} historyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+  public getDeviceHistory(historyId: string, options?: RawAxiosRequestConfig) {
+    return DevicesApiFp(this.configuration)
+      .getDeviceHistory(historyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
    * Generate a presigned URL to upload device_info for the selected device.
    * @summary Generate a presigned URL to upload device_info
    * @param {string} deviceId Device ID
@@ -1429,6 +1827,30 @@ export class DevicesApi extends BaseAPI {
   public getDeviceInfoUploadUrl(deviceId: string, options?: RawAxiosRequestConfig) {
     return DevicesApiFp(this.configuration)
       .getDeviceInfoUploadUrl(deviceId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
+   * @summary List device histories
+   * @param {string} [deviceId]
+   * @param {string} [from]
+   * @param {string} [to]
+   * @param {number} [limit]
+   * @param {number} [offset]
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+  public listDeviceHistories(
+    deviceId?: string,
+    from?: string,
+    to?: string,
+    limit?: number,
+    offset?: number,
+    options?: RawAxiosRequestConfig
+  ) {
+    return DevicesApiFp(this.configuration)
+      .listDeviceHistories(deviceId, from, to, limit, offset, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -1461,17 +1883,17 @@ export class DevicesApi extends BaseAPI {
    * Update the properties of selected device.
    * @summary Update data of selected device
    * @param {string} deviceId Device ID
-   * @param {DevicesDeviceBase} [devicesDeviceBase] New calibration data
+   * @param {DevicesDevicePatch} [devicesDevicePatch] Updated device metadata
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    */
   public updateDeviceData(
     deviceId: string,
-    devicesDeviceBase?: DevicesDeviceBase,
+    devicesDevicePatch?: DevicesDevicePatch,
     options?: RawAxiosRequestConfig
   ) {
     return DevicesApiFp(this.configuration)
-      .updateDeviceData(deviceId, devicesDeviceBase, options)
+      .updateDeviceData(deviceId, devicesDevicePatch, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
@@ -1495,7 +1917,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
       // verify required parameter 'userId' is not null or undefined
       assertParamExists('deleteUserById', 'userId', userId);
       const localVarPath = `/users/{user_id}`.replace(
-        `{${'user_id'}}`,
+        '{user_id}',
         encodeURIComponent(String(userId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1542,7 +1964,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
       // verify required parameter 'userId' is not null or undefined
       assertParamExists('getOneUserById', 'userId', userId);
       const localVarPath = `/users/{user_id}`.replace(
-        `{${'user_id'}}`,
+        '{user_id}',
         encodeURIComponent(String(userId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1681,7 +2103,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
       // verify required parameter 'usersUpdateUserRequest' is not null or undefined
       assertParamExists('updatetUserStatusById', 'usersUpdateUserRequest', usersUpdateUserRequest);
       const localVarPath = `/users/{user_id}`.replace(
-        `{${'user_id'}}`,
+        '{user_id}',
         encodeURIComponent(String(userId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
