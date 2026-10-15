@@ -200,6 +200,9 @@ export type DevicesDevicePatchStatusEnum =
 export interface ErrorBadRequestError {
   message: string;
 }
+export interface ErrorConflictError {
+  message: string;
+}
 export interface ErrorInternalServerError {
   message: string;
 }
@@ -955,9 +958,9 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       };
     },
     /**
-     * Deletes the device history metadata and archived device_info object identified by history_id.
+     *
      * @summary Delete device history
-     * @param {string} historyId Unique string identifying the device history.
+     * @param {string} historyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1049,9 +1052,9 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       };
     },
     /**
-     * Returns the device history identified by history_id.
+     *
      * @summary Get device history
-     * @param {string} historyId Unique string identifying the device history.
+     * @param {string} historyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1143,11 +1146,11 @@ export const DevicesApiAxiosParamCreator = function (configuration?: Configurati
       };
     },
     /**
-     * List device history metadata. Optionally filter by device_id.
+     * List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
      * @summary List device histories
-     * @param {string} [deviceId] Device identifier to filter histories.
-     * @param {string} [from] Inclusive lower bound of calibrated_at.
-     * @param {string} [to] Inclusive upper bound of calibrated_at.
+     * @param {string} [deviceId]
+     * @param {string} [from]
+     * @param {string} [to]
      * @param {number} [limit]
      * @param {number} [offset]
      * @param {*} [options] Override http request option.
@@ -1387,9 +1390,9 @@ export const DevicesApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
-     * Deletes the device history metadata and archived device_info object identified by history_id.
+     *
      * @summary Delete device history
-     * @param {string} historyId Unique string identifying the device history.
+     * @param {string} historyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1436,9 +1439,9 @@ export const DevicesApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
-     * Returns the device history identified by history_id.
+     *
      * @summary Get device history
-     * @param {string} historyId Unique string identifying the device history.
+     * @param {string} historyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1493,11 +1496,11 @@ export const DevicesApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
-     * List device history metadata. Optionally filter by device_id.
+     * List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
      * @summary List device histories
-     * @param {string} [deviceId] Device identifier to filter histories.
-     * @param {string} [from] Inclusive lower bound of calibrated_at.
-     * @param {string} [to] Inclusive upper bound of calibrated_at.
+     * @param {string} [deviceId]
+     * @param {string} [from]
+     * @param {string} [to]
      * @param {number} [limit]
      * @param {number} [offset]
      * @param {*} [options] Override http request option.
@@ -1640,9 +1643,9 @@ export const DevicesApiFactory = function (
       return localVarFp.deleteDevice(deviceId, options).then((request) => request(axios, basePath));
     },
     /**
-     * Deletes the device history metadata and archived device_info object identified by history_id.
+     *
      * @summary Delete device history
-     * @param {string} historyId Unique string identifying the device history.
+     * @param {string} historyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1662,9 +1665,9 @@ export const DevicesApiFactory = function (
       return localVarFp.getDevice(deviceId, options).then((request) => request(axios, basePath));
     },
     /**
-     * Returns the device history identified by history_id.
+     *
      * @summary Get device history
-     * @param {string} historyId Unique string identifying the device history.
+     * @param {string} historyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1692,11 +1695,11 @@ export const DevicesApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
-     * List device history metadata. Optionally filter by device_id.
+     * List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
      * @summary List device histories
-     * @param {string} [deviceId] Device identifier to filter histories.
-     * @param {string} [from] Inclusive lower bound of calibrated_at.
-     * @param {string} [to] Inclusive upper bound of calibrated_at.
+     * @param {string} [deviceId]
+     * @param {string} [from]
+     * @param {string} [to]
      * @param {number} [limit]
      * @param {number} [offset]
      * @param {*} [options] Override http request option.
@@ -1776,9 +1779,9 @@ export class DevicesApi extends BaseAPI {
   }
 
   /**
-   * Deletes the device history metadata and archived device_info object identified by history_id.
+   *
    * @summary Delete device history
-   * @param {string} historyId Unique string identifying the device history.
+   * @param {string} historyId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    */
@@ -1802,9 +1805,9 @@ export class DevicesApi extends BaseAPI {
   }
 
   /**
-   * Returns the device history identified by history_id.
+   *
    * @summary Get device history
-   * @param {string} historyId Unique string identifying the device history.
+   * @param {string} historyId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    */
@@ -1828,11 +1831,11 @@ export class DevicesApi extends BaseAPI {
   }
 
   /**
-   * List device history metadata. Optionally filter by device_id.
+   * List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
    * @summary List device histories
-   * @param {string} [deviceId] Device identifier to filter histories.
-   * @param {string} [from] Inclusive lower bound of calibrated_at.
-   * @param {string} [to] Inclusive upper bound of calibrated_at.
+   * @param {string} [deviceId]
+   * @param {string} [from]
+   * @param {string} [to]
    * @param {number} [limit]
    * @param {number} [offset]
    * @param {*} [options] Override http request option.

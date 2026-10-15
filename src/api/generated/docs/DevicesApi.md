@@ -69,8 +69,6 @@ const { status, data } = await apiInstance.deleteDevice(deviceId);
 
 > deleteDeviceHistory()
 
-Deletes the device history metadata and archived device_info object identified by history_id.
-
 ### Example
 
 ```typescript
@@ -79,16 +77,16 @@ import { DevicesApi, Configuration } from './api';
 const configuration = new Configuration();
 const apiInstance = new DevicesApi(configuration);
 
-let historyId: string; //Unique string identifying the device history. (default to undefined)
+let historyId: string; // (default to undefined)
 
 const { status, data } = await apiInstance.deleteDeviceHistory(historyId);
 ```
 
 ### Parameters
 
-| Name          | Type         | Description                                   | Notes                 |
-| ------------- | ------------ | --------------------------------------------- | --------------------- |
-| **historyId** | [**string**] | Unique string identifying the device history. | defaults to undefined |
+| Name          | Type         | Description | Notes                 |
+| ------------- | ------------ | ----------- | --------------------- |
+| **historyId** | [**string**] |             | defaults to undefined |
 
 ### Return type
 
@@ -108,6 +106,7 @@ void (empty response body)
 | Status code | Description              | Response headers |
 | ----------- | ------------------------ | ---------------- |
 | **204**     | Device history deleted   | -                |
+| **401**     | Unauthorized             | -                |
 | **404**     | Device history not found | -                |
 | **500**     | Internal Server Error    | -                |
 
@@ -165,8 +164,6 @@ const { status, data } = await apiInstance.getDevice(deviceId);
 
 > DevicesDeviceInfoHistoryDetail getDeviceHistory()
 
-Returns the device history identified by history_id.
-
 ### Example
 
 ```typescript
@@ -175,16 +172,16 @@ import { DevicesApi, Configuration } from './api';
 const configuration = new Configuration();
 const apiInstance = new DevicesApi(configuration);
 
-let historyId: string; //Unique string identifying the device history. (default to undefined)
+let historyId: string; // (default to undefined)
 
 const { status, data } = await apiInstance.getDeviceHistory(historyId);
 ```
 
 ### Parameters
 
-| Name          | Type         | Description                                   | Notes                 |
-| ------------- | ------------ | --------------------------------------------- | --------------------- |
-| **historyId** | [**string**] | Unique string identifying the device history. | defaults to undefined |
+| Name          | Type         | Description | Notes                 |
+| ------------- | ------------ | ----------- | --------------------- |
+| **historyId** | [**string**] |             | defaults to undefined |
 
 ### Return type
 
@@ -201,11 +198,12 @@ const { status, data } = await apiInstance.getDeviceHistory(historyId);
 
 ### HTTP response details
 
-| Status code | Description                 | Response headers |
-| ----------- | --------------------------- | ---------------- |
-| **200**     | Returns device history.     | -                |
-| **404**     | Device or history not found | -                |
-| **500**     | Internal Server Error       | -                |
+| Status code | Description              | Response headers |
+| ----------- | ------------------------ | ---------------- |
+| **200**     | Returns device history.  | -                |
+| **401**     | Unauthorized             | -                |
+| **404**     | Device history not found | -                |
+| **500**     | Internal Server Error    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -263,7 +261,7 @@ const { status, data } = await apiInstance.getDeviceInfoUploadUrl(deviceId);
 
 > DevicesDeviceInfoHistoryListResponse listDeviceHistories()
 
-List device history metadata. Optionally filter by device_id.
+List device history metadata, ordered by calibrated_at and history_id descending. Optionally filter by device_id.
 
 ### Example
 
@@ -273,9 +271,9 @@ import { DevicesApi, Configuration } from './api';
 const configuration = new Configuration();
 const apiInstance = new DevicesApi(configuration);
 
-let deviceId: string; //Device identifier to filter histories. (optional) (default to undefined)
-let from: string; //Inclusive lower bound of calibrated_at. (optional) (default to undefined)
-let to: string; //Inclusive upper bound of calibrated_at. (optional) (default to undefined)
+let deviceId: string; // (optional) (default to undefined)
+let from: string; // (optional) (default to undefined)
+let to: string; // (optional) (default to undefined)
 let limit: number; // (optional) (default to 100)
 let offset: number; // (optional) (default to 0)
 
@@ -284,13 +282,13 @@ const { status, data } = await apiInstance.listDeviceHistories(deviceId, from, t
 
 ### Parameters
 
-| Name         | Type         | Description                             | Notes                            |
-| ------------ | ------------ | --------------------------------------- | -------------------------------- |
-| **deviceId** | [**string**] | Device identifier to filter histories.  | (optional) defaults to undefined |
-| **from**     | [**string**] | Inclusive lower bound of calibrated_at. | (optional) defaults to undefined |
-| **to**       | [**string**] | Inclusive upper bound of calibrated_at. | (optional) defaults to undefined |
-| **limit**    | [**number**] |                                         | (optional) defaults to 100       |
-| **offset**   | [**number**] |                                         | (optional) defaults to 0         |
+| Name         | Type         | Description | Notes                            |
+| ------------ | ------------ | ----------- | -------------------------------- |
+| **deviceId** | [**string**] |             | (optional) defaults to undefined |
+| **from**     | [**string**] |             | (optional) defaults to undefined |
+| **to**       | [**string**] |             | (optional) defaults to undefined |
+| **limit**    | [**number**] |             | (optional) defaults to 100       |
+| **offset**   | [**number**] |             | (optional) defaults to 0         |
 
 ### Return type
 
@@ -310,6 +308,7 @@ const { status, data } = await apiInstance.listDeviceHistories(deviceId, from, t
 | Status code | Description                      | Response headers |
 | ----------- | -------------------------------- | ---------------- |
 | **200**     | Returns device history metadata. | -                |
+| **401**     | Unauthorized                     | -                |
 | **404**     | Device with device_id not found  | -                |
 | **500**     | Internal Server Error            | -                |
 
@@ -406,6 +405,7 @@ const { status, data } = await apiInstance.registerDevice(devicesDeviceBase);
 | **400**     | Bad Request           | -                |
 | **401**     | Unauthorized          | -                |
 | **403**     | Not authorized        | -                |
+| **409**     | Conflict              | -                |
 | **500**     | Internal Server Error | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
