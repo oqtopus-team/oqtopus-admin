@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
@@ -38,6 +38,8 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
   const [hasMore, setHasMore] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<DeviceInfoHistoryEntry>();
   const [isDeleting, setIsDeleting] = useState(false);
+  const requestGenerationRef = useRef(0);
+  const isLoadingRef = useRef(false);
   const { getDeviceInfoHistory, deleteDeviceHistory } = useDeviceAPI();
   const { t, i18n } = useTranslation();
 
@@ -62,33 +64,49 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
     });
   }, [devices]);
 
-  const fetchHistories = async (searchParams: SearchParams): Promise<void> => {
+  useEffect(() => {
+    const requestGeneration = requestGenerationRef.current + 1;
+    requestGenerationRef.current = requestGeneration;
+    isLoadingRef.current = true;
     setIsLoading(true);
     setHasMore(false);
-    try {
-      const result = await getDeviceInfoHistory(
-        searchParams.deviceId,
-        searchParams.from,
-        searchParams.to,
-        PAGE_SIZE,
-        0
-      );
-      setHistories(result.items);
-      setTotalCount(result.total);
-      setHasMore(result.items.length < result.total);
-    } catch {
-      setHistories([]);
-      setTotalCount(0);
-      setHasMore(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setHistories([]);
+    setTotalCount(0);
+    setDeleteTarget(undefined);
+
+    getDeviceInfoHistory(appliedParams.deviceId, appliedParams.from, appliedParams.to, PAGE_SIZE, 0)
+      .then((result) => {
+        if (requestGeneration !== requestGenerationRef.current) return;
+        setHistories(result.items);
+        setTotalCount(result.total);
+        setHasMore(result.items.length < result.total);
+      })
+      .catch(() => {
+        if (requestGeneration !== requestGenerationRef.current) return;
+        setHistories([]);
+        setTotalCount(0);
+        setHasMore(false);
+      })
+      .finally(() => {
+        if (requestGeneration === requestGenerationRef.current) {
+          isLoadingRef.current = false;
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      if (requestGeneration === requestGenerationRef.current) {
+        requestGenerationRef.current += 1;
+      }
+    };
+  }, [appliedParams]);
 
   const loadMoreHistories = async (): Promise<void> => {
-    if (isLoading || !hasMore) return;
+    if (isLoadingRef.current || !hasMore) return;
 
+    const requestGeneration = requestGenerationRef.current;
     const offset = histories.length;
+    isLoadingRef.current = true;
     setIsLoading(true);
     try {
       const result = await getDeviceInfoHistory(
@@ -98,19 +116,21 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
         PAGE_SIZE,
         offset
       );
+      if (requestGeneration !== requestGenerationRef.current) return;
       setHistories((current) => [...current, ...result.items]);
       setTotalCount(result.total);
       setHasMore(offset + result.items.length < result.total);
     } catch {
-      setHasMore(offset < totalCount);
+      if (requestGeneration === requestGenerationRef.current) {
+        setHasMore(offset < totalCount);
+      }
     } finally {
-      setIsLoading(false);
+      if (requestGeneration === requestGenerationRef.current) {
+        isLoadingRef.current = false;
+        setIsLoading(false);
+      }
     }
   };
-
-  useEffect(() => {
-    void fetchHistories(appliedParams);
-  }, [appliedParams]);
 
   const validateDateRange = (from: string | undefined, to: string | undefined): boolean => {
     if (!from || !to) {
@@ -146,7 +166,7 @@ export const DeviceInfoHistorySearch: React.FC<DeviceInfoHistorySearchProps> = (
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     if (!validateDateRange(params.from, params.to)) return;
-    setAppliedParams(params);
+    setAppliedParams({ ...params });
   };
 
   const handleClear = (): void => {
