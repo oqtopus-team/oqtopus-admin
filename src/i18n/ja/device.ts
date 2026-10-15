@@ -12,6 +12,7 @@ export default {
   description: '説明',
   detail: {
     title: 'デバイス詳細',
+    load_failure: 'デバイス情報の取得に失敗しました',
   },
   history: {
     title: 'デバイス履歴',

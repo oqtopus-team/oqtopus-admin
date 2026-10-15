@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useDeviceAPI } from '../device/DeviceApi';
 import { useAuth } from '../hooks/use-auth';
@@ -18,6 +18,8 @@ export const DeviceDetail: React.FC = () => {
   const { deviceId } = useParams();
   const [device, setDevice] = useState<Device>();
   const [historyDetail, setHistoryDetail] = useState<DeviceInfoHistoryDetail>();
+  const [hasLoadError, setHasLoadError] = useState(false);
+  const requestGenerationRef = useRef(0);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const auth = useAuth();
@@ -32,18 +34,42 @@ export const DeviceDetail: React.FC = () => {
   }, [auth.idToken]);
 
   useEffect(() => {
-    if (deviceId !== undefined) {
-      setHistoryDetail(undefined);
-      getDevice(deviceId)
-        .then(async (device) => {
-          setDevice(device);
-          if (requestedDeviceHistoryId) {
-            const history = await getDeviceHistory(requestedDeviceHistoryId);
-            setHistoryDetail(history);
-          }
-        })
-        .catch(() => {});
+    const requestGeneration = ++requestGenerationRef.current;
+    setDevice(undefined);
+    setHistoryDetail(undefined);
+    setHasLoadError(false);
+
+    if (deviceId === undefined) {
+      setHasLoadError(true);
+      return;
     }
+
+    const loadDevice = async (): Promise<void> => {
+      try {
+        const loadedDevice = await getDevice(deviceId);
+        let loadedHistory: DeviceInfoHistoryDetail | undefined;
+        if (requestedDeviceHistoryId) {
+          loadedHistory = await getDeviceHistory(requestedDeviceHistoryId);
+          if (loadedHistory.deviceId !== deviceId) {
+            throw new Error('Device history does not belong to the requested device');
+          }
+        }
+
+        if (requestGenerationRef.current !== requestGeneration) return;
+        setDevice(loadedDevice);
+        setHistoryDetail(loadedHistory);
+      } catch {
+        if (requestGenerationRef.current !== requestGeneration) return;
+        setHasLoadError(true);
+      }
+    };
+
+    void loadDevice();
+    return () => {
+      if (requestGenerationRef.current === requestGeneration) {
+        requestGenerationRef.current += 1;
+      }
+    };
   }, [deviceId, requestedDeviceHistoryId, auth.idToken]);
 
   const handleEdit = (): void => {
@@ -56,19 +82,26 @@ export const DeviceDetail: React.FC = () => {
 
   return (
     <div className="vertical-scrollable-container">
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-        <Button onClick={handleEdit} className="mx-2">
-          Edit
-        </Button>
-        <Button
-          variant="danger"
-          onClick={() => {
-            setShowModal(true);
-          }}
-        >
-          Delete
-        </Button>
-      </div>
+      {device !== undefined && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+          <Button onClick={handleEdit} className="mx-2">
+            Edit
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setShowModal(true);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      )}
+      {hasLoadError && (
+        <p className="alert alert-danger" role="alert">
+          {t('device.detail.load_failure')}
+        </p>
+      )}
       {device != null && <DeviceDetailBasicInfo {...device} />}
       <DeleteConfirmation
         showModal={showModal}

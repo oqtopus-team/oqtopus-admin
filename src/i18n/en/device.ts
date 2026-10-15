@@ -12,6 +12,7 @@ export default {
   description: 'Description',
   detail: {
     title: 'Device Details',
+    load_failure: 'Failed to load device information',
   },
   history: {
     title: 'Device History',
