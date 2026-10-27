@@ -59,7 +59,12 @@ const App: React.FC = () => {
           <Route element={<BaseLayout />}>
             <Route path="users" element={<UserList />} />
             <Route path="users/edit/:userId" element={<UserEdit />} />
-            <Route path="password-change" element={<PasswordChange />} />
+            {/* Password change is delegated to the IdP (Keycloak) in proxy mode;
+                block the in-app route so a direct URL can't reach the form. */}
+            <Route
+              path="password-change"
+              element={isProxyMode ? <Navigate to="/users" replace /> : <PasswordChange />}
+            />
             <Route path="whitelist" element={<WhitelistUserList />} />
             <Route path="whitelist-register" element={<WhitelistUserRegister />} />
             <Route path="device" element={<DeviceList />} />

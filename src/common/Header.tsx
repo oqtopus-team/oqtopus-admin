@@ -2,7 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/use-auth';
+import { useAuth, isProxyMode } from '../hooks/use-auth';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from './_components/LanguageSelector';
 import { ja, enUS } from 'date-fns/locale';
@@ -23,13 +23,17 @@ const Header: React.FunctionComponent = () => {
       <Container fluid>
         <Navbar.Brand href="/users">{appName}</Navbar.Brand>
         <NavDropdown title={auth.email} className="text-white" id="basic-nav-dropdown">
-          <NavDropdown.Item
-            onClick={() => {
-              navigate({ pathname: '/password-change' });
-            }}
-          >
-            {t('header.menu.change_password')}
-          </NavDropdown.Item>
+          {/* Password change is owned by the IdP (Keycloak) in proxy mode, so
+              hide the in-app entry there. */}
+          {!isProxyMode && (
+            <NavDropdown.Item
+              onClick={() => {
+                navigate({ pathname: '/password-change' });
+              }}
+            >
+              {t('header.menu.change_password')}
+            </NavDropdown.Item>
+          )}
           <NavDropdown.Item
             onClick={() => {
               auth
