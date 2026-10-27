@@ -2,7 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/use-auth';
+import { useAuth, isProxyMode } from '../hooks/use-auth';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from './_components/LanguageSelector';
 import { ja, enUS } from 'date-fns/locale';
@@ -18,18 +18,29 @@ const Header: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const appName: string = import.meta.env.VITE_APP_NAME;
+  const accountConsoleUrl = import.meta.env.VITE_APP_ACCOUNT_CONSOLE_URL;
   return (
     <Navbar bg="primary" variant="dark" fixed="top">
       <Container fluid>
         <Navbar.Brand href="/users">{appName}</Navbar.Brand>
         <NavDropdown title={auth.email} className="text-white" id="basic-nav-dropdown">
-          <NavDropdown.Item
-            onClick={() => {
-              navigate({ pathname: '/password-change' });
-            }}
-          >
-            {t('header.menu.change_password')}
-          </NavDropdown.Item>
+          {isProxyMode ? (
+            // Password / MFA are managed by the IdP (Keycloak) in proxy mode:
+            // link out to its account console instead of the in-app form.
+            accountConsoleUrl && (
+              <NavDropdown.Item href={accountConsoleUrl} target="_blank" rel="noopener noreferrer">
+                {t('header.menu.account_settings')}
+              </NavDropdown.Item>
+            )
+          ) : (
+            <NavDropdown.Item
+              onClick={() => {
+                navigate({ pathname: '/password-change' });
+              }}
+            >
+              {t('header.menu.change_password')}
+            </NavDropdown.Item>
+          )}
           <NavDropdown.Item
             onClick={() => {
               auth

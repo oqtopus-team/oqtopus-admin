@@ -1,8 +1,8 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect } from 'react';
-import { useAuth } from './hooks/use-auth';
+import { useAuth, isProxyMode } from './hooks/use-auth';
 import { LoadingProvider } from './common/Loader';
 import SignIn from './signin/SignIn';
 import UserList from './user/UserList';
@@ -39,15 +39,32 @@ const App: React.FC = () => {
     <BrowserRouter>
       <LoadingProvider>
         <Routes>
-          <Route index element={<SignIn />} />
-          <Route path="signin" element={<SignIn />} />
-          <Route path="first-password-change" element={<FirstPasswordChange />} />
-          <Route path="confirm-mfa" element={<ConfirmMFA />} />
-          <Route path="setup-mfa" element={<SetupMFA />} />
+          {isProxyMode ? (
+            // Proxy mode: login/MFA/password are owned by the IdP (Keycloak) via
+            // oauth2-proxy, so there is no in-app auth page. Send the entry
+            // routes into the app, which gates via AuthCheck (-> proxy login).
+            <>
+              <Route index element={<Navigate to="/users" replace />} />
+              <Route path="signin" element={<Navigate to="/users" replace />} />
+            </>
+          ) : (
+            <>
+              <Route index element={<SignIn />} />
+              <Route path="signin" element={<SignIn />} />
+              <Route path="first-password-change" element={<FirstPasswordChange />} />
+              <Route path="confirm-mfa" element={<ConfirmMFA />} />
+              <Route path="setup-mfa" element={<SetupMFA />} />
+            </>
+          )}
           <Route element={<BaseLayout />}>
             <Route path="users" element={<UserList />} />
             <Route path="users/edit/:userId" element={<UserEdit />} />
-            <Route path="password-change" element={<PasswordChange />} />
+            {/* Password change is delegated to the IdP (Keycloak) in proxy mode;
+                block the in-app route so a direct URL can't reach the form. */}
+            <Route
+              path="password-change"
+              element={isProxyMode ? <Navigate to="/users" replace /> : <PasswordChange />}
+            />
             <Route path="whitelist" element={<WhitelistUserList />} />
             <Route path="whitelist-register" element={<WhitelistUserRegister />} />
             <Route path="device" element={<DeviceList />} />
