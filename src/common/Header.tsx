@@ -18,14 +18,21 @@ const Header: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const appName: string = import.meta.env.VITE_APP_NAME;
+  const accountConsoleUrl = import.meta.env.VITE_APP_ACCOUNT_CONSOLE_URL;
   return (
     <Navbar bg="primary" variant="dark" fixed="top">
       <Container fluid>
         <Navbar.Brand href="/users">{appName}</Navbar.Brand>
         <NavDropdown title={auth.email} className="text-white" id="basic-nav-dropdown">
-          {/* Password change is owned by the IdP (Keycloak) in proxy mode, so
-              hide the in-app entry there. */}
-          {!isProxyMode && (
+          {isProxyMode ? (
+            // Password / MFA are managed by the IdP (Keycloak) in proxy mode:
+            // link out to its account console instead of the in-app form.
+            accountConsoleUrl && (
+              <NavDropdown.Item href={accountConsoleUrl} target="_blank" rel="noopener noreferrer">
+                {t('header.menu.account_settings')}
+              </NavDropdown.Item>
+            )
+          ) : (
             <NavDropdown.Item
               onClick={() => {
                 navigate({ pathname: '/password-change' });
