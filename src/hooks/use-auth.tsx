@@ -42,7 +42,17 @@ interface Props {
 //   "proxy"            : a reverse proxy (oauth2-proxy) owns authentication; the
 //                        SPA holds no token and talks to the API same-origin
 //                        with the proxy's session cookie.
-export const isProxyMode = import.meta.env.VITE_APP_AUTH_MODE === 'proxy';
+// Unset falls back to "cognito" (back-compat). A non-empty but unknown value is
+// almost always a typo (e.g. "PROXY") that would otherwise silently be treated
+// as Cognito — crashing at startup when the Cognito vars are unset, or silently
+// using the wrong provider with stale settings. Fail fast instead.
+const RAW_AUTH_MODE = import.meta.env.VITE_APP_AUTH_MODE;
+if (RAW_AUTH_MODE && RAW_AUTH_MODE !== 'proxy' && RAW_AUTH_MODE !== 'cognito') {
+  throw new Error(
+    `Invalid VITE_APP_AUTH_MODE: ${JSON.stringify(RAW_AUTH_MODE)} (expected 'cognito' or 'proxy')`
+  );
+}
+export const isProxyMode = RAW_AUTH_MODE === 'proxy';
 
 // Amplify is only needed by the cognito driver; don't configure it in proxy mode
 // (the Cognito env vars are unset there).
