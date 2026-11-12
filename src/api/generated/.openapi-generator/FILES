@@ -12,9 +12,14 @@ docs/AnnouncementsUpdateAnnouncementRequest.md
 docs/DevicesApi.md
 docs/DevicesDeviceBase.md
 docs/DevicesDeviceInfo.md
+docs/DevicesDeviceInfoHistoryDetail.md
+docs/DevicesDeviceInfoHistoryEntry.md
+docs/DevicesDeviceInfoHistoryListResponse.md
 docs/DevicesDeviceInfoUploadPresignedURL.md
 docs/DevicesDeviceInfoUploadResponse.md
+docs/DevicesDevicePatch.md
 docs/ErrorBadRequestError.md
+docs/ErrorConflictError.md
 docs/ErrorInternalServerError.md
 docs/ErrorNotFoundError.md
 docs/SuccessSuccessResponse.md
