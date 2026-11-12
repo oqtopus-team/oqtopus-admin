@@ -1,6 +1,7 @@
 export default {
   menu: {
     change_password: 'パスワード変更',
+    account_settings: 'アカウント設定',
     logout: 'ログアウト',
   },
   logout: {
